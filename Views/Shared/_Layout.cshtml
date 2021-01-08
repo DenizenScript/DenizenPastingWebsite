@@ -1,11 +1,39 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - DenizenPastingWebsite</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen">
+    <link rel="stylesheet" href="/css/paste.css">
+    <link rel="stylesheet" href="/css/paste_colors_light.css">
+    <link rel="stylesheet" href="/css/paste_colors_dark.css">
+    <title>@ViewData["Title"] | Denizen Pastebin</title>
+	<script src="/js/flasher.js"></script>
 </head>
-<body>
-@RenderBody()
+<body onload="javascript:autoflash();">
+    <nav class="navbar navbar-expand navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Denizen Pastebin</a>
+        <div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://one.denizenscript.com/logs">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Paste/New">New</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    @RenderBody()
+    <footer>
+        <center>
+            <br>
+            <hr>
+            Denizen Pasting Website (AKA The Denizen Pastebin), developed by Alex "mcmonkey" Goodwin on behalf of the Denizen Script team, is a pastebin webservice.
+            <br>You can find <a href="https://github.com/DenizenScript/DenizenPastingWebsite">DenizenPastingWebsite on GitHub</a>.
+			<br>Made using the <a href="https://bootswatch.com/darkly/">Darkly Bootstrap Theme</a> by Thomas Park, which was released under the <a href="https://github.com/thomaspark/bootswatch/blob/7fcf822114e71cfb3b89e98afb58055d21f5e240/LICENSE">MIT License</a>.
+            <p class="text-muted">DenizenPastingWebsite is Copyright (C) 2021 The Denizen Script Team, All Rights Reserved.</p>
+        </center>
+    </footer>
 </body>
 </html>
