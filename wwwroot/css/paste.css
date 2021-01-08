@@ -23,3 +23,13 @@ hr {
 .paste_spacer {
     height: 500px;
 }
+.prefix_text {
+    color: #999999;
+    z-index: -1000;
+    position: absolute;
+    left: 0px;
+    width: 60px;
+    font-size: 13px;
+    font-family: Courier New,monospaced;
+    text-align: right;
+}

@@ -13,6 +13,9 @@ namespace DenizenPastingWebsite.Models
         /// </summary>
         public string NewType = "Script";
 
+        /// <summary>
+        /// Used to enable only the correct paste type radio button.
+        /// </summary>
         public HtmlString Checked(string type)
         {
             return new HtmlString(NewType == type ? "Checked" : "");
