@@ -1,0 +1,25 @@
+.type_buttons {
+    text-align: center;
+    display: block;
+}
+textarea {
+    background: transparent;
+    border: 0px;
+    color: #FFFFFF;
+    padding: 0px;
+    width: 90%;
+    height: 85%;
+    font-family: Courier New,monospaced;
+    outline: none;
+    resize: none;
+    font-size: 13px;
+    left: 65px;
+    position: absolute;
+    overflow: visible;
+}
+hr {
+    border-color: #AAAAAA;
+}
+.paste_spacer {
+    height: 500px;
+}

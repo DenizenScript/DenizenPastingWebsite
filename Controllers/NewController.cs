@@ -9,6 +9,7 @@ using DenizenPastingWebsite.Models;
 
 namespace DenizenPastingWebsite.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class NewController : Controller
     {
         public NewController()
@@ -17,27 +18,27 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Index()
         {
-            return View(new NewPasteModel() { RecommendChangeType = true });
+            return View(new NewPasteModel());
         }
 
         public IActionResult Script()
         {
-            return View(new NewPasteModel() { NewType = "Script" });
+            return View("Index", new NewPasteModel() { NewType = "Script" });
         }
 
         public IActionResult Log()
         {
-            return View(new NewPasteModel() { NewType = "Log" });
+            return View("Index", new NewPasteModel() { NewType = "Log" });
         }
 
         public IActionResult BBCode()
         {
-            return View(new NewPasteModel() { NewType = "BBCode" });
+            return View("Index", new NewPasteModel() { NewType = "BBCode" });
         }
 
         public IActionResult Text()
         {
-            return View(new NewPasteModel() { NewType = "Text" });
+            return View("Index", new NewPasteModel() { NewType = "Text" });
         }
     }
 }

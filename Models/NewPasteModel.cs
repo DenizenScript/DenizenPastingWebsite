@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Html;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,9 +13,9 @@ namespace DenizenPastingWebsite.Models
         /// </summary>
         public string NewType = "Script";
 
-        /// <summary>
-        /// If true, emphasize the option of changing to a different paste type.
-        /// </summary>
-        public bool RecommendChangeType = false;
+        public HtmlString Checked(string type)
+        {
+            return new HtmlString(NewType == type ? "Checked" : "");
+        }
     }
 }

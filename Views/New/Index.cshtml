@@ -1,4 +1,30 @@
 ﻿@model NewPasteModel
 @{
-    ViewData["Title"] = "New " + Model.NewType;
+    ViewData["Title"] = $"New {Model.NewType} Paste";
 }
+
+<br>
+<form asp-antiforgery="false" name="paste_form" id="submit" method="POST">
+    <span class="type_buttons">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-primary">
+                <input type="radio" name="paste_type" value="script" @Model.Checked("Script") onclick="setPasteType('Script')"> Denizen Script
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="paste_type" value="log" @Model.Checked("Log") onclick="setPasteType('Log')"> Server Log
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="paste_type" value="bbcode" @Model.Checked("BBCode") onclick="setPasteType('BBCode')"> BBCode
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="paste_type" value="text" @Model.Checked("Text") onclick="setPasteType('Text')"> Plain Text
+            </label>
+        </div>
+        &nbsp;<input type="submit" class="btn btn-success" value="Submit">
+    </span>
+    <br><hr>
+    <textarea class="textarea_title" name="pastetitle" wrap="off" rows="1" style="min-width:500px;max-width:100%;overflow:hidden;height:50px;" placeholder="Give your paste a title here..."></textarea>
+    <br><hr>
+    <div class="paste_spacer"><textarea name="pastecontents" placeholder="Enter your paste contents here..." autofocus="true"></textarea></div>
+</form>
+<script src="/js/newpaste.js"></script>
