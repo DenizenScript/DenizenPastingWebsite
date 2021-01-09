@@ -1,6 +1,9 @@
-.type_buttons {
+.center_helper {
     text-align: center;
     display: block;
+}
+.card {
+    display: inline-block;
 }
 textarea {
     background: transparent;

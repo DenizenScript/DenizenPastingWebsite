@@ -14,6 +14,11 @@ namespace DenizenPastingWebsite.Models
         public string NewType = "Script";
 
         /// <summary>
+        /// If true, a rejection message will show to the user.
+        /// </summary>
+        public bool ShowRejection = false;
+
+        /// <summary>
         /// Used to enable only the correct paste type radio button.
         /// </summary>
         public HtmlString Checked(string type)

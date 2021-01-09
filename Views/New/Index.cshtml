@@ -5,7 +5,7 @@
 
 <br>
 <form asp-antiforgery="false" name="paste_form" id="submitpost" method="POST">
-    <span class="type_buttons">
+    <span class="center_helper">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <label class="btn btn-primary">
                 <input type="radio" name="paste_type" value="script" @Model.Checked("Script") onclick="setPasteType('Script')"> Denizen Script
@@ -21,6 +21,18 @@
             </label>
         </div>
         &nbsp;<input type="submit" class="btn btn-success" value="Submit">
+        @{
+            if (Model.ShowRejection)
+            {
+                <br><br>
+                <div class="card text-white bg-danger mb-3" style="max-width: 20rem;">
+                    <div class="card-header">Submission Refused</div>
+                    <div class="card-body">
+                        <p class="card-text">If you're a spammer, go away. If you're not, ask on Discord for help.</p>
+                    </div>
+                </div>
+            }
+        }
     </span>
     <br><hr>
     <span class="prefix_text">&gt;</span><textarea class="textarea_title" name="pastetitle" wrap="off" rows="1" style="min-width:500px;max-width:100%;overflow:hidden;height:50px;" placeholder="Give your paste a title here..."></textarea>
