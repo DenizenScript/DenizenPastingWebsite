@@ -16,6 +16,7 @@ namespace DenizenPastingWebsite
     {
         public Startup(IConfiguration configuration)
         {
+            PasteDatabase.Init();
             Configuration = configuration;
         }
 
