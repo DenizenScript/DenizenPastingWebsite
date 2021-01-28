@@ -54,10 +54,6 @@ namespace DenizenPastingWebsite.Highlighters
 
         public static string ColorLine(string line, string lastKey)
         {
-            if (line.EndsWithFast('\r'))
-            {
-                line = line[..^1];
-            }
             string trimmed = line.Trim();
             if (trimmed.Length == 0)
             {

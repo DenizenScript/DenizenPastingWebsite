@@ -16,18 +16,27 @@ namespace DenizenPastingWebsite.Highlighters
         /// <summary>
         /// A helper matcher for characters that need HTML escaping.
         /// </summary>
-        public static AsciiMatcher NeedsEscapeMatcher = new AsciiMatcher("&<>\0\t");
+        public static AsciiMatcher NeedsEscapeMatcher = new AsciiMatcher("&<>");
+
+        /// <summary>
+        /// A helper matcher for characters that need general cleanup.
+        /// </summary>
+        public static AsciiMatcher NeedsCleanupMatcher = new AsciiMatcher("\0\t\r");
 
         /// <summary>
         /// Escapes some text to be safe to put into HTML.
         /// </summary>
         public static string EscapeForHTML(string text)
         {
-            if (!NeedsEscapeMatcher.ContainsAnyMatch(text))
+            if (NeedsCleanupMatcher.ContainsAnyMatch(text))
             {
-                return text;
+                text = text.Replace("\0", " ").Replace("\t", "    ").Replace("\r\n", "\n").Replace("\r", "");
             }
-            return text.Replace("\0", " ").Replace("&", "&amp;").Replace("\t", "    ").Replace("<", "&lt;").Replace(">", "&gt;");
+            if (NeedsEscapeMatcher.ContainsAnyMatch(text))
+            {
+                text = text.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+            }
+            return text;
         }
 
         /// <summary>
