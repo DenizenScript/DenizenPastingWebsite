@@ -22,6 +22,8 @@ namespace DenizenPastingWebsite
             Configuration = configuration;
         }
 
+        public static string URL_BASE = "https://paste.denizenscript.com";
+
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)

@@ -43,6 +43,8 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused paste: Improper form data");
                 return RejectPaste(controller, type);
             }
+            bool micro = form.TryGetValue("response", out StringValues responseValue) && responseValue.Count == 1 && responseValue[0].ToLowerFast() == "micro";
+            bool microv2 = form.TryGetValue("v", out StringValues versionValue) && versionValue.Count == 1 && versionValue[0].ToLowerFast() == "200";
             string pasteTypeName = pasteType[0].ToLowerFast();
             if (!PasteType.ValidPasteTypes.TryGetValue(pasteTypeName, out PasteType actualType))
             {
@@ -76,6 +78,10 @@ namespace DenizenPastingWebsite.Controllers
             {
                 sender += ", REMOTE_ADDR: " + string.Join(" / ", remoteAddr);
             }
+            if (micro)
+            {
+                sender += ", response=micro";
+            }
             Paste newPaste = new Paste()
             {
                 Title = pasteTitleText,
@@ -97,6 +103,11 @@ namespace DenizenPastingWebsite.Controllers
             }
             PasteDatabase.SubmitPaste(newPaste);
             Console.Error.WriteLine($"Accepted new paste: {newPaste.ID} from {newPaste.PostSourceData}");
+            if (micro)
+            {
+                controller.Response.ContentType = "text/plain";
+                return controller.Ok(microv2 ? $"{Startup.URL_BASE}/View/{newPaste.ID}\n" : $"/paste/{newPaste.ID}\n");
+            }
             return controller.Redirect($"/View/{newPaste.ID}");
         }
 
