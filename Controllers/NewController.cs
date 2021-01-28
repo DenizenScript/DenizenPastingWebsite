@@ -85,6 +85,11 @@ namespace DenizenPastingWebsite.Controllers
                 Raw = pasteContentText,
                 Formatted = actualType.Highlight(pasteContentText)
             };
+            if (newPaste.Formatted.Length > PasteDatabase.MaxPasteRawLength * 5)
+            {
+                Console.Error.WriteLine("Refused paste: Massive formatted-content length");
+                return RejectPaste(controller, type);
+            }
             if (newPaste.Formatted == null)
             {
                 Console.Error.WriteLine("Refused paste: format failed");

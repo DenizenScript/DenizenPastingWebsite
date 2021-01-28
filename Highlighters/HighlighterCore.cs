@@ -25,9 +25,9 @@ namespace DenizenPastingWebsite.Highlighters
         {
             if (!NeedsEscapeMatcher.ContainsAnyMatch(text))
             {
-                return text.Replace(" ", "&nbsp;");
+                return text;
             }
-            return text.Replace("\0", " ").Replace("&", "&amp;").Replace("\t", "    ").Replace("<", "&lt;").Replace(">", "&gt;").Replace(" ", "&nbsp;");
+            return text.Replace("\0", " ").Replace("&", "&amp;").Replace("\t", "    ").Replace("<", "&lt;").Replace(">", "&gt;");
         }
 
         /// <summary>
