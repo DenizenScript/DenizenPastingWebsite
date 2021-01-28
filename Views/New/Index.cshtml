@@ -8,16 +8,16 @@
     <span class="center_helper">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <label class="btn btn-primary">
-                <input type="radio" name="paste_type" value="script" @Model.Checked("Script") onclick="setPasteType('Script')"> Denizen Script
+                <input type="radio" name="pastetype" value="script" @Model.Checked("Script") onclick="setPasteType('Script')"> Denizen Script
             </label>
             <label class="btn btn-primary">
-                <input type="radio" name="paste_type" value="log" @Model.Checked("Log") onclick="setPasteType('Log')"> Server Log
+                <input type="radio" name="pastetype" value="log" @Model.Checked("Log") onclick="setPasteType('Log')"> Server Log
             </label>
             <label class="btn btn-primary">
-                <input type="radio" name="paste_type" value="bbcode" @Model.Checked("BBCode") onclick="setPasteType('BBCode')"> BBCode
+                <input type="radio" name="pastetype" value="bbcode" @Model.Checked("BBCode") onclick="setPasteType('BBCode')"> BBCode
             </label>
             <label class="btn btn-primary">
-                <input type="radio" name="paste_type" value="text" @Model.Checked("Text") onclick="setPasteType('Text')"> Plain Text
+                <input type="radio" name="pastetype" value="text" @Model.Checked("Text") onclick="setPasteType('Text')"> Plain Text
             </label>
         </div>
         &nbsp;<input type="submit" class="btn btn-success" value="Submit">
@@ -35,7 +35,7 @@
         }
     </span>
     <br><hr>
-    <span class="prefix_text">&gt;</span><textarea class="textarea_title" name="pastetitle" wrap="off" rows="1" style="min-width:500px;max-width:100%;overflow:hidden;height:50px;" placeholder="Give your paste a title here..."></textarea>
+    <span class="prefix_text">&gt;</span><textarea class="textarea_title" maxlength="200" name="pastetitle" wrap="off" rows="1" style="min-width:500px;max-width:100%;overflow:hidden;height:50px;" placeholder="Give your paste a title here..."></textarea>
     <br><hr>
     <span class="prefix_text">&gt;</span><div class="paste_spacer" id="paste_spacer"><textarea name="pastecontents" id="pastecontents" placeholder="Enter your paste contents here..." autofocus="true"></textarea></div>
 </form>

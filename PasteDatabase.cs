@@ -32,6 +32,12 @@ namespace DenizenPastingWebsite
         }
 
         /// <summary>
+        /// Maximum raw length (in characters) of a paste.
+        /// Defaults to 5 MiB.
+        /// </summary>
+        public static int MaxPasteRawLength = 5 * 1024 * 1024;
+
+        /// <summary>
         /// Initializes the database handler.
         /// </summary>
         public static void Init()
@@ -62,6 +68,16 @@ namespace DenizenPastingWebsite
                 Internal.DataCollection.Upsert(0, Internal.DataInstance);
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Submits a new paste, assigning it a new ID and added it to the database.
+        /// </summary>
+        /// <param name="paste">The paste to insert.</param>
+        public static void SubmitPaste(Paste paste)
+        {
+            paste.ID = GetNextPasteID();
+            Internal.PasteCollection.Insert(paste.ID, paste);
         }
     }
 }
