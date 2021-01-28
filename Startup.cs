@@ -48,7 +48,6 @@ namespace DenizenPastingWebsite
             app.Use(async (context, next) =>
             {
                 string path = context.Request.Path.Value.ToLowerFast();
-                Console.Error.WriteLine("Attempted " + path);
                 if (path.StartsWith("/view/") && !path.StartsWith("/view/index"))
                 {
                     context.Items["viewable"] = path[("/View/".Length)..];
@@ -61,8 +60,12 @@ namespace DenizenPastingWebsite
                 await next();
                 if (context.Response.StatusCode == 404)
                 {
-                    context.Request.Path = "/Error/Error404";
-                    await next();
+                    string path = context.Request.Path.Value.ToLowerFast();
+                    if (!path.StartsWith("/error/"))
+                    {
+                        context.Request.Path = "/Error/Error404";
+                        await next();
+                    }
                 }
             });
             app.UseStaticFiles();

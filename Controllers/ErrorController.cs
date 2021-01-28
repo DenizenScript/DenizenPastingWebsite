@@ -10,7 +10,7 @@ namespace DenizenPastingWebsite.Controllers
     {
         public IActionResult Any()
         {
-            if (Response.StatusCode == 200)
+            if (Response.StatusCode == 200 && !Response.HasStarted)
             {
                 Response.StatusCode = 400;
             }
@@ -19,7 +19,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Error404()
         {
-            if (Response.StatusCode == 200)
+            if (Response.StatusCode == 200 && !Response.HasStarted)
             {
                 Response.StatusCode = 404;
             }

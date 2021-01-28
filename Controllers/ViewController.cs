@@ -25,13 +25,12 @@ namespace DenizenPastingWebsite.Controllers
             if (!long.TryParse(pasteIdText, out long pasteId))
             {
                 Console.Error.WriteLine("Refused view: non-numeric ID");
-                return View("/Error/Error404");
+                return Redirect("/Error/Error404");
             }
             if (!PasteDatabase.TryGetPaste(pasteId, out Paste paste))
             {
                 Console.Error.WriteLine("Refused view: unlisted ID");
-                Response.StatusCode = 404;
-                return View("/Error/Error404");
+                return Redirect("/Error/Error404");
             }
             if (raw)
             {
