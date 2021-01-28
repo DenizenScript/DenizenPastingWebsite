@@ -28,7 +28,7 @@ namespace DenizenPastingWebsite.Models
             return str;
         }
 
-        public string DownloadName => $"paste_{Paste.ID}_{LimitLength(CleanNameCharactersMatcher.TrimToMatches(Paste.Title.ToLowerFast()), 32)}.{Type.FileExtension}";
+        public string DownloadName => $"paste_{Paste.ID}_{LimitLength(CleanNameCharactersMatcher.TrimToMatches(Paste.Title.ToLowerFast().Replace(' ', '_')), 32)}.{Type.FileExtension}";
 
         public string RawLink => $"/View/{Paste.ID}.txt";
 

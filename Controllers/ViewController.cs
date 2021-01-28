@@ -12,11 +12,11 @@ namespace DenizenPastingWebsite.Controllers
     {
         public IActionResult Index()
         {
-            if (!Request.Query.TryGetValue("paste_id", out StringValues pasteIdValue) || pasteIdValue.Count != 1)
+            if (!Request.HttpContext.Items.TryGetValue("viewable", out object pasteIdObject) || pasteIdObject is not string pasteIdText)
             {
+                Console.Error.WriteLine("Refused view: ID missing");
                 return Redirect("/");
             }
-            string pasteIdText = pasteIdValue[0];
             bool raw = pasteIdText.EndsWith(".txt");
             if (raw)
             {
@@ -24,10 +24,12 @@ namespace DenizenPastingWebsite.Controllers
             }
             if (!long.TryParse(pasteIdText, out long pasteId))
             {
+                Console.Error.WriteLine("Refused view: non-numeric ID");
                 return View("/Error/Error404");
             }
             if (!PasteDatabase.TryGetPaste(pasteId, out Paste paste))
             {
+                Console.Error.WriteLine("Refused view: unlisted ID");
                 Response.StatusCode = 404;
                 return View("/Error/Error404");
             }

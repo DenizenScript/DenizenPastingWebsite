@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FreneticUtilities.FreneticExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -47,9 +48,11 @@ namespace DenizenPastingWebsite
             app.Use(async (context, next) =>
             {
                 string path = context.Request.Path.Value.ToLowerFast();
-                if (path.StartsWith("/View/") && !path.StartsWith("/View/Index"))
+                Console.Error.WriteLine("Attempted " + path);
+                if (path.StartsWith("/view/") && !path.StartsWith("/view/index"))
                 {
-                    context.Request.Path = "/View/Index?paste_id=" + path[("/View/".Length)..];
+                    context.Items["viewable"] = path[("/View/".Length)..];
+                    context.Request.Path = "/View/Index";
                 }
                 await next();
             });

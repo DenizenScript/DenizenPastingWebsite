@@ -44,7 +44,6 @@ namespace DenizenPastingWebsite.Highlighters
         /// </summary>
         public static string HandleLines(string text)
         {
-            text = text.Replace("\n", "\n<br>");
             int lineCount = text.CountCharacter('\n') + 2;
             StringBuilder lineNumbers = new StringBuilder(lineCount * 40);
             for (int i = 1; i < lineCount; i++)
