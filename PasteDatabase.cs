@@ -10,6 +10,9 @@ namespace DenizenPastingWebsite
 {
     public static class PasteDatabase
     {
+        /// <summary>
+        /// Internal fields for the paste database.
+        /// </summary>
         public static class Internal
         {
             public static LiteDatabase DB;
@@ -18,9 +21,7 @@ namespace DenizenPastingWebsite
 
             public class DataTracker
             {
-                public int _id;
-
-                public long Value;
+                public long Value { get; set; }
             }
 
             public static ILiteCollection<DataTracker> DataCollection;
@@ -39,13 +40,14 @@ namespace DenizenPastingWebsite
             {
                 Directory.CreateDirectory("data");
             }
-            Internal.DB = new LiteDatabase("data/pastes.db");
+            Internal.DB = new LiteDatabase("data/pastes.ldb");
             Internal.PasteCollection = Internal.DB.GetCollection<Paste>("pastes");
             Internal.DataCollection = Internal.DB.GetCollection<Internal.DataTracker>("data");
             Internal.DataInstance = Internal.DataCollection.FindById(0);
             if (Internal.DataInstance == null)
             {
-                Internal.DataInstance = new Internal.DataTracker() { Value = 0, _id = 0 };
+                Internal.DataInstance = new Internal.DataTracker() { Value = 0 };
+                Internal.DataCollection.Insert(0, Internal.DataInstance);
             }
         }
 
