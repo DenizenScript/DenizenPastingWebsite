@@ -1,6 +1,26 @@
+html {
+    font-size: 16px;
+}
 .center_helper {
     text-align: center;
     display: block;
+}
+.navbar-fixed-ifier {
+    z-index: 200;
+    position: fixed;
+    width: 100%;
+}
+.lock_top {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    height: 240px;
+    background-color: #222;
+    z-index: 100;
+}
+.lock_top_spacer {
+    height: 130px;
+    width: 100%;
 }
 .card {
     display: inline-block;
@@ -17,6 +37,12 @@ textarea {
     font-size: 13px;
     left: 65px;
     position: absolute;
+}
+.textarea_title {
+    min-width: 500px;
+    max-width: 100%;
+    overflow: hidden;
+    height: 30px;
 }
 hr {
     border-color: #AAAAAA;

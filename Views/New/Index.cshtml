@@ -5,6 +5,7 @@
 
 <br>
 <form asp-antiforgery="false" name="paste_form" id="submitpost" method="POST">
+    <div class="lock_top"><div style="height:90px;"></div>
     <span class="center_helper">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <label class="btn btn-primary">
@@ -35,8 +36,10 @@
         }
     </span>
     <br><hr>
-    <span class="prefix_text">&gt;</span><textarea class="textarea_title" maxlength="200" name="pastetitle" wrap="off" rows="1" style="min-width:500px;max-width:100%;overflow:hidden;height:50px;" placeholder="Give your paste a title here..."></textarea>
+    <span class="prefix_text">&gt;</span><textarea class="textarea_title" maxlength="200" name="pastetitle" wrap="off" rows="1" placeholder="Give your paste a title here..."></textarea>
     <br><hr>
+    </div>
+    <div class="lock_top_spacer"></div>
     <span class="prefix_text">&gt;</span><div class="paste_spacer" id="paste_spacer"><textarea name="pastecontents" id="pastecontents" placeholder="Enter your paste contents here..." autofocus="true"></textarea></div>
 </form>
 <script src="/js/newpaste.js"></script>
