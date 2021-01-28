@@ -29,15 +29,15 @@ namespace DenizenPastingWebsite.Highlighters
                 string line = lines[i];
                 if (line.StartsWithFast('+'))
                 {
-                    line = $"<div class=\"diff_added\">{line}</div>";
+                    line = $"<div class=\"green\">{line}</div>";
                 }
                 else if (line.StartsWithFast('-'))
                 {
-                    line = $"<div class=\"diff_removed\">{line}</div>";
+                    line = $"<div class=\"red\">{line}</div>";
                 }
                 else if (line.StartsWithFast('@'))
                 {
-                    line = $"<div class=\"diff_special\">{line}</div>";
+                    line = $"<div class=\"blue\">{line}</div>";
                 }
                 lines[i] = line;
             }

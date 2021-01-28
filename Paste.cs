@@ -25,7 +25,7 @@ namespace DenizenPastingWebsite
         public string PostSourceData { get; set; }
 
         /// <summary>
-        /// Post type eg "Script".
+        /// Post type name, all lowercase, like "script".
         /// </summary>
         public string Type { get; set; }
 

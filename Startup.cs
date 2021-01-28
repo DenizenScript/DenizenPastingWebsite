@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FreneticUtilities.FreneticExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -43,6 +44,15 @@ namespace DenizenPastingWebsite
             {
                 app.UseExceptionHandler("/Error/Any");
             }
+            app.Use(async (context, next) =>
+            {
+                string path = context.Request.Path.Value.ToLowerFast();
+                if (path.StartsWith("/View/") && !path.StartsWith("/View/Index"))
+                {
+                    context.Request.Path = "/View/Index?paste_id=" + path[("/View/".Length)..];
+                }
+                await next();
+            });
             app.Use(async (context, next) =>
             {
                 await next();

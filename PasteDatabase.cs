@@ -79,5 +79,14 @@ namespace DenizenPastingWebsite
             paste.ID = GetNextPasteID();
             Internal.PasteCollection.Insert(paste.ID, paste);
         }
+
+        /// <summary>
+        /// Tries to get a paste.
+        /// </summary>
+        public static bool TryGetPaste(long id, out Paste paste)
+        {
+            paste = Internal.PasteCollection.FindById(id);
+            return paste != null;
+        }
     }
 }

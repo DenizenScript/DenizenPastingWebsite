@@ -34,3 +34,37 @@ hr {
     font-family: Courier New,monospaced;
     text-align: right;
 }
+.line_numbers {
+    color :#999999;
+    position: absolute;
+    width: 60px;
+    font-size: 16px;
+    font-family: Courier New,monospaced;
+    text-align: right;
+}
+.paste_body {
+    left: 80px;
+    position: relative;
+    font-family: Courier New,monospaced;
+    font-size: 16px;
+    white-space: nowrap;
+}
+.center_auto {
+    display: inline-block;
+    text-align: left;
+}
+.flash {
+    animation: flash 2s ease-out;
+    animation-iteration-count: 1;
+}
+@keyframes flash {
+    0% { background-color: transparent; }
+    20% { background-color: #88BBFF; }
+    100% { background-color: transparent; }
+}
+.flasher_tool {
+    position: absolute;
+    width: 30rem;
+    left: 0;
+    height: 1.3rem;
+}

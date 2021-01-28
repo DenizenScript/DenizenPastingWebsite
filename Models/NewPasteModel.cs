@@ -9,11 +9,6 @@ namespace DenizenPastingWebsite.Models
     public class NewPasteModel
     {
         /// <summary>
-        /// A set of all valid paste types (lowercased).
-        /// </summary>
-        public static HashSet<string> ValidPasteTypes = new HashSet<string>() { "script", "log", "bbcode", "text", "diff" };
-
-        /// <summary>
         /// The type of paste to be submitted.
         /// </summary>
         public string NewType = "Script";

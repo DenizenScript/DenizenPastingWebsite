@@ -40,15 +40,15 @@ namespace DenizenPastingWebsite.Controllers
             {
                 return RejectPaste(controller, type);
             }
-            string pasteTypeName = pasteType[0];
-            if (!NewPasteModel.ValidPasteTypes.Contains(pasteTypeName))
+            string pasteTypeName = pasteType[0].ToLowerFast();
+            if (!PasteType.ValidPasteTypes.TryGetValue(pasteTypeName, out PasteType actualType))
             {
                 return RejectPaste(controller, type);
             }
             string pasteTitleText = pasteTitle[0];
             if (string.IsNullOrWhiteSpace(pasteTitleText))
             {
-                pasteTitleText = $"Unnamed {pasteTypeName} Paste";
+                pasteTitleText = $"Unnamed {actualType.DisplayName} Paste";
             }
             if (pasteTitleText.Length > 200)
             {
@@ -75,11 +75,11 @@ namespace DenizenPastingWebsite.Controllers
             Paste newPaste = new Paste()
             {
                 Title = pasteTitleText,
-                Type = pasteTypeName,
+                Type = actualType.Name.ToLowerFast(),
                 PostSourceData = sender,
                 Date = StringConversionHelper.DateTimeToString(DateTimeOffset.Now, false),
                 Raw = pasteContentText,
-                Formatted = ProcessFormat(pasteTypeName, pasteContentText)
+                Formatted = actualType.Highlight(pasteContentText)
             };
             if (newPaste.Formatted == null)
             {
@@ -87,35 +87,6 @@ namespace DenizenPastingWebsite.Controllers
             }
             PasteDatabase.SubmitPaste(newPaste);
             return controller.Redirect($"/View/{newPaste.ID}");
-        }
-
-        public static string ProcessFormat(string type, string content)
-        {
-            type = type.ToLowerFast();
-            if (type == "script")
-            {
-                return ScriptHighlighter.Highlight(content);
-            }
-            else if (type == "log")
-            {
-                return LogHighlighter.Highlight(content);
-            }
-            else if (type == "bbcode")
-            {
-                return BBCodeHighlighter.Highlight(content);
-            }
-            else if (type == "text")
-            {
-                return HighlighterCore.HighlightPlainText(content);
-            }
-            else if (type == "diff")
-            {
-                return DiffHighlighter.Highlight(content);
-            }
-            else
-            {
-                return null;
-            }
         }
 
         public static bool IsValidPaste(string title, string content)
