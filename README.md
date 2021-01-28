@@ -1,7 +1,17 @@
 DenizenPastingWebsite
 ---------------------
 
-In-progress paste website for Denizen scripts and server logs.
+Paste website (like pastebin), primarily for Denizen scripts and server logs.
+
+### How To Run
+
+Designed for and tested on Debian Linux.
+
+- Make sure you have `screen` and `dotnet-5-sdk` available
+- Add a user for the service (via `adduser` generally, then `su` to that user)
+- Clone the git repo (`git clone https://github.com/DenizenScript/DenizenPastingWebsite`) and enter the folder
+- Call `./update.sh`
+- Will by default open on port 8096. To change this, edit `start.sh`
 
 ### Licensing pre-note:
 
