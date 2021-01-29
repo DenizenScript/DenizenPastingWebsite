@@ -14,8 +14,15 @@
         </p>
         <a class="btn btn-secondary btn-sm" href="@Model.RawLink">View Raw Paste</a>
         <a class="btn btn-secondary btn-sm" href="@Model.RawLink" download="@Model.DownloadName">Download This Paste</a>
-        <br>
-        <form name="edit_button" id="edit_button" method="POST" action="/View/@Model.Paste.ID">
+        @if (Model.Paste.Edited > 0)
+        {
+            <a class="btn btn-secondary btn-sm" href="/View/@Model.Paste.Edited">Edit Of Paste @Model.Paste.Edited</a>
+        }
+        @if (Model.Paste.DiffReport > 0)
+        {
+            <a class="btn btn-secondary btn-sm" href="/View/@Model.Paste.DiffReport">View Edit Report</a>
+        }
+        <form name="edit_button" id="edit_button" method="POST" action="/View/@Model.Paste.ID" style="display:inline;">
             <input type="hidden" id="is_edit_button" name="is_edit_button" value="yes">
             <input type="submit" class="btn btn-secondary btn-sm" value="Edit This Paste">
         </form>

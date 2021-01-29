@@ -94,7 +94,7 @@ namespace DenizenPastingWebsite.Controllers
             {
                 return RejectPaste(controller, type);
             }
-            if (RateLimiter.TryUser(realOrigin))
+            if (!RateLimiter.TryUser(realOrigin))
             {
                 Console.Error.WriteLine("Refused paste: spam");
                 return RejectPaste(controller, type);
@@ -118,6 +118,24 @@ namespace DenizenPastingWebsite.Controllers
             {
                 Console.Error.WriteLine("Refused paste: format failed");
                 return RejectPaste(controller, type);
+            }
+            newPaste.ID = PasteDatabase.GetNextPasteID();
+            if (edits != null)
+            {
+                string diffText = DiffHighlighter.GenerateDiff(edits.Raw, newPaste.Raw);
+                Paste diffPaste = new Paste()
+                {
+                    Title = $"Diff Report Between Paste#{newPaste.ID} and #{edits.ID}",
+                    Type = "diff",
+                    PostSourceData = "(GENERATED), " + sender,
+                    Date = StringConversionHelper.DateTimeToString(DateTimeOffset.Now, false),
+                    Raw = diffText,
+                    Formatted = DiffHighlighter.Highlight(diffText),
+                    Edited = newPaste.ID,
+                    ID = PasteDatabase.GetNextPasteID()
+                };
+                newPaste.DiffReport = diffPaste.ID;
+                PasteDatabase.SubmitPaste(diffPaste);
             }
             PasteDatabase.SubmitPaste(newPaste);
             Console.Error.WriteLine($"Accepted new paste: {newPaste.ID} from {newPaste.PostSourceData}");

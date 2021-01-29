@@ -39,6 +39,7 @@ namespace DenizenPastingWebsite
             MaxPasteRawLength = Config.GetInt("max-paste-size").Value;
             TrustXForwardedFor = Config.GetBool("trust-x-forwarded-for").Value;
             MaxPastesPerMinute = Config.GetInt("max-pastes-per-minute").Value;
+            Console.WriteLine($"Loaded at URL-base {URL_BASE} with max length {MaxPasteRawLength} with ratelimit {MaxPastesPerMinute} and x-forwarded-for set {TrustXForwardedFor}");
         }
     }
 }

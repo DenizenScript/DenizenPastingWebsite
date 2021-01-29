@@ -48,5 +48,10 @@ namespace DenizenPastingWebsite
         /// The ID of the paste that was edited to produce this paste (if any).
         /// </summary>
         public long Edited { get; set; }
+
+        /// <summary>
+        /// The ID of the paste that was generated as a diff report for a paste edit.
+        /// </summary>
+        public long DiffReport { get; set; }
     }
 }

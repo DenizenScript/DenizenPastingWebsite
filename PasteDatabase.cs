@@ -70,7 +70,6 @@ namespace DenizenPastingWebsite
         /// <param name="paste">The paste to insert.</param>
         public static void SubmitPaste(Paste paste)
         {
-            paste.ID = GetNextPasteID();
             Internal.PasteCollection.Insert(paste.ID, paste);
         }
 

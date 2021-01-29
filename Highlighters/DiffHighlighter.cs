@@ -1,8 +1,12 @@
 ﻿using FreneticUtilities.FreneticExtensions;
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DiffPlex;
+using DiffPlex.DiffBuilder;
+using DiffPlex.DiffBuilder.Model;
 
 namespace DenizenPastingWebsite.Highlighters
 {
@@ -29,19 +33,32 @@ namespace DenizenPastingWebsite.Highlighters
                 string line = lines[i];
                 if (line.StartsWithFast('+'))
                 {
-                    line = $"<div class=\"diff_added\">{line}</div>";
+                    line = $"<span class=\"diff_added\">{line}</span>";
                 }
                 else if (line.StartsWithFast('-'))
                 {
-                    line = $"<div class=\"diff_removed\">{line}</div>";
+                    line = $"<span class=\"diff_removed\">{line}</span>";
                 }
                 else if (line.StartsWithFast('@'))
                 {
-                    line = $"<div class=\"diff_special\">{line}</div>";
+                    line = $"<span class=\"diff_special\">{line}</span>";
                 }
                 lines[i] = line;
             }
             return string.Join('\n', lines);
+        }
+
+        public static string GenerateDiff(string oldText, string newText)
+        {
+            DiffPaneModel result = new InlineDiffBuilder(new Differ()).BuildDiffModel(oldText, newText);
+            StringBuilder output = new StringBuilder(oldText.Length + newText.Length);
+            foreach (var line in result.Lines)
+            {
+                string lineRaw = line.Text;
+                output.Append(line.Type switch { ChangeType.Inserted => '+', ChangeType.Deleted => '-', ChangeType.Imaginary => '@', ChangeType.Modified => '+', ChangeType.Unchanged => ' ', _ => ' ' });
+                output.Append(lineRaw).Append('\n');
+            }
+            return output.ToString();
         }
     }
 }
