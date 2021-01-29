@@ -32,3 +32,30 @@ hr {
 .script_colon{color:#0000FF;font-weight:bold;}
 .script_bad_space{color:#000000;background-color:#FF6666;}
 .script_normal{color:#000000;}
+/* Diff colors */
+.diff_added{color:#008800;}
+.diff_removed{color:#880000;}
+.diff_special{color:#5500BB;}
+/* MC Log Colors */
+.mc_0{color:#000000;}
+.mc_1{color:#000088;}
+.mc_2{color:#008800;}
+.mc_3{color:#008888;}
+.mc_4{color:#880000;}
+.mc_5{color:#880088;}
+.mc_6{color:#888800;}
+.mc_7{color:#888888;}
+.mc_8{color:#444444;}
+.mc_9{color:#5555CC;}
+.mc_a{color:#55CC55;}
+.mc_b{color:#55CCCC;}
+.mc_c{color:#CC5555;}
+.mc_d{color:#CC55CC;}
+.mc_e{color:#CCCC55;}
+.mc_f{color:#000000;}
+.mc_n{border-bottom:1px solid white;}
+.mc_m{text-decoration:line-through;}
+.mc_l{font-weight:bold;}
+.mc_o{font-style:italic;}
+.mc_r{font-size:100%;font-style:normal;font-weight:normal;color:#FFFFFF;}
+.mc_k{font-style:italic;font-weight:bold;}
