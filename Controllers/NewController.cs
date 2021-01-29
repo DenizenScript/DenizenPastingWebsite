@@ -200,6 +200,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Index()
         {
+            ThemeHelper.HandleTheme(Request, ViewData);
             if (Request.Method == "POST")
             {
                 return HandlePost(this, "script");
@@ -209,6 +210,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Script()
         {
+            ThemeHelper.HandleTheme(Request, ViewData);
             if (Request.Method == "POST")
             {
                 return HandlePost(this, "script");
@@ -218,6 +220,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Log()
         {
+            ThemeHelper.HandleTheme(Request, ViewData);
             if (Request.Method == "POST")
             {
                 return HandlePost(this, "log");
@@ -227,6 +230,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult BBCode()
         {
+            ThemeHelper.HandleTheme(Request, ViewData);
             if (Request.Method == "POST")
             {
                 return HandlePost(this, "bbcode");
@@ -236,6 +240,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Text()
         {
+            ThemeHelper.HandleTheme(Request, ViewData);
             if (Request.Method == "POST")
             {
                 return HandlePost(this, "text");
@@ -245,6 +250,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Edit()
         {
+            ThemeHelper.HandleTheme(Request, ViewData);
             if (!Request.HttpContext.Items.TryGetValue("viewable", out object pasteIdObject) || pasteIdObject is not string pasteIdText)
             {
                 Console.Error.WriteLine("Refused edit: ID missing");

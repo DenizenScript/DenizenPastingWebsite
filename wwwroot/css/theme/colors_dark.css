@@ -1,0 +1,31 @@
+/* General Page */
+.lock_top {
+    background-color: #222;
+}
+textarea {
+    color: #FFFFFF;
+}
+hr {
+    border-color: #AAAAAA;
+}
+.prefix_text {
+    color: #999999;
+}
+.line_numbers {
+    color: #999999;
+}
+/* Denizen Script Colors */
+.script_comment_header{color:#FF0000;}
+.script_comment_normal{color:#007700;}
+.script_comment_code{color:#DD5500;}
+.script_key{color:#1155FF;}
+.script_key_inline{color:#1155FF;font-style:italic;}
+.script_command{color:#DD99FF;font-style:italic;}
+.script_quote_double{color:#77BBF5;}
+.script_quote_single{color:#88DDFF;}
+.script_tag{color:#AAAAAA;}
+.script_tag_dot{color:#EEEEFF;}
+.script_tag_param{color:#7777FF;}
+.script_colon{color:#66CCFF;font-weight:bold;}
+.script_bad_space{color:#FFFFFF;background-color:#440000;}
+.script_normal{color:#FFFFFF;}

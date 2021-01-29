@@ -3,12 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen">
+    <link rel="stylesheet" href="@ViewData["Bootstrap_URL"]" media="screen">
     <link rel="stylesheet" href="/css/paste.css">
     <link rel="stylesheet" href="/css/paste_colors.css">
+    <link rel="stylesheet" href="@ViewData["Theme_Colors"]">
     <title>@ViewData["Title"] | Denizen Pastebin</title>
     <meta name="description" content="@ViewData["Description"]" />
 	<script src="/js/flasher.js"></script>
+	<script src="/js/themes.js"></script>
 </head>
 <body onload="javascript:autoflash();">
     <nav class="navbar navbar-expand navbar-dark bg-primary navbar-fixed-ifier">
@@ -21,6 +23,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/New">New</a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Theme</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" onclick="changetheme('dark')">Standard Dark</a>
+                        <a class="dropdown-item" onclick="changetheme('light')">Quite Light</a>
+                    </div>
+                </li>
             </ul>
         </div>
     </nav>
@@ -32,7 +41,7 @@
             <hr>
             Denizen Pasting Website (AKA The Denizen Pastebin), developed by Alex "mcmonkey" Goodwin on behalf of the Denizen Script team, is a pastebin webservice.
             <br>You can find <a href="https://github.com/DenizenScript/DenizenPastingWebsite">DenizenPastingWebsite on GitHub</a>, or talk to us on <a href="https://discord.gg/Q6pZGSR">Discord</a>.
-			<br>Made using the <a href="https://bootswatch.com/darkly/">Darkly Bootstrap Theme</a> by Thomas Park, which was released under the <a href="https://github.com/thomaspark/bootswatch/blob/7fcf822114e71cfb3b89e98afb58055d21f5e240/LICENSE">MIT License</a>.
+			<br>Made using the @ViewData["Bootstrap_Footer"] by Thomas Park, which was released under the <a href="https://github.com/thomaspark/bootswatch/blob/7fcf822114e71cfb3b89e98afb58055d21f5e240/LICENSE">MIT License</a>.
             <p class="text-muted">DenizenPastingWebsite is Copyright (C) 2021 The Denizen Script Team, All Rights Reserved.</p>
         </center>
     </footer>

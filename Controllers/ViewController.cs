@@ -12,6 +12,7 @@ namespace DenizenPastingWebsite.Controllers
     {
         public IActionResult Index()
         {
+            ThemeHelper.HandleTheme(Request, ViewData);
             if (!Request.HttpContext.Items.TryGetValue("viewable", out object pasteIdObject) || pasteIdObject is not string pasteIdText)
             {
                 Console.Error.WriteLine("Refused view: ID missing");

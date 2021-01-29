@@ -10,6 +10,7 @@ namespace DenizenPastingWebsite.Controllers
     {
         public IActionResult Any()
         {
+            ThemeHelper.HandleTheme(Request, ViewData);
             if (Response.StatusCode == 200 && !Response.HasStarted)
             {
                 Response.StatusCode = 400;
@@ -19,6 +20,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Error404()
         {
+            ThemeHelper.HandleTheme(Request, ViewData);
             if (Response.StatusCode == 200 && !Response.HasStarted)
             {
                 Response.StatusCode = 404;
