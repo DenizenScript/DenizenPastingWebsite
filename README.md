@@ -3,15 +3,30 @@ DenizenPastingWebsite
 
 Paste website (like pastebin), primarily for Denizen scripts and server logs.
 
-### How To Run
+### How To Install/Run
 
 Designed for and tested on Debian Linux.
 
 - Make sure you have `screen` and `dotnet-5-sdk` available
 - Add a user for the service (via `adduser` generally, then `su` to that user)
 - Clone the git repo (`git clone https://github.com/DenizenScript/DenizenPastingWebsite`) and enter the folder
+- Make a folder labeled `config`, inside it make a text file labeled `config.fds`, and fill it with the config sample below (and change values to fit your configuration needs).
 - Call `./update.sh`
 - Will by default open on port 8096. To change this, edit `start.sh`
+- It is strongly recommended you run this webserver behind a reverse proxy like Apache2.
+
+### Configuration
+
+```yml
+# Maximum paste size (in number of characters). Pastes longer than this will be trimmed.
+max-paste-size: 5000000
+# Set to 'true' if running behind a reverse-proxy, 'false' if directly exposed.
+trust-x-forwarded-for: true
+# Set to the base URL for the paste service.
+url-base: https://paste.denizenscript.com
+# How many pastes from a single origin can come through per minute (a simple flood protection tool). If set to 0, the paste website is effectively read-only.
+max-pastes-per-minute: 3
+```
 
 ### Licensing pre-note:
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FreneticUtilities.FreneticDataSyntax;
 using FreneticUtilities.FreneticExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,19 +23,11 @@ namespace DenizenPastingWebsite
             Configuration = configuration;
         }
 
-        public static string URL_BASE = "https://paste.denizenscript.com";
-
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews(o =>
-            {
-                o.Filters.Add(new IgnoreAntiforgeryTokenAttribute());
-            }).AddRazorPagesOptions(o =>
-            {
-                o.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
-            });
+            services.AddControllersWithViews();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -47,13 +40,19 @@ namespace DenizenPastingWebsite
             {
                 app.UseExceptionHandler("/Error/Any");
             }
+            PasteServer.LoadConfig();
             app.Use(async (context, next) =>
             {
                 string path = context.Request.Path.Value.ToLowerFast();
                 if (path.StartsWith("/view/") && !path.StartsWith("/view/index"))
                 {
-                    context.Items["viewable"] = path[("/View/".Length)..];
-                    context.Request.Path = "/View/Index";
+                    context.Items["viewable"] = path[("/view/".Length)..];
+                    context.Request.Path = context.Request.Method == "POST" ? "/New/Edit" : "/View/Index";
+                }
+                else if (path.StartsWith("/edit/"))
+                {
+                    context.Items["editing"] = path[("/edit/".Length)..];
+                    context.Request.Path = "/New/Edit";
                 }
                 await next();
             });
