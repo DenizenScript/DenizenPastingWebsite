@@ -5,3 +5,4 @@ data/
 .vs/
 *.suo
 *.user
+LaunchSettings.json
