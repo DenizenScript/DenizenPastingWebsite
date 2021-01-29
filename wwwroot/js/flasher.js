@@ -17,4 +17,5 @@ function autoflash() {
     flasher.classList.add("flasher_tool");
     flashable.appendChild(flasher);
     flashElement("flasher_tool_generated");
+    window.scroll(0, flashable.getBoundingClientRect().top + window.pageYOffset - window.innerHeight / 2);
 }
