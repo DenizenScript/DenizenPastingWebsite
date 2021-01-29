@@ -71,6 +71,7 @@ namespace DenizenPastingWebsite
         public static void SubmitPaste(Paste paste)
         {
             Internal.PasteCollection.Insert(paste.ID, paste);
+            Internal.DB.Commit();
         }
 
         /// <summary>
