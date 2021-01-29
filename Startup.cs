@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Loader;
 using System.Threading.Tasks;
 using FreneticUtilities.FreneticDataSyntax;
 using FreneticUtilities.FreneticExtensions;
@@ -20,6 +21,14 @@ namespace DenizenPastingWebsite
         public Startup(IConfiguration configuration)
         {
             PasteDatabase.Init();
+            AssemblyLoadContext.Default.Unloading += (context) =>
+            {
+                PasteDatabase.Shutdown();
+            };
+            AppDomain.CurrentDomain.ProcessExit += (obj, e) =>
+            {
+                PasteDatabase.Shutdown();
+            };
             Configuration = configuration;
         }
 
@@ -30,8 +39,12 @@ namespace DenizenPastingWebsite
             services.AddControllersWithViews();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
+            lifetime.ApplicationStopping.Register(() =>
+            {
+                PasteDatabase.Shutdown();
+            });
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

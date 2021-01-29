@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.IO;
 using LiteDB;
 using System.Threading;
+using LiteDB.Engine;
 
 namespace DenizenPastingWebsite
 {
@@ -51,6 +52,15 @@ namespace DenizenPastingWebsite
             }
         }
 
+        public static void Shutdown()
+        {
+            if (Internal.DB != null)
+            {
+                Internal.DB.Dispose();
+                Internal.DB = null;
+            }
+        }
+
         /// <summary>
         /// Gets the next paste ID, automatically incrementing the ID in the process.
         /// </summary>
@@ -71,7 +81,6 @@ namespace DenizenPastingWebsite
         public static void SubmitPaste(Paste paste)
         {
             Internal.PasteCollection.Insert(paste.ID, paste);
-            Internal.DB.Commit();
         }
 
         /// <summary>
