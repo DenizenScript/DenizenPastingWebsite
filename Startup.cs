@@ -62,11 +62,6 @@ namespace DenizenPastingWebsite
                     context.Items["viewable"] = path[("/view/".Length)..];
                     context.Request.Path = context.Request.Method == "POST" ? "/New/Edit" : "/View/Index";
                 }
-                else if (path.StartsWith("/edit/"))
-                {
-                    context.Items["editing"] = path[("/edit/".Length)..];
-                    context.Request.Path = "/New/Edit";
-                }
                 await next();
             });
             app.Use(async (context, next) =>
