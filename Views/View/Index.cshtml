@@ -26,6 +26,8 @@
             <input type="hidden" id="is_edit_button" name="is_edit_button" value="yes">
             <input type="submit" class="btn btn-secondary btn-sm" value="Edit This Paste">
         </form>
+        <a class="btn btn-secondary btn-sm" id="copybutton" onclick="navigator.clipboard.writeText(document.location);doPopover('copybutton', 'Copied!');">Copy Link</a>
+	<script src="/js/button.js"></script>
     </div>
     </div>
     <br>
