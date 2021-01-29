@@ -32,12 +32,6 @@ namespace DenizenPastingWebsite
         }
 
         /// <summary>
-        /// Maximum raw length (in characters) of a paste.
-        /// Defaults to 5 MiB.
-        /// </summary>
-        public static int MaxPasteRawLength = 5 * 1024 * 1024;
-
-        /// <summary>
         /// Initializes the database handler.
         /// </summary>
         public static void Init()

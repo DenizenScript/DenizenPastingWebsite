@@ -32,6 +32,22 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused paste: Non-Post");
                 return RejectPaste(controller, type);
             }
+            IPAddress remoteAddress = controller.Request.HttpContext.Connection.RemoteIpAddress;
+            string sender = $"Remote IP: {remoteAddress}";
+            string realOrigin = remoteAddress.ToString();
+            if (controller.Request.Headers.TryGetValue("X-Forwarded-For", out StringValues forwardHeader))
+            {
+                sender += ", X-Forwarded-For: " + string.Join(" / ", forwardHeader);
+                if (PasteServer.TrustXForwardedFor && forwardHeader.Count > 0)
+                {
+                    realOrigin = string.Join(" / ", forwardHeader);
+                }
+            }
+            if (controller.Request.Headers.TryGetValue("REMOTE_ADDR", out StringValues remoteAddr))
+            {
+                sender += ", REMOTE_ADDR: " + string.Join(" / ", remoteAddr);
+            }
+            Console.WriteLine($"Attempted paste from {sender}");
             IFormCollection form = controller.Request.Form;
             if (!form.TryGetValue("pastetype", out StringValues pasteType) || !form.TryGetValue("pastetitle", out StringValues pasteTitle) || !form.TryGetValue("pastecontents", out StringValues pasteContents))
             {
@@ -45,6 +61,14 @@ namespace DenizenPastingWebsite.Controllers
             }
             bool micro = form.TryGetValue("response", out StringValues responseValue) && responseValue.Count == 1 && responseValue[0].ToLowerFast() == "micro";
             bool microv2 = form.TryGetValue("v", out StringValues versionValue) && versionValue.Count == 1 && versionValue[0].ToLowerFast() == "200";
+            if (micro)
+            {
+                sender += ", response=micro";
+                if (microv2)
+                {
+                    sender += "v2";
+                }
+            }
             string pasteTypeName = pasteType[0].ToLowerFast();
             if (!PasteType.ValidPasteTypes.TryGetValue(pasteTypeName, out PasteType actualType))
             {
@@ -69,18 +93,10 @@ namespace DenizenPastingWebsite.Controllers
             {
                 return RejectPaste(controller, type);
             }
-            string sender = $"Remote IP: {controller.Request.HttpContext.Connection.RemoteIpAddress}";
-            if (controller.Request.Headers.TryGetValue("X-Forwarded-For", out StringValues forwardHeader))
+            if (RateLimiter.TryUser(realOrigin))
             {
-                sender += ", X-Forwarded-For: " + string.Join(" / ", controller.Request.Headers["X-Forwarded-For"]);
-            }
-            if (controller.Request.Headers.TryGetValue("REMOTE_ADDR", out StringValues remoteAddr))
-            {
-                sender += ", REMOTE_ADDR: " + string.Join(" / ", remoteAddr);
-            }
-            if (micro)
-            {
-                sender += ", response=micro";
+                Console.Error.WriteLine("Refused paste: spam");
+                return RejectPaste(controller, type);
             }
             Paste newPaste = new Paste()
             {
