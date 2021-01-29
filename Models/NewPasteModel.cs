@@ -36,7 +36,7 @@ namespace DenizenPastingWebsite.Models
         /// <summary>
         /// The sub-URL for the edit paste action.
         /// </summary>
-        public string PasteURL => Edit == null ? "$/New/{NewType}" : $"/View/{Edit.ID}";
+        public string PasteURL => Edit == null ? $"/New/{NewType}" : $"/View/{Edit.ID}";
 
         /// <summary>
         /// Used to enable only the correct paste type radio button.
