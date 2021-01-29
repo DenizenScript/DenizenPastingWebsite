@@ -11,6 +11,7 @@ using FreneticUtilities.FreneticToolkit;
 using FreneticUtilities.FreneticExtensions;
 using DenizenPastingWebsite.Models;
 using DenizenPastingWebsite.Highlighters;
+using System.Net;
 
 namespace DenizenPastingWebsite.Controllers
 {
@@ -22,10 +23,10 @@ namespace DenizenPastingWebsite.Controllers
 
         public static IActionResult RejectPaste(NewController controller, string type)
         {
-            return controller.View(new NewPasteModel() { ShowRejection = true, NewType = type });
+            return controller.View("Index", new NewPasteModel() { ShowRejection = true, NewType = type });
         }
 
-        public static IActionResult HandlePost(NewController controller, string type)
+        public static IActionResult HandlePost(NewController controller, string type, Paste edits = null)
         {
             if (controller.Request.Method != "POST" || controller.Request.Form.IsEmpty())
             {
@@ -85,9 +86,9 @@ namespace DenizenPastingWebsite.Controllers
                 pasteTitleText = pasteTitleText[0..200];
             }
             string pasteContentText = pasteContents[0];
-            if (pasteContentText.Length > PasteDatabase.MaxPasteRawLength)
+            if (pasteContentText.Length > PasteServer.MaxPasteRawLength)
             {
-                pasteContentText = pasteContentText[0..PasteDatabase.MaxPasteRawLength];
+                pasteContentText = pasteContentText[0..PasteServer.MaxPasteRawLength];
             }
             if (!IsValidPaste(pasteTitleText, pasteContentText))
             {
@@ -105,9 +106,10 @@ namespace DenizenPastingWebsite.Controllers
                 PostSourceData = sender,
                 Date = StringConversionHelper.DateTimeToString(DateTimeOffset.Now, false),
                 Raw = pasteContentText,
-                Formatted = actualType.Highlight(pasteContentText)
+                Formatted = actualType.Highlight(pasteContentText),
+                Edited = (edits == null ? 0 : edits.ID)
             };
-            if (newPaste.Formatted.Length > PasteDatabase.MaxPasteRawLength * 5)
+            if (newPaste.Formatted.Length > PasteServer.MaxPasteRawLength * 5)
             {
                 Console.Error.WriteLine("Refused paste: Massive formatted-content length");
                 return RejectPaste(controller, type);
@@ -122,7 +124,7 @@ namespace DenizenPastingWebsite.Controllers
             if (micro)
             {
                 controller.Response.ContentType = "text/plain";
-                return controller.Ok(microv2 ? $"{Startup.URL_BASE}/View/{newPaste.ID}\n" : $"/paste/{newPaste.ID}\n");
+                return controller.Ok(microv2 ? $"{PasteServer.URL_BASE}/View/{newPaste.ID}\n" : $"/paste/{newPaste.ID}\n");
             }
             return controller.Redirect($"/View/{newPaste.ID}");
         }
@@ -182,45 +184,76 @@ namespace DenizenPastingWebsite.Controllers
         {
             if (Request.Method == "POST")
             {
-                return HandlePost(this, "Script");
+                return HandlePost(this, "script");
             }
-            return View(new NewPasteModel() { NewType = "Script" });
+            return View(new NewPasteModel() { NewType = "script" });
         }
 
         public IActionResult Script()
         {
             if (Request.Method == "POST")
             {
-                return HandlePost(this, "Script");
+                return HandlePost(this, "script");
             }
-            return View("Index", new NewPasteModel() { NewType = "Script" });
+            return View("Index", new NewPasteModel() { NewType = "script" });
         }
 
         public IActionResult Log()
         {
             if (Request.Method == "POST")
             {
-                return HandlePost(this, "Log");
+                return HandlePost(this, "log");
             }
-            return View("Index", new NewPasteModel() { NewType = "Log" });
+            return View("Index", new NewPasteModel() { NewType = "log" });
         }
 
         public IActionResult BBCode()
         {
             if (Request.Method == "POST")
             {
-                return HandlePost(this, "BBCode");
+                return HandlePost(this, "bbcode");
             }
-            return View("Index", new NewPasteModel() { NewType = "BBCode" });
+            return View("Index", new NewPasteModel() { NewType = "bbcode" });
         }
 
         public IActionResult Text()
         {
             if (Request.Method == "POST")
             {
-                return HandlePost(this, "Text");
+                return HandlePost(this, "text");
             }
-            return View("Index", new NewPasteModel() { NewType = "Text" });
+            return View("Index", new NewPasteModel() { NewType = "text" });
+        }
+
+        public IActionResult Edit()
+        {
+            if (!Request.HttpContext.Items.TryGetValue("viewable", out object pasteIdObject) || pasteIdObject is not string pasteIdText)
+            {
+                Console.Error.WriteLine("Refused edit: ID missing");
+                return Redirect("/");
+            }
+            if (!long.TryParse(pasteIdText, out long pasteId))
+            {
+                Console.Error.WriteLine("Refused edit: non-numeric ID");
+                return Redirect("/Error/Error404");
+            }
+            if (!PasteDatabase.TryGetPaste(pasteId, out Paste paste))
+            {
+                Console.Error.WriteLine("Refused view: unlisted ID");
+                return Redirect("/Error/Error404");
+            }
+            if (Request.Method != "POST")
+            {
+                return Redirect($"/View/{paste.ID}");
+            }
+            if (Request.Form.TryGetValue("is_edit_button", out StringValues editButtonVal) && editButtonVal.Count == 1 && editButtonVal[0] == "yes")
+            {
+                return View("Index", new NewPasteModel() { NewType = paste.Type, Edit = paste });
+            }
+            else
+            {
+                return HandlePost(this, paste.Type, paste);
+            }
         }
     }
 }

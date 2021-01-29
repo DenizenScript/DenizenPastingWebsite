@@ -43,5 +43,10 @@ namespace DenizenPastingWebsite
         /// Formatted post text (colors and all applied).
         /// </summary>
         public string Formatted { get; set; }
+
+        /// <summary>
+        /// The ID of the paste that was edited to produce this paste (if any).
+        /// </summary>
+        public long Edited { get; set; }
     }
 }
