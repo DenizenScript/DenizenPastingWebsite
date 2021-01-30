@@ -74,6 +74,10 @@ namespace DenizenPastingWebsite.Highlighters
                     {
                         return $"<span class=\"script_comment_header\">{line}</span>";
                     }
+                    if (afterComment.ToLowerFast().StartsWith("todo"))
+                    {
+                        return $"<span class=\"script_comment_todo\">{line}</span>";
+                    }
                     if (afterComment[0] == '-')
                     {
                         return $"<span class=\"script_comment_code\">{line}</span>";

@@ -18,6 +18,7 @@ hr {
 .script_comment_header{color:#FF0000;}
 .script_comment_normal{color:#007700;}
 .script_comment_code{color:#DD5500;}
+.script_comment_todo{color:#FFFF00;font-weight:bold;}
 .script_key{color:#1155FF;}
 .script_key_inline{color:#1155FF;font-style:italic;}
 .script_command{color:#DD99FF;font-style:italic;}

@@ -21,6 +21,7 @@ hr {
 .script_comment_header{color:#CC0000;}
 .script_comment_normal{color:#007700;}
 .script_comment_code{color:#AA6600;}
+.script_comment_todo{color:#777700;font-weight:bold;}
 .script_key{color:#0000FF;}
 .script_key_inline{color:#0000FF;font-style:italic;}
 .script_command{color:#000000;font-style:italic;}
