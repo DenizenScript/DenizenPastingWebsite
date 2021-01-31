@@ -1,0 +1,13 @@
+@import "colors_dark.css";
+
+.script_command{color:#FFF100;font-style:italic;}
+.script_tag{color:#00997B;}
+.script_comment_header{color:#326F12;}
+.script_key_inline{color:#59FF00;font-style:italic;}
+.script_tag_dot{color:#EEEEFF;font-weight:bold;}
+.script_tag_param{color:#2ef0c9;}
+.script_key{color:#56BE1E;}
+.script_quote_double{color:#6DEAD2;}
+.script_comment_normal{color:#00564A;}
+.script_comment_code{color:#8A8A00;}
+.script_comment_todo{color:#DD5500;font-weight:bold;}

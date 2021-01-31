@@ -37,14 +37,17 @@ namespace DenizenPastingWebsite
                 BootstrapFooterText = new HtmlString("<a href=\"https://bootswatch.com/darkly/\">Darkly Bootstrap Theme</a>"),
                 ColorCSS = "/css/theme/colors_dark.css"
             };
+            Themes.Add("dark", Dark);
             ThemeHelper lightRef = new ThemeHelper()
             {
                 BootstrapURL = "/css/bootstrap_light.min.css",
                 BootstrapFooterText = new HtmlString("<a href=\"https://bootswatch.com/litera/\">Lightera Bootstrap Theme</a>"),
                 ColorCSS = "/css/theme/colors_light.css"
             };
-            Themes.Add("dark", Dark);
             Themes.Add("light", lightRef);
+            ThemeHelper Darkbehr = Dark.MemberwiseClone() as ThemeHelper;
+            Darkbehr.ColorCSS = "/css/theme/colors_darkbehr.css";
+            Themes.Add("darkbehr", Darkbehr);
         }
 
         public string BootstrapURL;
