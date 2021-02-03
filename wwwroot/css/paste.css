@@ -93,3 +93,12 @@ textarea {
     background-color: #33FF33;
     color: #000000;
 }
+h1 {
+    white-space: normal;
+}
+h2 {
+    white-space: normal;
+}
+h4 {
+    white-space: normal;
+}

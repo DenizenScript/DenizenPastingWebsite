@@ -90,6 +90,7 @@ namespace DenizenPastingWebsite.Controllers
             {
                 pasteContentText = pasteContentText[0..PasteServer.MaxPasteRawLength];
             }
+            pasteContentText = pasteContentText.Replace('\0', ' ');
             if (!IsValidPaste(pasteTitleText, pasteContentText))
             {
                 return RejectPaste(controller, type);

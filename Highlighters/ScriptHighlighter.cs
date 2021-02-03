@@ -100,25 +100,28 @@ namespace DenizenPastingWebsite.Highlighters
                     trimmed = trimmed[0..^1];
                 }
                 string afterDash = trimmed[1..];
-                int commandEnd = afterDash.IndexOf(' ', 1) + 1;
-                string commandText = commandEnd == 0 ? afterDash : afterDash[0..commandEnd];
-                if (!afterDash.StartsWithFast(' '))
+                if (afterDash.Length != 0)
                 {
-                    result.Append("<span class=\"script_bad_space\">").Append(commandText).Append("</span>");
-                    result.Append(ColorArgument(afterDash[commandText.Length..], false));
-                }
-                else
-                {
-                    if (commandText.Contains('\'') || commandText.Contains('"') || commandText.Contains('['))
+                    int commandEnd = afterDash.IndexOf(' ', 1) + 1;
+                    string commandText = commandEnd == 0 ? afterDash : afterDash[0..commandEnd];
+                    if (!afterDash.StartsWithFast(' '))
                     {
+                        result.Append("<span class=\"script_bad_space\">").Append(commandText).Append("</span>");
                         result.Append(ColorArgument(afterDash[commandText.Length..], false));
                     }
                     else
                     {
-                        result.Append($"<span class=\"script_command\">{commandText}</span>");
-                        if (commandEnd > 0)
+                        if (commandText.Contains('\'') || commandText.Contains('"') || commandText.Contains('['))
                         {
-                            result.Append(ColorArgument(afterDash[commandText.Length..], true));
+                            result.Append(ColorArgument(afterDash[commandText.Length..], false));
+                        }
+                        else
+                        {
+                            result.Append($"<span class=\"script_command\">{commandText}</span>");
+                            if (commandEnd > 0)
+                            {
+                                result.Append(ColorArgument(afterDash[commandText.Length..], true));
+                            }
                         }
                     }
                 }
