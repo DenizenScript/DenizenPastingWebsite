@@ -53,5 +53,10 @@ namespace DenizenPastingWebsite
         /// The ID of the paste that was generated as a diff report for a paste edit.
         /// </summary>
         public long DiffReport { get; set; }
+
+        /// <summary>
+        /// If true, the internal data of this paste is in file storage and must be retrieved from there.
+        /// </summary>
+        public bool IsInFileStore { get; set; }
     }
 }

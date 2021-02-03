@@ -6,6 +6,7 @@ using System.IO;
 using LiteDB;
 using System.Threading;
 using LiteDB.Engine;
+using System.Text;
 
 namespace DenizenPastingWebsite
 {
@@ -30,6 +31,8 @@ namespace DenizenPastingWebsite
             public static DataTracker DataInstance;
 
             public static Object IDLocker = new Object();
+
+            public static ILiteStorage<string> FileStorage;
         }
 
         /// <summary>
@@ -50,6 +53,7 @@ namespace DenizenPastingWebsite
                 Internal.DataInstance = new Internal.DataTracker() { Value = 0 };
                 Internal.DataCollection.Insert(0, Internal.DataInstance);
             }
+            Internal.FileStorage = Internal.DB.FileStorage;
         }
 
         public static void Shutdown()
@@ -80,6 +84,14 @@ namespace DenizenPastingWebsite
         /// <param name="paste">The paste to insert.</param>
         public static void SubmitPaste(Paste paste)
         {
+            if (paste.Raw.Length + paste.Formatted.Length > 7 * 1024 * 1024)
+            {
+                paste.IsInFileStore = true;
+                Internal.FileStorage.Upload($"/paste/raw/{paste.ID}.txt", $"{paste.ID}.txt", new MemoryStream(Encoding.UTF8.GetBytes(paste.Raw)));
+                Internal.FileStorage.Upload($"/paste/formatted/{paste.ID}.txt", $"{paste.ID}.txt", new MemoryStream(Encoding.UTF8.GetBytes(paste.Formatted)));
+                paste.Raw = null;
+                paste.Formatted = null;
+            }
             Internal.PasteCollection.Insert(paste.ID, paste);
         }
 
@@ -89,6 +101,15 @@ namespace DenizenPastingWebsite
         public static bool TryGetPaste(long id, out Paste paste)
         {
             paste = Internal.PasteCollection.FindById(id);
+            if (paste != null && paste.IsInFileStore)
+            {
+                MemoryStream stream = new MemoryStream();
+                Internal.FileStorage.Download($"/paste/raw/{paste.ID}.txt", stream);
+                paste.Raw = Encoding.UTF8.GetString(stream.ToArray());
+                stream = new MemoryStream();
+                Internal.FileStorage.Download($"/paste/formatted/{paste.ID}.txt", stream);
+                paste.Formatted = Encoding.UTF8.GetString(stream.ToArray());
+            }
             return paste != null;
         }
     }
