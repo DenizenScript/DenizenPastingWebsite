@@ -15,6 +15,7 @@ using System.Net;
 
 namespace DenizenPastingWebsite.Controllers
 {
+    [RequestFormLimits(ValueLengthLimit = 1024 * 1024 * 30)]
     public class NewController : Controller
     {
         public NewController()
