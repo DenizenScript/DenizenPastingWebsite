@@ -27,6 +27,11 @@ namespace DenizenPastingWebsite.Controllers
             return controller.View("Index", new NewPasteModel() { ShowRejection = true, NewType = type });
         }
 
+        public static HashSet<string> IgnoredOrigins = new HashSet<string>()
+        {
+            "127.0.0.1", "::1", "[::1]"
+        };
+
         public static IActionResult HandlePost(NewController controller, string type, Paste edits = null)
         {
             if (controller.Request.Method != "POST" || controller.Request.Form.IsEmpty())
@@ -35,8 +40,8 @@ namespace DenizenPastingWebsite.Controllers
                 return RejectPaste(controller, type);
             }
             IPAddress remoteAddress = controller.Request.HttpContext.Connection.RemoteIpAddress;
-            string sender = $"Remote IP: {remoteAddress}";
             string realOrigin = remoteAddress.ToString();
+            string sender = IgnoredOrigins.Contains(realOrigin) ? "" : $"Remote IP: {realOrigin}";
             if (controller.Request.Headers.TryGetValue("X-Forwarded-For", out StringValues forwardHeader))
             {
                 sender += ", X-Forwarded-For: " + string.Join(" / ", forwardHeader);
@@ -49,7 +54,15 @@ namespace DenizenPastingWebsite.Controllers
             {
                 sender += ", REMOTE_ADDR: " + string.Join(" / ", remoteAddr);
             }
-            Console.WriteLine($"Attempted paste from {sender}");
+            if (sender.StartsWith(", "))
+            {
+                sender = sender[(", ".Length)..];
+            }
+            if (sender.Length == 0)
+            {
+                sender = "Unknown";
+            }
+            Console.WriteLine($"Attempted paste from {realOrigin} as {sender}");
             IFormCollection form = controller.Request.Form;
             if (!form.TryGetValue("pastetype", out StringValues pasteType) || !form.TryGetValue("pastetitle", out StringValues pasteTitle) || !form.TryGetValue("pastecontents", out StringValues pasteContents))
             {
