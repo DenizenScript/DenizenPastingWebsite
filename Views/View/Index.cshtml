@@ -1,7 +1,7 @@
 @model ViewPasteModel
 @{
     ViewData["Title"] = $"{Model.Paste.Title} | Paste #{Model.Paste.ID}";
-    ViewData["Description"] = $"Content of {Model.Type.DisplayName} Paste #{Model.Paste.ID}: '{Model.Paste.Title}'";
+    ViewData["Description"] = $"Content of {Model.Type.DisplayName} Paste #{Model.Paste.ID}: '{Model.Paste.Title}'... pasted {Model.Paste.Date}, Paste length: {Model.LengthText}";
 }
 
 <center>
