@@ -140,7 +140,7 @@ namespace DenizenPastingWebsite.Controllers
                 string diffText = DiffHighlighter.GenerateDiff(edits.Raw, newPaste.Raw);
                 Paste diffPaste = new Paste()
                 {
-                    Title = $"Diff Report Between Paste#{newPaste.ID} and #{edits.ID}",
+                    Title = $"Diff Report Between Paste #{newPaste.ID} and #{edits.ID}",
                     Type = "diff",
                     PostSourceData = "(GENERATED), " + sender,
                     Date = StringConversionHelper.DateTimeToString(DateTimeOffset.Now, false),

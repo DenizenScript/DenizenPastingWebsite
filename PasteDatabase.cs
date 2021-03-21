@@ -79,7 +79,7 @@ namespace DenizenPastingWebsite
         }
 
         /// <summary>
-        /// Submits a new paste, assigning it a new ID and added it to the database.
+        /// Submits a new paste, adding it to the database.
         /// </summary>
         /// <param name="paste">The paste to insert.</param>
         public static void SubmitPaste(Paste paste)
