@@ -1,4 +1,5 @@
 ﻿using FreneticUtilities.FreneticDataSyntax;
+using FreneticUtilities.FreneticExtensions;
 using FreneticUtilities.FreneticToolkit;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace DenizenPastingWebsite
         public static LockObject WebhookLock = new LockObject();
 
         /// <summary>What text is allowed to be included in the sender of a paste when showing to a webhook.</summary>
-        public static AsciiMatcher AllowedSenderText = new AsciiMatcher("0123456789abcdefghijklmnopqrstuvwxyz.:[](),/= ");
+        public static AsciiMatcher AllowedSenderText = new AsciiMatcher("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.:-[](),/= ");
 
         /// <summary>Runs the new-paste webhooks, if needed.</summary>
         public static void RunNewPasteWebhook(Paste paste)
