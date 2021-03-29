@@ -307,7 +307,7 @@ namespace DenizenPastingWebsite.Highlighters
                         lastColor = i + 1;
                     }
                 }
-                else if (c == '.' && inTagParamCounter == 0)
+                else if ((c == '.' || c == '|') && inTagCounter == 0 && inTagParamCounter == 0)
                 {
                     output.Append($"<span class=\"script_{defaultColor}\">{tag[lastColor..i]}</span>");
                     lastColor = i + 1;
