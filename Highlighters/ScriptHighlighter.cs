@@ -113,7 +113,7 @@ namespace DenizenPastingWebsite.Highlighters
                     {
                         if (commandText.Contains('\'') || commandText.Contains('"') || commandText.Contains('['))
                         {
-                            result.Append(ColorArgument(afterDash[commandText.Length..], false));
+                            result.Append(ColorArgument(afterDash, false));
                         }
                         else
                         {
