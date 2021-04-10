@@ -42,6 +42,7 @@ namespace DenizenPastingWebsite
                         {
                             paste.Type = "text";
                             paste.Formatted = HighlighterCore.HighlightPlainText("Bot post removed from view.");
+                            PasteDatabase.SubmitPaste(paste);
                             Console.WriteLine($"paste {pasteId} removed");
                         }
                         else

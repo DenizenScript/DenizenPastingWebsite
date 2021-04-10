@@ -86,13 +86,22 @@ namespace DenizenPastingWebsite
         {
             if (paste.Raw.Length + paste.Formatted.Length > 7 * 1024 * 1024)
             {
+                if (paste.IsInFileStore)
+                {
+                    Internal.FileStorage.Delete($"/paste/raw/{paste.ID}.txt");
+                    Internal.FileStorage.Delete($"/paste/formatted/{paste.ID}.txt");
+                }
                 paste.IsInFileStore = true;
                 Internal.FileStorage.Upload($"/paste/raw/{paste.ID}.txt", $"{paste.ID}.txt", new MemoryStream(Encoding.UTF8.GetBytes(paste.Raw)));
                 Internal.FileStorage.Upload($"/paste/formatted/{paste.ID}.txt", $"{paste.ID}.txt", new MemoryStream(Encoding.UTF8.GetBytes(paste.Formatted)));
                 paste.Raw = null;
                 paste.Formatted = null;
             }
-            Internal.PasteCollection.Insert(paste.ID, paste);
+            else
+            {
+                paste.IsInFileStore = false;
+            }
+            Internal.PasteCollection.Upsert(paste.ID, paste);
         }
 
         /// <summary>
