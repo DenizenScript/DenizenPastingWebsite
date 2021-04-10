@@ -58,5 +58,10 @@ namespace DenizenPastingWebsite
         /// If true, the internal data of this paste is in file storage and must be retrieved from there.
         /// </summary>
         public bool IsInFileStore { get; set; }
+
+        /// <summary>
+        /// Some deleted pastes have a historical record of their content.
+        /// </summary>
+        public string HistoricalContent { get; set; }
     }
 }

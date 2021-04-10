@@ -41,6 +41,12 @@ namespace DenizenPastingWebsite
                         if (split.Length == 2 && long.TryParse(split[1], out long pasteId) && PasteDatabase.TryGetPaste(pasteId, out Paste paste))
                         {
                             paste.Type = "text";
+                            paste.Title = "REMOVED BOT POST";
+                            if (string.IsNullOrWhiteSpace(paste.HistoricalContent))
+                            {
+                                paste.HistoricalContent = paste.Title + "\n\n" + paste.Raw;
+                            }
+                            paste.Raw = "Bot post removed from view.";
                             paste.Formatted = HighlighterCore.HighlightPlainText("Bot post removed from view.");
                             PasteDatabase.SubmitPaste(paste);
                             Console.WriteLine($"paste {pasteId} removed");
