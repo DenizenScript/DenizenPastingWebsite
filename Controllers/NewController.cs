@@ -206,7 +206,7 @@ namespace DenizenPastingWebsite.Controllers
                         normalLines++;
                     }
                 }
-                if (linkLines >= normalLines)
+                if (linkLines >= normalLines || (linkLines > 0 && normalLines < 4))
                 {
                     Console.Error.WriteLine($"Refused paste: link spambot? {linkLines} linkLines and {normalLines} normal lines");
                     return false;
