@@ -48,6 +48,9 @@ namespace DenizenPastingWebsite
             ThemeHelper Darkbehr = Dark.MemberwiseClone() as ThemeHelper;
             Darkbehr.ColorCSS = "/css/theme/colors_darkbehr.css";
             Themes.Add("darkbehr", Darkbehr);
+            ThemeHelper acidic = Dark.MemberwiseClone() as ThemeHelper;
+            acidic.ColorCSS = "/css/theme/colors_acidic.css";
+            Themes.Add("acidic", acidic);
         }
 
         public string BootstrapURL;

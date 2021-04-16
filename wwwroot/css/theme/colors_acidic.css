@@ -1,0 +1,17 @@
+@import "colors_dark.css";
+
+.script_key{color:#C070D0;font-weight:bold;}
+.script_key_inline{color:#5090E0;font-style:italic;}
+.script_normal{color:#A0B0B0;}
+.script_tag_param{color:#A0B0B0;}
+.script_tag{color:#E06070;}
+.script_command{color:#60A0E0;font-style:normal;}
+.script_quote_double{color:#90C070;}
+.script_quote_single{color:#80e060;}
+.script_tag_dot{color:#A0B0B0;font-weight:normal;}
+.script_colon{color:#50B0C0;font-weight:bold;}
+.script_comment_code{color:#7080C0;}
+.script_comment_normal{color:#607080;}
+.script_comment_header{color:#50B0C0;}
+.script_bad_space{color:#A0B0B0;background-color:#440000;}
+.script_comment_todo{color:#E0C070;font-weight:bold;}
