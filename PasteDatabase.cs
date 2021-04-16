@@ -105,11 +105,10 @@ namespace DenizenPastingWebsite
         }
 
         /// <summary>
-        /// Tries to get a paste.
+        /// Fills content of a paste object from file store if necessary.
         /// </summary>
-        public static bool TryGetPaste(long id, out Paste paste)
+        public static void FillPaste(Paste paste)
         {
-            paste = Internal.PasteCollection.FindById(id);
             if (paste != null && paste.IsInFileStore)
             {
                 MemoryStream stream = new MemoryStream();
@@ -119,6 +118,15 @@ namespace DenizenPastingWebsite
                 Internal.FileStorage.Download($"/paste/formatted/{paste.ID}.txt", stream);
                 paste.Formatted = Encoding.UTF8.GetString(stream.ToArray());
             }
+        }
+
+        /// <summary>
+        /// Tries to get a paste.
+        /// </summary>
+        public static bool TryGetPaste(long id, out Paste paste)
+        {
+            paste = Internal.PasteCollection.FindById(id);
+            FillPaste(paste);
             return paste != null;
         }
     }

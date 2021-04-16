@@ -34,6 +34,10 @@ namespace DenizenPastingWebsite
             while (true)
             {
                 string line = await Console.In.ReadLineAsync();
+                if (line == null)
+                {
+                    return;
+                }
                 string[] split = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 switch (split[0])
                 {
@@ -67,8 +71,14 @@ namespace DenizenPastingWebsite
                                     try
                                     {
                                         Console.WriteLine($"Rerender paste {paste.ID}...");
+                                        PasteDatabase.FillPaste(paste);
+                                        string origFormat = paste.Formatted;
                                         paste.Formatted = type.Highlight(paste.Raw);
-                                        PasteDatabase.Internal.PasteCollection.Update(paste);
+                                        if (origFormat.TrimEnd() != paste.Formatted.TrimEnd())
+                                        {
+                                            Console.WriteLine($"Updating paste {paste.ID} (was {origFormat.Length} now {paste.Formatted.Length})...");
+                                            PasteDatabase.SubmitPaste(paste);
+                                        }
                                     }
                                     catch (Exception ex)
                                     {
