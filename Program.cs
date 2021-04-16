@@ -38,22 +38,49 @@ namespace DenizenPastingWebsite
                 switch (split[0])
                 {
                     case "remove_bot_post":
-                        if (split.Length == 2 && long.TryParse(split[1], out long pasteId) && PasteDatabase.TryGetPaste(pasteId, out Paste paste))
                         {
-                            paste.Type = "text";
-                            paste.Title = "REMOVED BOT POST";
-                            if (string.IsNullOrWhiteSpace(paste.HistoricalContent))
+                            if (split.Length == 2 && long.TryParse(split[1], out long pasteId) && PasteDatabase.TryGetPaste(pasteId, out Paste paste))
                             {
-                                paste.HistoricalContent = paste.Title + "\n\n" + paste.Raw;
+                                paste.Type = "text";
+                                paste.Title = "REMOVED BOT POST";
+                                if (string.IsNullOrWhiteSpace(paste.HistoricalContent))
+                                {
+                                    paste.HistoricalContent = paste.Title + "\n\n" + paste.Raw;
+                                }
+                                paste.Raw = "Bot post removed from view.";
+                                paste.Formatted = HighlighterCore.HighlightPlainText("Bot post removed from view.");
+                                PasteDatabase.SubmitPaste(paste);
+                                Console.WriteLine($"paste {pasteId} removed");
                             }
-                            paste.Raw = "Bot post removed from view.";
-                            paste.Formatted = HighlighterCore.HighlightPlainText("Bot post removed from view.");
-                            PasteDatabase.SubmitPaste(paste);
-                            Console.WriteLine($"paste {pasteId} removed");
+                            else
+                            {
+                                Console.WriteLine("remove_bot_post (ID HERE)");
+                            }
                         }
-                        else
+                        break;
+                    case "rerender_type":
                         {
-                            Console.WriteLine("remove_bot_post (ID HERE)");
+                            if (split.Length == 2 && PasteType.ValidPasteTypes.TryGetValue(split[1], out PasteType type))
+                            {
+                                foreach (Paste paste in PasteDatabase.Internal.PasteCollection.Find(p => p.Type == type.Name))
+                                {
+                                    try
+                                    {
+                                        Console.WriteLine($"Rerender paste {paste.ID}...");
+                                        paste.Formatted = type.Highlight(paste.Raw);
+                                        PasteDatabase.Internal.PasteCollection.Update(paste);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine($"Failed to rerender paste {paste.ID}: {ex}");
+                                    }
+                                }
+                                Console.WriteLine("Rerender done.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("rerender_type (TYPE HERE)");
+                            }
                         }
                         break;
                     default:
