@@ -52,9 +52,15 @@ namespace DenizenPastingWebsite.Highlighters
         public const char ESCAPE_CHAR = (char)0x1b;
         public const char ALT_COLOR_CHAR = (char)0x01;
 
-        public static AsciiMatcher ColorSymbolMatcher = new AsciiMatcher("0123456789abcdefABCDEFklmnorKLMNOR");
+        public const string HEX_LETTERS = "0123456789abcdefABCDEF";
 
-        public static AsciiMatcher ResettersMatcher = new AsciiMatcher("0123456789abcdefABCDEFrR");
+        public const string COLOR_RESET_CODES = HEX_LETTERS + "rRxX";
+
+        public static AsciiMatcher HexMatcher = new AsciiMatcher(HEX_LETTERS);
+
+        public static AsciiMatcher ColorSymbolMatcher = new AsciiMatcher(COLOR_RESET_CODES + "klmnoKLMNO");
+
+        public static AsciiMatcher ResettersMatcher = new AsciiMatcher(COLOR_RESET_CODES);
 
         public static string StandardizeColoration(string text)
         {
@@ -76,6 +82,31 @@ namespace DenizenPastingWebsite.Highlighters
                 text = patched.ToString();
             }
             return text;
+        }
+
+        public static bool TryGetHex(string text, out string hex)
+        {
+            hex = "";
+            if (text.Length < 12)
+            {
+                return false;
+            }
+            Span<char> outHex = stackalloc char[6];
+            for (int i = 0; i < 6; i++)
+            {
+                if (text[i * 2] != ALT_COLOR_CHAR)
+                {
+                    return false;
+                }
+                char symbol = text[i * 2 + 1];
+                if (HexMatcher.IsMatch(symbol))
+                {
+                    return false;
+                }
+                outHex[i] = symbol;
+            }
+            hex = new string(outHex);
+            return true;
         }
 
         public static string ColorLog(string text)
@@ -104,7 +135,15 @@ namespace DenizenPastingWebsite.Highlighters
                                 }
                                 spans = 0;
                             }
-                            output.Append($"<span class=\"mc_{line[index + 1].ToString().ToLowerFast()}\">");
+                            string code = line[index + 1].ToString().ToLowerFast();
+                            if (code == "x" && TryGetHex(line[(index + 2)..], out string hex))
+                            {
+                                output.Append($"<span style=\"color:#{hex};\">");
+                            }
+                            else
+                            {
+                                output.Append($"<span class=\"mc_{code}\">");
+                            }
                             spans++;
                             lastIndex = index + 2;
                         }
