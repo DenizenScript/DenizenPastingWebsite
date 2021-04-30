@@ -72,7 +72,7 @@ namespace DenizenPastingWebsite
                             {
                                 sender = sender[..512];
                             }
-                            string content = $"New paste: {URL_BASE}/View/{paste.ID} sent by `{sender}`";
+                            string content = $"New **{PasteType.ValidPasteTypes[paste.Type].Name}** paste: {URL_BASE}/View/{paste.ID} sent by `{sender}`";
                             ReusableWebClient.UploadString(hookURL, "{\"content\":\"" + content + "\"}");
                         }
                         catch (Exception ex)
