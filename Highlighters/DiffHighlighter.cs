@@ -48,9 +48,10 @@ namespace DenizenPastingWebsite.Highlighters
             return string.Join('\n', lines);
         }
 
-        public static string GenerateDiff(string oldText, string newText)
+        public static string GenerateDiff(string oldText, string newText, out bool hasDifferences)
         {
             DiffPaneModel result = new InlineDiffBuilder(new Differ()).BuildDiffModel(oldText, newText);
+            hasDifferences = result.HasDifferences;
             StringBuilder output = new StringBuilder(oldText.Length + newText.Length);
             foreach (var line in result.Lines)
             {

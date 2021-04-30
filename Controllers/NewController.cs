@@ -134,10 +134,19 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused paste: format failed");
                 return RejectPaste(controller, type);
             }
-            newPaste.ID = PasteDatabase.GetNextPasteID();
+            string diffText = null;
             if (edits != null)
             {
-                string diffText = DiffHighlighter.GenerateDiff(edits.Raw, newPaste.Raw);
+                diffText = DiffHighlighter.GenerateDiff(edits.Raw, newPaste.Raw, out bool hasDifferences);
+                if (!hasDifferences)
+                {
+                    Console.Error.WriteLine("Refused paste: edits nothing");
+                    return RejectPaste(controller, type);
+                }
+            }
+            newPaste.ID = PasteDatabase.GetNextPasteID();
+            if (diffText != null)
+            {
                 Paste diffPaste = new Paste()
                 {
                     Title = $"Diff Report Between Paste #{newPaste.ID} and #{edits.ID}",
