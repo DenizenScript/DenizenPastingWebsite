@@ -99,7 +99,7 @@ namespace DenizenPastingWebsite.Highlighters
                     return false;
                 }
                 char symbol = text[i * 2 + 1];
-                if (HexMatcher.IsMatch(symbol))
+                if (!HexMatcher.IsMatch(symbol))
                 {
                     return false;
                 }
@@ -138,6 +138,7 @@ namespace DenizenPastingWebsite.Highlighters
                             string code = line[index + 1].ToString().ToLowerFast();
                             if (code == "x" && TryGetHex(line[(index + 2)..], out string hex))
                             {
+                                index += 12;
                                 output.Append($"<span style=\"color:#{hex};\">");
                             }
                             else
