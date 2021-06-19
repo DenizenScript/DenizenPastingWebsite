@@ -1,0 +1,16 @@
+@import "colors_dark.css";
+
+/* Chrispy Dark: created by Chris|LordNoob */
+/* Denizen Script Colors */
+.script_comment_header{color:#a41919;}
+.script_comment_normal{color:#00ab56;}
+.script_comment_code{color:#aa4100;}
+.script_comment_todo{color:#FFFF00;font-weight:bold;}
+.script_key{color:#6f89cc;}
+.script_key_inline{color:#8bacff;font-style:italic;}
+.script_command{color:#c48646;font-style:italic;}
+.script_quote_double{color:#a7d3f8;}
+.script_quote_single{color:#a8d4e5;}
+.script_tag_param{color:#aaaaff;}
+.script_bad_space{color:#cccccc;background-color:#440000;}
+.script_normal{color:#cccccc;}

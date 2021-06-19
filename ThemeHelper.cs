@@ -23,6 +23,7 @@ namespace DenizenPastingWebsite
             viewData["Bootstrap_URL"] = theme.BootstrapURL;
             viewData["Bootstrap_Footer"] = theme.BootstrapFooterText;
             viewData["Theme_Colors"] = theme.ColorCSS;
+            viewData["Theme_Footer"] = theme.Footer;
         }
 
         public static Dictionary<string, ThemeHelper> Themes = new Dictionary<string, ThemeHelper>();
@@ -35,22 +36,30 @@ namespace DenizenPastingWebsite
             {
                 BootstrapURL = "/css/bootstrap_dark.min.css",
                 BootstrapFooterText = new HtmlString("<a href=\"https://bootswatch.com/darkly/\">Darkly Bootstrap Theme</a>"),
-                ColorCSS = "/css/theme/colors_dark.css"
+                ColorCSS = "/css/theme/colors_dark.css",
+                Footer = "Theme: Standard Dark, created by Alex 'mcmonkey' Goodwin"
             };
             Themes.Add("dark", Dark);
             ThemeHelper lightRef = new ThemeHelper()
             {
                 BootstrapURL = "/css/bootstrap_light.min.css",
                 BootstrapFooterText = new HtmlString("<a href=\"https://bootswatch.com/litera/\">Lightera Bootstrap Theme</a>"),
-                ColorCSS = "/css/theme/colors_light.css"
+                ColorCSS = "/css/theme/colors_light.css",
+                Footer = "Theme: Quite Light, created by Alex 'mcmonkey' Goodwin"
             };
             Themes.Add("light", lightRef);
             ThemeHelper Darkbehr = Dark.MemberwiseClone() as ThemeHelper;
             Darkbehr.ColorCSS = "/css/theme/colors_darkbehr.css";
+            Darkbehr.Footer = "Theme: Behrry Dark, created by Behr AKA Hydra";
             Themes.Add("darkbehr", Darkbehr);
             ThemeHelper acidic = Dark.MemberwiseClone() as ThemeHelper;
             acidic.ColorCSS = "/css/theme/colors_acidic.css";
+            acidic.Footer = "Theme: Acidic (Dark), created by acikek";
             Themes.Add("acidic", acidic);
+            ThemeHelper chrispy = Dark.MemberwiseClone() as ThemeHelper;
+            chrispy.ColorCSS = "/css/theme/colors_chrispy.css";
+            chrispy.Footer = "Theme: Chrispy Dark, created by Chris|LordNoob";
+            Themes.Add("chrispy", chrispy);
         }
 
         public string BootstrapURL;
@@ -58,5 +67,7 @@ namespace DenizenPastingWebsite
         public HtmlString BootstrapFooterText;
 
         public string ColorCSS;
+
+        public string Footer;
     }
 }
