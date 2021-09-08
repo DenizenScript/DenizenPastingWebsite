@@ -83,7 +83,7 @@ textarea {
 }
 .flasher_tool {
     position: absolute;
-    width: 30rem;
+    width: 50vw;
     left: 0;
     height: 1.3rem;
 }
