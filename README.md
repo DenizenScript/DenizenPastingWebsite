@@ -30,6 +30,9 @@ max-pastes-per-minute: 3
 webhooks:
     new-paste:
     - https://example.com/webhook
+# Optionally specify a list of (case-insensitive) text to check new pastes for to trigger automatic spam blocking.
+spam-block-keyphrases:
+- some naughty thing
 ```
 
 ### Licensing pre-note:

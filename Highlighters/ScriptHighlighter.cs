@@ -50,7 +50,7 @@ namespace DenizenPastingWebsite.Highlighters
         /// </summary>
         public const char CHAR_TAG_START = (char)0x01, CHAR_TAG_END = (char)0x02;
 
-        public static HashSet<string> IfOperators = new HashSet<string>() { CHAR_TAG_START.ToString(), CHAR_TAG_END.ToString(), CHAR_TAG_START + "=", CHAR_TAG_END + "=", "==", "!=", "||", "&&", "(", ")" };
+        public static HashSet<string> IfOperators = new HashSet<string>() { CHAR_TAG_START.ToString(), CHAR_TAG_END.ToString(), CHAR_TAG_START + "=", CHAR_TAG_END + "=", "==", "!=", "||", "&&", "(", ")", "or", "and", "not", "in", "contains", "!in", "!contains" };
 
         public static string ColorLine(string line, string lastKey)
         {

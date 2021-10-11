@@ -195,6 +195,23 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused paste: spam-bot title");
                 return false;
             }
+            if (PasteServer.SpamBlockKeywords.Length > 0)
+            {
+                String contentLow = content.ToLowerFast();
+                foreach (string block in PasteServer.SpamBlockKeywords)
+                {
+                    if (titleLow.Contains(block))
+                    {
+                        Console.Error.WriteLine("Refused paste: spam-block-keyphrase in title");
+                        return false;
+                    }
+                    if (contentLow.Contains(block))
+                    {
+                        Console.Error.WriteLine("Refused paste: spam-block-keyphrase in paste content");
+                        return false;
+                    }
+                }
+            }
             if (content.Length < 100 * 1024)
             {
                 string[] lines = content.SplitFast('\n');

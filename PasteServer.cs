@@ -29,6 +29,9 @@ namespace DenizenPastingWebsite
         /// <summary>Webhook URLs to announce new pastes to, if any.</summary>
         public static string[] NewPasteWebhooks;
 
+        /// <summary>A list of keywords to automatically block when present in a new paste.</summary>
+        public static string[] SpamBlockKeywords;
+
         /// <summary>Loads the paste config.</summary>
         public static void LoadConfig()
         {
@@ -38,6 +41,7 @@ namespace DenizenPastingWebsite
             TrustXForwardedFor = Config.GetBool("trust-x-forwarded-for").Value;
             MaxPastesPerMinute = Config.GetInt("max-pastes-per-minute").Value;
             NewPasteWebhooks = (Config.GetStringList("webhooks.new-paste") ?? new List<string>()).ToArray();
+            SpamBlockKeywords = (Config.GetStringList("spam-block-keyphrases") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
             Console.WriteLine($"Loaded at URL-base {URL_BASE} with max length {MaxPasteRawLength} with ratelimit {MaxPastesPerMinute} and x-forwarded-for set {TrustXForwardedFor}");
         }
 
