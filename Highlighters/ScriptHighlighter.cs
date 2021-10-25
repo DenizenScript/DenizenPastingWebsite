@@ -210,7 +210,7 @@ namespace DenizenPastingWebsite.Highlighters
                     }
                     int nextSpace = arg.IndexOf(' ', i + 1);
                     string nextArg = nextSpace == -1 ? arg[(i + 1)..] : arg[(i + 1)..nextSpace];
-                    if (IfOperators.Contains(nextArg))
+                    if (!quoted && canQuote && IfOperators.Contains(nextArg))
                     {
                         output.Append($"<span class=\"script_colon\">{arg[(i + 1)..(i + 1 + nextArg.Length)]}</span>");
                         i += nextArg.Length;
