@@ -13,11 +13,14 @@ namespace DenizenPastingWebsite
 {
     public class Program
     {
+        public static IHost CurrentHost;
+
         public static void Main(string[] args)
         {
             CancellationTokenSource cancel = new CancellationTokenSource();
             Task consoleThread = Task.Run(RunConsole, cancel.Token);
-            CreateHostBuilder(args).Build().Run();
+            CurrentHost = CreateHostBuilder(args).Build();
+            CurrentHost.Run();
             cancel.Cancel();
         }
 
@@ -93,8 +96,14 @@ namespace DenizenPastingWebsite
                             }
                         }
                         break;
+                    case "stop":
+                        {
+                            PasteDatabase.Shutdown();
+                            CurrentHost.StopAsync().Wait();
+                            return;
+                        }
                     default:
-                        Console.WriteLine("Unknown command.");
+                        Console.WriteLine("Unknown command. Use 'remove_bot_post', 'rerender_type', or 'stop'");
                         break;
                 }
             }
