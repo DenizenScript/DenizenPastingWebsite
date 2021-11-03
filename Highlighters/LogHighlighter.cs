@@ -284,7 +284,7 @@ namespace DenizenPastingWebsite.Highlighters
         /// <summary>Converts core line format data to an actual HTML string.</summary>
         public static string FormatCoreLine(string timestamp, string thread, string logMode, string modeSpan, string spanFormat, string text)
         {
-            return $"<span class=\"log_timestamp\">[{timestamp}]</span> <span class=\"{modeSpan}\">[{thread}/{logMode}]:</span> <span class=\"{spanFormat}\">{text}</span>";
+            return $"<span class=\"log_timestamp\">[{timestamp}]</span> <span class=\"{modeSpan} log_modepart\">[{thread}/{logMode}]:</span> <span class=\"{spanFormat}\">{text}</span>";
         }
 
         /// <summary>Formats and colorizes a message from a plugin. Returns null if not a plugin message.</summary>
