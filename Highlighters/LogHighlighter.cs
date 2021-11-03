@@ -171,14 +171,6 @@ namespace DenizenPastingWebsite.Highlighters
         /// <summary>Character validator for the timestamp portion of a log.</summary>
         public static AsciiMatcher TimeStampValidator = new AsciiMatcher(AsciiMatcher.Digits + ":");
 
-        /// <summary>Map of log modes to span formats to use.</summary>
-        public static Dictionary<string, string> ModesToFormats = new Dictionary<string, string>()
-        {
-            { "INFO", "log_info" },
-            { "WARN", "log_warn" },
-            { "ERROR", "log_error" }
-        };
-
         /// <summary>Generates a unique ID for the text, within a given limit, using a highly simplified hash-like function.
         /// Doesn't use native hash function for the reason of ensuring long-term consistency.
         /// Returns a value between 0 (inclusive) and 'max' (exclusive).</summary>
@@ -255,18 +247,27 @@ namespace DenizenPastingWebsite.Highlighters
                 {
                     threadSpan = "log_thread_async";
                 }
+                else if (logMode == "WARN" || logMode == "ERROR")
+                {
+                    threadSpan = "log_" + logMode.ToLowerFast();
+                }
                 else
                 {
-                    if (!ModesToFormats.TryGetValue(logMode, out threadSpan))
-                    {
-                        threadSpan = "log_autocolor_" + ChooseIDFor(logModeParts, 20);
-                    }
+                    threadSpan = "log_autocolor_" + ChooseIDFor(logModeParts, 20);
                 }
                 return FormatCoreLine(timeStamp, threadName, logMode, threadSpan, threadSpan, text);
             }
             if (logMode != "INFO")
             {
-                string spanMode = ModesToFormats.GetValueOrDefault(logMode) ?? "log_autocolor_" + ChooseIDFor(logModeParts, 20);
+                string spanMode;
+                if (logMode == "WARN" || logMode == "ERROR")
+                {
+                    spanMode = "log_" + logMode.ToLowerFast();
+                }
+                else
+                {
+                    spanMode = "log_autocolor_" + ChooseIDFor(logModeParts, 20);
+                }
                 return FormatCoreLine(timeStamp, threadName, logMode, spanMode, spanMode, text);
             }
             // Part 3: Format INFO messages
