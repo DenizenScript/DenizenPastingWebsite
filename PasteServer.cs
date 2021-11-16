@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace DenizenPastingWebsite
@@ -72,7 +73,6 @@ namespace DenizenPastingWebsite
                         {
                             HttpRequestMessage request = new(HttpMethod.Post, hookURL);
                             request.Headers.UserAgent.ParseAdd("DenizenPastingWebsite/1.0");
-                            request.Headers.Add("Content-Type", "application/json");
                             string sender = AllowedSenderText.TrimToMatches(paste.PostSourceData);
                             if (sender.Length > 512)
                             {
@@ -80,6 +80,7 @@ namespace DenizenPastingWebsite
                             }
                             string content = $"New **{PasteType.ValidPasteTypes[paste.Type].Name}** paste: {URL_BASE}/View/{paste.ID} sent by `{sender}`";
                             request.Content = new ByteArrayContent(StringConversionHelper.UTF8Encoding.GetBytes("{\"content\":\"" + content + "\"}"));
+                            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                             ReusableWebClient.Send(request);
                         }
                         catch (Exception ex)
