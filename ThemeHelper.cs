@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace DenizenPastingWebsite
 {
-    /// <summary>
-    /// Helper class that handles theme processing.
-    /// </summary>
+    /// <summary>Helper class that handles theme processing.</summary>
     public class ThemeHelper
     {
         public static void HandleTheme(HttpRequest request, ViewDataDictionary viewData)

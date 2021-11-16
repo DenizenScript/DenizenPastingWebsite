@@ -10,14 +10,10 @@ using DiffPlex.DiffBuilder.Model;
 
 namespace DenizenPastingWebsite.Highlighters
 {
-    /// <summary>
-    /// Helper class to highlight a git-style diff report.
-    /// </summary>
+    /// <summary>Helper class to highlight a git-style diff report.</summary>
     public static class DiffHighlighter
     {
-        /// <summary>
-        /// Highlights a git-style diff.
-        /// </summary>
+        /// <summary>Highlights a git-style diff.</summary>
         public static string Highlight(string text)
         {
             text = HighlighterCore.EscapeForHTML(text);

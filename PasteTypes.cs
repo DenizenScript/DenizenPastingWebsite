@@ -6,14 +6,10 @@ using DenizenPastingWebsite.Highlighters;
 
 namespace DenizenPastingWebsite
 {
-    /// <summary>
-    /// Helper class for the different paste types available.
-    /// </summary>
+    /// <summary>Helper class for the different paste types available.</summary>
     public class PasteType
     {
-        /// <summary>
-        /// A map of all valid paste types (lowercased) to their paste type object.
-        /// </summary>
+        /// <summary>A map of all valid paste types (lowercased) to their paste type object.</summary>
         public static Dictionary<string, PasteType> ValidPasteTypes = new();
 
         static PasteType()

@@ -13,9 +13,7 @@ namespace DenizenPastingWebsite
 {
     public static class PasteDatabase
     {
-        /// <summary>
-        /// Internal fields for the paste database.
-        /// </summary>
+        /// <summary>Internal fields for the paste database.</summary>
         public static class Internal
         {
             public static LiteDatabase DB;
@@ -36,9 +34,7 @@ namespace DenizenPastingWebsite
             public static ILiteStorage<string> FileStorage;
         }
 
-        /// <summary>
-        /// Initializes the database handler.
-        /// </summary>
+        /// <summary>Initializes the database handler.</summary>
         public static void Init()
         {
             if (!Directory.Exists("data"))
@@ -66,9 +62,7 @@ namespace DenizenPastingWebsite
             }
         }
 
-        /// <summary>
-        /// Gets the next paste ID, automatically incrementing the ID in the process.
-        /// </summary>
+        /// <summary>Gets the next paste ID, automatically incrementing the ID in the process.</summary>
         public static long GetNextPasteID()
         {
             lock (Internal.IDLocker)
@@ -79,9 +73,7 @@ namespace DenizenPastingWebsite
             }
         }
 
-        /// <summary>
-        /// Submits a new paste, adding it to the database.
-        /// </summary>
+        /// <summary>Submits a new paste, adding it to the database.</summary>
         /// <param name="paste">The paste to insert.</param>
         public static void SubmitPaste(Paste paste)
         {
@@ -105,9 +97,7 @@ namespace DenizenPastingWebsite
             Internal.PasteCollection.Upsert(paste.ID, paste);
         }
 
-        /// <summary>
-        /// Fills content of a paste object from file store if necessary.
-        /// </summary>
+        /// <summary>Fills content of a paste object from file store if necessary.</summary>
         public static void FillPaste(Paste paste)
         {
             if (paste != null && paste.IsInFileStore)
@@ -121,9 +111,7 @@ namespace DenizenPastingWebsite
             }
         }
 
-        /// <summary>
-        /// Tries to get a paste.
-        /// </summary>
+        /// <summary>Tries to get a paste.</summary>
         public static bool TryGetPaste(long id, out Paste paste)
         {
             paste = Internal.PasteCollection.FindById(id);

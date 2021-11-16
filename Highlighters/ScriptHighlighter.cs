@@ -8,14 +8,10 @@ using System.Threading.Tasks;
 
 namespace DenizenPastingWebsite.Highlighters
 {
-    /// <summary>
-    /// Helper class to highlight a Denizen script.
-    /// </summary>
+    /// <summary>Helper class to highlight a Denizen script.</summary>
     public static class ScriptHighlighter
     {
-        /// <summary>
-        /// Highlights a Denizen script.
-        /// </summary>
+        /// <summary>Highlights a Denizen script.</summary>
         public static string Highlight(string text)
         {
             text = HighlighterCore.EscapeForHTML(text);
@@ -45,9 +41,7 @@ namespace DenizenPastingWebsite.Highlighters
         public static HashSet<string> DefiniteNotScriptKeys = new()
         { "interact scripts", "default constants", "data", "constants", "text", "lore", "aliases", "slots", "enchantments", "input" };
 
-        /// <summary>
-        /// Special helper characters to avoid HTML validity mixups.
-        /// </summary>
+        /// <summary>Special helper characters to avoid HTML validity mixups.</summary>
         public const char CHAR_TAG_START = (char)0x01, CHAR_TAG_END = (char)0x02;
 
         public static HashSet<string> IfOperators = new() { CHAR_TAG_START.ToString(), CHAR_TAG_END.ToString(), CHAR_TAG_START + "=", CHAR_TAG_END + "=", "==", "!=", "||", "&&", "(", ")", "or", "and", "not", "in", "contains", "!in", "!contains" };

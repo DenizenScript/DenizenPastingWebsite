@@ -10,9 +10,7 @@ namespace DenizenPastingWebsite.Models
 {
     public class ViewPasteModel
     {
-        /// <summary>
-        /// The paste being viewed.
-        /// </summary>
+        /// <summary>The paste being viewed.</summary>
         public Paste Paste;
 
         public PasteType Type => PasteType.ValidPasteTypes[Paste.Type];

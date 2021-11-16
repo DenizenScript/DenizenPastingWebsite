@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace DenizenPastingWebsite
 {
-    /// <summary>
-    /// Very simplistic ratelimiting helper.
-    /// </summary>
+    /// <summary>Very simplistic ratelimiting helper.</summary>
     public class RateLimiter
     {
         public static ConcurrentDictionary<string, long> Users = new();

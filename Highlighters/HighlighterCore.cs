@@ -8,24 +8,16 @@ using FreneticUtilities.FreneticToolkit;
 
 namespace DenizenPastingWebsite.Highlighters
 {
-    /// <summary>
-    /// Helper class for all highlighter types.
-    /// </summary>
+    /// <summary>Helper class for all highlighter types.</summary>
     public static class HighlighterCore
     {
-        /// <summary>
-        /// A helper matcher for characters that need HTML escaping.
-        /// </summary>
+        /// <summary>A helper matcher for characters that need HTML escaping.</summary>
         public static AsciiMatcher NeedsEscapeMatcher = new("&<>");
 
-        /// <summary>
-        /// A helper matcher for characters that need general cleanup.
-        /// </summary>
+        /// <summary>A helper matcher for characters that need general cleanup.</summary>
         public static AsciiMatcher NeedsCleanupMatcher = new("\0\t\r");
 
-        /// <summary>
-        /// Escapes some text to be safe to put into HTML.
-        /// </summary>
+        /// <summary>Escapes some text to be safe to put into HTML.</summary>
         public static string EscapeForHTML(string text)
         {
             if (NeedsCleanupMatcher.ContainsAnyMatch(text))
@@ -39,18 +31,14 @@ namespace DenizenPastingWebsite.Highlighters
             return text;
         }
 
-        /// <summary>
-        /// Formats plain text.
-        /// </summary>
+        /// <summary>Formats plain text.</summary>
         public static string HighlightPlainText(string text)
         {
             text = EscapeForHTML(text);
             return HandleLines(text);
         }
 
-        /// <summary>
-        /// The final stage of most highlighters, turns newlines into HTML newlines and generates a line number sidebar.
-        /// </summary>
+        /// <summary>The final stage of most highlighters, turns newlines into HTML newlines and generates a line number sidebar.</summary>
         public static string HandleLines(string text)
         {
             int lineCount = text.CountCharacter('\n') + 2;

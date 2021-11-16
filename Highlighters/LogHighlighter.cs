@@ -8,14 +8,10 @@ using System.Threading.Tasks;
 
 namespace DenizenPastingWebsite.Highlighters
 {
-    /// <summary>
-    /// Helper class to highlight BBCode.
-    /// </summary>
+    /// <summary>Helper class to highlight BBCode.</summary>
     public static class LogHighlighter
     {
-        /// <summary>
-        /// Highlights BBCode.
-        /// </summary>
+        /// <summary>Highlights BBCode.</summary>
         public static string Highlight(string text)
         {
             text = HighlighterCore.EscapeForHTML(text);
