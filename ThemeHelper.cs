@@ -26,7 +26,7 @@ namespace DenizenPastingWebsite
             viewData["Theme_Footer"] = theme.Footer;
         }
 
-        public static Dictionary<string, ThemeHelper> Themes = new Dictionary<string, ThemeHelper>();
+        public static Dictionary<string, ThemeHelper> Themes = new();
 
         public static ThemeHelper Dark;
 
@@ -40,7 +40,7 @@ namespace DenizenPastingWebsite
                 Footer = "Theme: Standard Dark, created by Alex 'mcmonkey' Goodwin"
             };
             Themes.Add("dark", Dark);
-            ThemeHelper lightRef = new ThemeHelper()
+            ThemeHelper lightRef = new()
             {
                 BootstrapURL = "/css/bootstrap_light.min.css",
                 BootstrapFooterText = new HtmlString("<a href=\"https://bootswatch.com/litera/\">Lightera Bootstrap Theme</a>"),

@@ -27,7 +27,7 @@ namespace DenizenPastingWebsite.Controllers
             return controller.View("Index", new NewPasteModel() { ShowRejection = true, NewType = type });
         }
 
-        public static HashSet<string> IgnoredOrigins = new HashSet<string>()
+        public static HashSet<string> IgnoredOrigins = new()
         {
             "127.0.0.1", "::1", "[::1]"
         };
@@ -114,7 +114,7 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused paste: spam");
                 return RejectPaste(controller, type);
             }
-            Paste newPaste = new Paste()
+            Paste newPaste = new()
             {
                 Title = pasteTitleText,
                 Type = actualType.Name.ToLowerFast(),
@@ -147,7 +147,7 @@ namespace DenizenPastingWebsite.Controllers
             newPaste.ID = PasteDatabase.GetNextPasteID();
             if (diffText != null)
             {
-                Paste diffPaste = new Paste()
+                Paste diffPaste = new()
                 {
                     Title = $"Diff Report Between Paste #{newPaste.ID} and #{edits.ID}",
                     Type = "diff",

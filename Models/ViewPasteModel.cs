@@ -17,7 +17,7 @@ namespace DenizenPastingWebsite.Models
 
         public PasteType Type => PasteType.ValidPasteTypes[Paste.Type];
 
-        public static AsciiMatcher CleanNameCharactersMatcher = new AsciiMatcher("abcdefghijklmnopqrstuvwxyz0123456789_");
+        public static AsciiMatcher CleanNameCharactersMatcher = new("abcdefghijklmnopqrstuvwxyz0123456789_");
 
         public static string LimitLength(string str, int len)
         {
@@ -32,7 +32,7 @@ namespace DenizenPastingWebsite.Models
 
         public string RawLink => $"/View/{Paste.ID}.txt";
 
-        public HtmlString Content => new HtmlString(Paste.Formatted);
+        public HtmlString Content => new(Paste.Formatted);
 
         public string LengthText => $"{Paste.Raw.Length} characters across {Paste.Raw.CountCharacter('\n')} lines";
     }

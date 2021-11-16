@@ -40,9 +40,9 @@ namespace DenizenPastingWebsite.Highlighters
             return string.Join('\n', lines);
         }
 
-        public static AsciiMatcher CommentHeaderMatcher = new AsciiMatcher("|+=#_@/");
+        public static AsciiMatcher CommentHeaderMatcher = new("|+=#_@/");
 
-        public static HashSet<string> DefiniteNotScriptKeys = new HashSet<string>()
+        public static HashSet<string> DefiniteNotScriptKeys = new()
         { "interact scripts", "default constants", "data", "constants", "text", "lore", "aliases", "slots", "enchantments", "input" };
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace DenizenPastingWebsite.Highlighters
         /// </summary>
         public const char CHAR_TAG_START = (char)0x01, CHAR_TAG_END = (char)0x02;
 
-        public static HashSet<string> IfOperators = new HashSet<string>() { CHAR_TAG_START.ToString(), CHAR_TAG_END.ToString(), CHAR_TAG_START + "=", CHAR_TAG_END + "=", "==", "!=", "||", "&&", "(", ")", "or", "and", "not", "in", "contains", "!in", "!contains" };
+        public static HashSet<string> IfOperators = new() { CHAR_TAG_START.ToString(), CHAR_TAG_END.ToString(), CHAR_TAG_START + "=", CHAR_TAG_END + "=", "==", "!=", "||", "&&", "(", ")", "or", "and", "not", "in", "contains", "!in", "!contains" };
 
         public static string ColorLine(string line, string lastKey)
         {
@@ -87,7 +87,7 @@ namespace DenizenPastingWebsite.Highlighters
             }
             if (trimmed.StartsWithFast('-'))
             {
-                StringBuilder result = new StringBuilder(line.Length * 2);
+                StringBuilder result = new(line.Length * 2);
                 result.Append("<span class=\"script_normal\">").Append(line[0..(preSpaces + 1)]).Append("</span>");
                 if (DefiniteNotScriptKeys.Contains(lastKey))
                 {
@@ -146,7 +146,7 @@ namespace DenizenPastingWebsite.Highlighters
         public static string ColorArgument(string arg, bool canQuote)
         {
             arg = arg.Replace("&lt;", CHAR_TAG_START.ToString()).Replace("&gt;", CHAR_TAG_END.ToString());
-            StringBuilder output = new StringBuilder(arg.Length * 2);
+            StringBuilder output = new(arg.Length * 2);
             bool quoted = false;
             char quoteMode = 'x';
             int inTagCounter = 0;
@@ -255,7 +255,7 @@ namespace DenizenPastingWebsite.Highlighters
 
         public static string ColorTag(string tag)
         {
-            StringBuilder output = new StringBuilder(tag.Length * 2);
+            StringBuilder output = new(tag.Length * 2);
             int inTagCounter = 0;
             int tagStart = 0;
             int inTagParamCounter = 0;

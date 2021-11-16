@@ -17,7 +17,7 @@ namespace DenizenPastingWebsite
 
         public static void Main(string[] args)
         {
-            CancellationTokenSource cancel = new CancellationTokenSource();
+            CancellationTokenSource cancel = new();
             Task consoleThread = Task.Run(RunConsole, cancel.Token);
             CurrentHost = CreateHostBuilder(args).Build();
             CurrentHost.Run();

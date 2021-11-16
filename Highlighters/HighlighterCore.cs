@@ -16,12 +16,12 @@ namespace DenizenPastingWebsite.Highlighters
         /// <summary>
         /// A helper matcher for characters that need HTML escaping.
         /// </summary>
-        public static AsciiMatcher NeedsEscapeMatcher = new AsciiMatcher("&<>");
+        public static AsciiMatcher NeedsEscapeMatcher = new("&<>");
 
         /// <summary>
         /// A helper matcher for characters that need general cleanup.
         /// </summary>
-        public static AsciiMatcher NeedsCleanupMatcher = new AsciiMatcher("\0\t\r");
+        public static AsciiMatcher NeedsCleanupMatcher = new("\0\t\r");
 
         /// <summary>
         /// Escapes some text to be safe to put into HTML.
@@ -54,7 +54,7 @@ namespace DenizenPastingWebsite.Highlighters
         public static string HandleLines(string text)
         {
             int lineCount = text.CountCharacter('\n') + 2;
-            StringBuilder lineNumbers = new StringBuilder(lineCount * 40);
+            StringBuilder lineNumbers = new(lineCount * 40);
             for (int i = 1; i < lineCount; i++)
             {
                 lineNumbers.Append($"<a id=\"{i}\" href=\"#{i}\">{i}</a>\n");

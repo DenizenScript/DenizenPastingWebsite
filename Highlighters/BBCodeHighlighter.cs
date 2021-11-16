@@ -23,11 +23,11 @@ namespace DenizenPastingWebsite.Highlighters
             return HighlighterCore.HandleLines(text);
         }
 
-        public static AsciiMatcher HexMatcher = new AsciiMatcher("0123456789abcdefABCDEF");
+        public static AsciiMatcher HexMatcher = new("0123456789abcdefABCDEF");
 
         public static string ColorBBCode(string text)
         {
-            StringBuilder built = new StringBuilder(text.Length);
+            StringBuilder built = new(text.Length);
             bool inBrackets = false;
             string bracketContents = "";
             int spans = 0;
@@ -37,7 +37,7 @@ namespace DenizenPastingWebsite.Highlighters
             bool strike = false;
             bool url = false;
             bool build_url = false;
-            StringBuilder url_link = new StringBuilder();
+            StringBuilder url_link = new();
             for (int i = 0; i < text.Length; i++)
             {
                 if (!inBrackets && text[i] == '[')

@@ -14,7 +14,7 @@ namespace DenizenPastingWebsite
         /// <summary>
         /// A map of all valid paste types (lowercased) to their paste type object.
         /// </summary>
-        public static Dictionary<string, PasteType> ValidPasteTypes = new Dictionary<string, PasteType>();
+        public static Dictionary<string, PasteType> ValidPasteTypes = new();
 
         static PasteType()
         {

@@ -23,7 +23,7 @@ namespace DenizenPastingWebsite.Highlighters
             return HighlighterCore.HandleLines(text);
         }
 
-        public static Dictionary<string, char> MinecraftLogColorMap = new Dictionary<string, char>()
+        public static Dictionary<string, char> MinecraftLogColorMap = new()
         {
             { "0;30;22", '0' },
             { "0;34;22", '1' },
@@ -56,18 +56,18 @@ namespace DenizenPastingWebsite.Highlighters
 
         public const string COLOR_RESET_CODES = HEX_LETTERS + "rRxX";
 
-        public static AsciiMatcher HexMatcher = new AsciiMatcher(HEX_LETTERS);
+        public static AsciiMatcher HexMatcher = new(HEX_LETTERS);
 
-        public static AsciiMatcher ColorSymbolMatcher = new AsciiMatcher(COLOR_RESET_CODES + "klmnoKLMNO");
+        public static AsciiMatcher ColorSymbolMatcher = new(COLOR_RESET_CODES + "klmnoKLMNO");
 
-        public static AsciiMatcher ResettersMatcher = new AsciiMatcher(COLOR_RESET_CODES);
+        public static AsciiMatcher ResettersMatcher = new(COLOR_RESET_CODES);
 
         public static string StandardizeColoration(string text)
         {
             text = text.Replace('§', ALT_COLOR_CHAR);
             if (text.Contains(ESCAPE_CHAR))
             {
-                StringBuilder patched = new StringBuilder(text.Length);
+                StringBuilder patched = new(text.Length);
                 string[] split = text.Split(ESCAPE_CHAR);
                 for (int i = 0; i < split.Length; i++)
                 {
@@ -119,7 +119,7 @@ namespace DenizenPastingWebsite.Highlighters
                 int index = line.IndexOf(ALT_COLOR_CHAR);
                 if (index != -1)
                 {
-                    StringBuilder output = new StringBuilder(line.Length * 2);
+                    StringBuilder output = new(line.Length * 2);
                     int spans = 0;
                     int lastIndex = 0;
                     while (index != -1)
@@ -169,7 +169,7 @@ namespace DenizenPastingWebsite.Highlighters
         }
 
         /// <summary>Character validator for the timestamp portion of a log.</summary>
-        public static AsciiMatcher TimeStampValidator = new AsciiMatcher(AsciiMatcher.Digits + ":");
+        public static AsciiMatcher TimeStampValidator = new(AsciiMatcher.Digits + ":");
 
         /// <summary>Generates a unique ID for the text, within a given limit, using a highly simplified hash-like function.
         /// Doesn't use native hash function for the reason of ensuring long-term consistency.
@@ -324,7 +324,7 @@ namespace DenizenPastingWebsite.Highlighters
         }
 
         /// <summary>Special plugins for <see cref="ColorizePluginMessage(string)"/>.</summary>
-        public static HashSet<string> SpecialPlugins = new HashSet<string>() { "Denizen", "Citizens", "Sentinel" };
+        public static HashSet<string> SpecialPlugins = new() { "Denizen", "Citizens", "Sentinel" };
 
         /// <summary>Formats and colorizes a message from a user.</summary>
         public static (string, string) ColorizeUserMessage(string text)
@@ -363,7 +363,7 @@ namespace DenizenPastingWebsite.Highlighters
                 string preBody = text.StartsWithFast('+') ? "+&gt;" : " +&gt;";
                 if (text.StartsWith($"{preBody} Executing '"))
                 {
-                    StringBuilder output = new StringBuilder(text.Length * 2);
+                    StringBuilder output = new(text.Length * 2);
                     bool mode = false;
                     string toScan = text[preBody.Length..];
                     for (int i = 0; i < toScan.Length; i++)

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace DenizenPastingWebsite
@@ -46,13 +47,13 @@ namespace DenizenPastingWebsite
         }
 
         /// <summary>Webclient used for webhooks.</summary>
-        public static WebClient ReusableWebClient = new WebClient();
+        public static HttpClient ReusableWebClient = new();
 
         /// <summary>Locker for running webhooks.</summary>
-        public static LockObject WebhookLock = new LockObject();
+        public static LockObject WebhookLock = new();
 
         /// <summary>What text is allowed to be included in the sender of a paste when showing to a webhook.</summary>
-        public static AsciiMatcher AllowedSenderText = new AsciiMatcher("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.:-[](),/= ");
+        public static AsciiMatcher AllowedSenderText = new("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.:-[](),/= ");
 
         /// <summary>Runs the new-paste webhooks, if needed.</summary>
         public static void RunNewPasteWebhook(Paste paste)
@@ -69,15 +70,17 @@ namespace DenizenPastingWebsite
                     {
                         try
                         {
-                            ReusableWebClient.Headers["User-Agent"] = "DenizenPastingWebsite";
-                            ReusableWebClient.Headers["Content-Type"] = "application/json";
+                            HttpRequestMessage request = new(HttpMethod.Post, hookURL);
+                            request.Headers.UserAgent.ParseAdd("DenizenPastingWebsite/1.0");
+                            request.Headers.Add("Content-Type", "application/json");
                             string sender = AllowedSenderText.TrimToMatches(paste.PostSourceData);
                             if (sender.Length > 512)
                             {
                                 sender = sender[..512];
                             }
                             string content = $"New **{PasteType.ValidPasteTypes[paste.Type].Name}** paste: {URL_BASE}/View/{paste.ID} sent by `{sender}`";
-                            ReusableWebClient.UploadString(hookURL, "{\"content\":\"" + content + "\"}");
+                            request.Content = new ByteArrayContent(StringConversionHelper.UTF8Encoding.GetBytes("{\"content\":\"" + content + "\"}"));
+                            ReusableWebClient.Send(request);
                         }
                         catch (Exception ex)
                         {

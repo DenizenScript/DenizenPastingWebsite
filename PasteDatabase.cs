@@ -7,6 +7,7 @@ using LiteDB;
 using System.Threading;
 using LiteDB.Engine;
 using System.Text;
+using FreneticUtilities.FreneticToolkit;
 
 namespace DenizenPastingWebsite
 {
@@ -30,7 +31,7 @@ namespace DenizenPastingWebsite
 
             public static DataTracker DataInstance;
 
-            public static Object IDLocker = new Object();
+            public static LockObject IDLocker = new();
 
             public static ILiteStorage<string> FileStorage;
         }
@@ -111,7 +112,7 @@ namespace DenizenPastingWebsite
         {
             if (paste != null && paste.IsInFileStore)
             {
-                MemoryStream stream = new MemoryStream();
+                MemoryStream stream = new();
                 Internal.FileStorage.Download($"/paste/raw/{paste.ID}.txt", stream);
                 paste.Raw = Encoding.UTF8.GetString(stream.ToArray());
                 stream = new MemoryStream();

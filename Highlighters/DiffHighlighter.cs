@@ -52,7 +52,7 @@ namespace DenizenPastingWebsite.Highlighters
         {
             DiffPaneModel result = new InlineDiffBuilder(new Differ()).BuildDiffModel(oldText, newText);
             hasDifferences = result.HasDifferences;
-            StringBuilder output = new StringBuilder(oldText.Length + newText.Length);
+            StringBuilder output = new(oldText.Length + newText.Length);
             foreach (var line in result.Lines)
             {
                 string lineRaw = line.Text;

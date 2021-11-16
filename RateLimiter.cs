@@ -12,7 +12,7 @@ namespace DenizenPastingWebsite
     /// </summary>
     public class RateLimiter
     {
-        public static ConcurrentDictionary<string, long> Users = new ConcurrentDictionary<string, long>();
+        public static ConcurrentDictionary<string, long> Users = new();
 
         public static bool TryUser(string origin)
         {
