@@ -32,6 +32,21 @@ namespace DenizenPastingWebsite.Controllers
             "127.0.0.1", "::1", "[::1]"
         };
 
+        /// <summary>Quickly cleans control codes from text and replaces them with spaces.</summary>
+        public static string ForceCleanText(string text)
+        {
+            char[] chars = text.ToArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                // ASCII Control codes
+                if (chars[i] < 32 || chars[i] == 127)
+                {
+                    chars[i] = ' ';
+                }
+            }
+            return new string(chars);
+        }
+
         public static IActionResult HandlePost(NewController controller, string type, Paste edits = null)
         {
             if (controller.Request.Method != "POST" || controller.Request.Form.IsEmpty())
@@ -90,7 +105,7 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused paste: Unknown type");
                 return RejectPaste(controller, type);
             }
-            string pasteTitleText = pasteTitle[0];
+            string pasteTitleText = ForceCleanText(pasteTitle[0]);
             if (string.IsNullOrWhiteSpace(pasteTitleText))
             {
                 pasteTitleText = $"Unnamed {actualType.DisplayName} Paste";

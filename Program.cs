@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DenizenPastingWebsite.Highlighters;
+using FreneticUtilities.FreneticToolkit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +18,7 @@ namespace DenizenPastingWebsite
 
         public static void Main(string[] args)
         {
+            SpecialTools.Internationalize();
             CancellationTokenSource cancel = new();
             Task consoleThread = Task.Run(RunConsole, cancel.Token);
             CurrentHost = CreateHostBuilder(args).Build();
