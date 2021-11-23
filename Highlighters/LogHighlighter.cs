@@ -2,6 +2,7 @@
 using FreneticUtilities.FreneticToolkit;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -277,9 +278,33 @@ namespace DenizenPastingWebsite.Highlighters
             return FormatCoreLine(timeStamp, threadName, logMode, "log_info", "log_info", text);
         }
 
+        /// <summary>Helper to verify the output doesn't lose spans.</summary>
+        [Conditional("DEBUG")]
+        public static void ValidateSpans(string text)
+        {
+            int spans = 0;
+            int index = text.IndexOf("<span");
+            while (index != -1)
+            {
+                spans++;
+                index = text.IndexOf("<span", index + 2);
+            }
+            index = text.IndexOf("</span>");
+            while (index != -1)
+            {
+                spans--;
+                index = text.IndexOf("</span>", index + 2);
+            }
+            if (spans != 0)
+            {
+                Console.Error.WriteLine("Inconsistent spans " + spans + " for " + text);
+            }
+        }
+
         /// <summary>Converts core line format data to an actual HTML string.</summary>
         public static string FormatCoreLine(string timestamp, string thread, string logMode, string modeSpan, string spanFormat, string text)
         {
+            //ValidateSpans(text);
             return $"<span class=\"log_timestamp\">[{timestamp}]</span> <span class=\"{modeSpan} log_modepart\">[{thread}/{logMode}]:</span> <span class=\"{spanFormat}\">{text}</span>";
         }
 
@@ -397,6 +422,35 @@ namespace DenizenPastingWebsite.Highlighters
                         {
                             span = "mc_5";
                         }
+                        else if (messageBody.StartsWith(" Depenizen loaded"))
+                        {
+                            span = "mc_f";
+                        }
+                        else if (messageBody.StartsWith(" Warning:"))
+                        {
+                            span = "mc_c";
+                        }
+                        else
+                        {
+                            bool isFilledTag = messageBody.StartsWith(" Pre-Filled tag &lt;");
+                            if (isFilledTag || messageBody.StartsWith(" Pre-Filled partial tag '&lt;"))
+                            {
+                                string baseText = isFilledTag ? " Pre-Filled tag &lt;" : " Pre-Filled partial tag '&lt;";
+                                string endText = isFilledTag ? "&gt; with '" : "...' with '";
+                                int endTag = messageBody.IndexOf(endText);
+                                if (endTag != -1)
+                                {
+                                    int endWith = messageBody.IndexOf("', and ", endTag + endText.Length);
+                                    if (endWith != -1)
+                                    {
+                                        string tag = messageBody[baseText.Length..endTag];
+                                        string with = messageBody[(endTag + endText.Length)..endWith];
+                                        string after = messageBody[endWith..];
+                                        messageBody = $"{baseText}<span class=\"mc_f\">{tag}</span>{endText}<span class=\"mc_f\">{with}</span>{after}";
+                                    }
+                                }
+                            }
+                        }
                         return (span, $"<span class=\"mc_e\">{preBody} [{clName}]</span>{messageBody}");
                     }
                 }
@@ -404,6 +458,27 @@ namespace DenizenPastingWebsite.Highlighters
             }
             else if (text.StartsWith("+-"))
             {
+                if (text.StartsWith("+- Queue '") && text.TrimEnd().EndsWith("-+"))
+                {
+                    int executeIndex = text.IndexOf("' Executing: (");
+                    if (executeIndex != -1)
+                    {
+                        int endLine = text.IndexOf(") ", executeIndex);
+                        if (endLine != -1)
+                        {
+                            string queueName = text["+- Queue '".Length..executeIndex];
+                            string line = text[(executeIndex + "' Executing: (".Length)..endLine];
+                            int lastSpace = text.TrimEnd().LastIndexOf(' ');
+                            if (lastSpace > endLine)
+                            {
+                                string cmd = text[(endLine + ") ".Length)..lastSpace];
+                                string endOfLine = text[lastSpace..];
+                                string built = $"+- Queue '<span class=\"mc_7\">{queueName}</span>' Executing: <span class=\"mc_8\">({line})</span> <span class=\"mc_f\">{cmd}</span>{endOfLine}";
+                                return ("mc_5", built);
+                            }
+                        }
+                    }
+                }
                 return ("mc_5", text);
             }
             else if (text.StartsWith(" ERROR in queue"))
