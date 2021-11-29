@@ -1,19 +1,9 @@
 /* General Page */
-.lock_top {
-    background-color: #222;
-}
-textarea {
-    color: #FFFFFF;
-}
-hr {
-    border-color: #AAAAAA;
-}
-.prefix_text {
-    color: #999999;
-}
-.line_numbers {
-    color: #999999;
-}
+.lock_top {background-color:#222;}
+textarea {color:#FFFFFF;}
+hr {border-color:#AAAAAA;}
+.prefix_text {color:#999999;}
+.line_numbers {color:#999999;}
 /* Standard Dark: created by Alex 'mcmonkey' Goodwin */
 /* Denizen Script Colors */
 .script_comment_header{color:#FF0000;}
@@ -98,3 +88,22 @@ hr {
 .log_autocolor_18{color:#99EEEE;}
 .log_autocolor_19{color:#EEEE99;}
 .log_modepart{filter:brightness(75%);}
+/* HLJS */
+pre code.hljs{display:block;overflow-x:auto;padding:1em;}
+code.hljs{padding:3px 5px;}
+.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#77BBF5;}
+.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#DD99FF;}
+.hljs-attr,.hljs-attribute{color:#1155FF;}
+.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#77BBF5;}
+.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#AAAAAA;}
+.hljs-built_in,.hljs-symbol{color:#77BBF5;}
+.hljs-code,.hljs-comment,.hljs-formula{color:#007700;}
+.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag,.hljs-params{color:#88DDFF;}
+.hljs-subst{color:#7777FF;}
+.hljs-section{color:#1155FF;font-weight:700;}
+.hljs-bullet{color:#EEEEFF;}
+.hljs-doctag{color:#FF8080;}
+.hljs-emphasis{color:#c9d1d9;font-style:italic;}
+.hljs-strong{color:#c9d1d9;font-weight:700;}
+.hljs-addition{color:#aff5b4;background-color:#033a16;}
+.hljs-deletion{color:#ffdcd7;background-color:#67060c;}

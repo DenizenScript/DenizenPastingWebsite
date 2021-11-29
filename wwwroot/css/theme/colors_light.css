@@ -1,22 +1,10 @@
 /* General Page */
-.lock_top {
-    background-color: #EEEEEE;
-}
-body {
-    background-color: #EEEEEE;
-}
-textarea {
-    color: #000000;
-}
-hr {
-    border-color: #333333;
-}
-.prefix_text {
-    color: #666666;
-}
-.line_numbers {
-    color: #666666;
-}
+.lock_top {background-color:#EEEEEE;}
+body {background-color:#EEEEEE;}
+textarea {color:#000000;}
+hr {border-color:#333333;}
+.prefix_text {color:#666666;}
+.line_numbers {color:#666666;}
 /* Quite Light: created by Alex 'mcmonkey' Goodwin */
 /* Denizen Script Colors */
 .script_comment_header{color:#CC0000;}
@@ -100,3 +88,22 @@ hr {
 .log_autocolor_17{color:#4d4d77;}
 .log_autocolor_18{color:#4d7777;}
 .log_autocolor_19{color:#77774d;}
+/* HLJS */
+pre code.hljs{display:block;overflow-x:auto;padding:1em;}
+code.hljs{padding:3px 5px;}
+.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#0066FF;}
+.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#000000;}
+.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#0066FF;}
+.hljs-attr,.hljs-attribute{color:#0000FF;}
+.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#000000;}
+.hljs-built_in,.hljs-symbol{color:#0066FF;}
+.hljs-code,.hljs-comment,.hljs-formula{color:#007700;}
+.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#0099BB;}
+.hljs-subst{color:#5500FF;}
+.hljs-section{color:#0000FF;font-weight:700;}
+.hljs-bullet{color:#000000;}
+.hljs-doctag{color:#AA2020;}
+.hljs-emphasis{color:#24292e;font-style:italic;}
+.hljs-strong{color:#24292e;font-weight:700;}
+.hljs-addition{color:#22863a;background-color:#f0fff4;}
+.hljs-deletion{color:#b31d28;background-color:#ffeef0;}

@@ -3,15 +3,7 @@
     ViewData["Title"] = $"{Model.Paste.Title} | Paste #{Model.Paste.ID}";
     ViewData["Description"] = $"Content of {Model.Type.DisplayName} Paste #{Model.Paste.ID}: '{Model.Paste.Title}'... pasted {Model.Paste.Date}, Paste length: {Model.LengthText}";
     ViewData["MetaColor"] = Model.Type.MetaColor;
-    if (Model.IsOtherType)
-    {
-        bool dark = (bool)ViewData["Theme_Is_Dark"];
-        ViewData["OtherHeaderLines"] = new HtmlString($"<link rel=\"stylesheet\" href=\"/css/jshighlighter_{(dark ? "dark" : "light")}.min.css\">");
-    }
-    else
-    {
-        ViewData["OtherHeaderLines"] = "";
-    }
+    ViewData["OtherHeaderLines"] = "";
 }
 
 <center>
