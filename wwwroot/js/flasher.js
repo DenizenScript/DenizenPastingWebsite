@@ -30,7 +30,7 @@ $(function() {
                 generateFlasher(target);
                 var newY = target.getBoundingClientRect().top + window.pageYOffset - window.innerHeight / 2;
                 $('html,body').animate({ scrollTop: newY }, 500);
-                return false;
+                return true;
             }
         }
     });
