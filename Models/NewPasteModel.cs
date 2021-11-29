@@ -17,17 +17,23 @@ namespace DenizenPastingWebsite.Models
         /// <summary>The existing paste that is being edited (if any).</summary>
         public Paste Edit = null;
 
+        /// <summary>The ID of the existing paste that is being edited (if any).</summary>
+        public string EditID => Edit is null ? "" : Edit.ID.ToString();
+
         /// <summary>The content to prefill into the title area (if any).</summary>
-        public string PreFillTitle => Edit == null ? "" : $"Edit of paste {Edit.ID}: {Edit.Title}";
+        public string PreFillTitle => Edit is null ? "" : $"Edit of paste {Edit.ID}: {Edit.Title}";
 
         /// <summary>The content to prefill into the text area (if any).</summary>
-        public string PreFillContents => Edit == null ? "" : Edit.Raw;
+        public string PreFillContents => Edit is null ? "" : Edit.Raw;
 
         /// <summary>The sub-URL for the edit paste action.</summary>
-        public string PasteURL => Edit == null ? $"/New/{NewType}" : $"/View/{Edit.ID}";
+        public string PasteURL => Edit is null ? $"/New/{NewType}" : $"/View/{Edit.ID}";
 
         /// <summary>The limit on paste character length.</summary>
         public int MaxLength => PasteServer.MaxPasteRawLength;
+
+        /// <summary>HTMLString option list for other language selection.</summary>
+        public HtmlString OtherLangOptions => PasteType.OtherLangOptions;
 
         /// <summary>Used to enable only the correct paste type radio button.</summary>
         public HtmlString Checked(string type)

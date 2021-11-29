@@ -1,5 +1,4 @@
-﻿using FreneticUtilities.FreneticExtensions;
-using System;
+﻿using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Threading.Tasks;
 using DiffPlex;
 using DiffPlex.DiffBuilder;
 using DiffPlex.DiffBuilder.Model;
+using FreneticUtilities.FreneticExtensions;
 
 namespace DenizenPastingWebsite.Highlighters
 {

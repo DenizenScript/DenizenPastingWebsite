@@ -102,3 +102,6 @@ h2 {
 h4 {
     white-space: normal;
 }
+.hljs {
+    display: block;
+}

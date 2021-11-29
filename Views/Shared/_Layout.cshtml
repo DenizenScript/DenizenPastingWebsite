@@ -4,14 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="@ViewData["Bootstrap_URL"]" media="screen">
-    <link rel="stylesheet" href="/css/paste.css">
+    <link rel="stylesheet" href="/css/paste.css?vary=1">
     <link rel="stylesheet" href="@ViewData["Theme_Colors"]">
     <title>@ViewData["Title"] | Denizen Pastebin</title>
     <meta name="description" content="@ViewData["Description"]" />
     <meta name="theme-color" content="@ViewData["MetaColor"]" />
 	<script src="/js/jquery.min.js"></script>
-	<script src="/js/flasher.js"></script>
+	<script src="/js/flasher.js?vary=1"></script>
 	<script src="/js/themes.js"></script>
+    @ViewData["OtherHeaderLines"]
 </head>
 <body onload="javascript:autoflash();">
     <nav class="navbar navbar-expand navbar-dark bg-primary navbar-fixed-ifier">

@@ -15,6 +15,9 @@ namespace DenizenPastingWebsite.Models
 
         public PasteType Type => PasteType.ValidPasteTypes[Paste.Type];
 
+        /// <summary>True if the paste type is an 'other' type, or false if a core type.</summary>
+        public bool IsOtherType => Type.Name.StartsWith("other-");
+
         public static AsciiMatcher CleanNameCharactersMatcher = new("abcdefghijklmnopqrstuvwxyz0123456789_");
 
         public static string LimitLength(string str, int len)

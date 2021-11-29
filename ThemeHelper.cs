@@ -22,6 +22,7 @@ namespace DenizenPastingWebsite
             viewData["Bootstrap_Footer"] = theme.BootstrapFooterText;
             viewData["Theme_Colors"] = theme.ColorCSS;
             viewData["Theme_Footer"] = theme.Footer;
+            viewData["Theme_Is_Dark"] = theme.IsDark;
         }
 
         public static Dictionary<string, ThemeHelper> Themes = new();
@@ -35,7 +36,8 @@ namespace DenizenPastingWebsite
                 BootstrapURL = "/css/bootstrap_dark.min.css",
                 BootstrapFooterText = new HtmlString("<a href=\"https://bootswatch.com/darkly/\">Darkly Bootstrap Theme</a>"),
                 ColorCSS = "/css/theme/colors_dark.css",
-                Footer = "Theme: Standard Dark, created by Alex 'mcmonkey' Goodwin"
+                Footer = "Theme: Standard Dark, created by Alex 'mcmonkey' Goodwin",
+                IsDark = true
             };
             Themes.Add("dark", Dark);
             ThemeHelper lightRef = new()
@@ -43,7 +45,8 @@ namespace DenizenPastingWebsite
                 BootstrapURL = "/css/bootstrap_light.min.css",
                 BootstrapFooterText = new HtmlString("<a href=\"https://bootswatch.com/litera/\">Lightera Bootstrap Theme</a>"),
                 ColorCSS = "/css/theme/colors_light.css",
-                Footer = "Theme: Quite Light, created by Alex 'mcmonkey' Goodwin"
+                Footer = "Theme: Quite Light, created by Alex 'mcmonkey' Goodwin",
+                IsDark = false
             };
             Themes.Add("light", lightRef);
             ThemeHelper Darkbehr = Dark.MemberwiseClone() as ThemeHelper;
@@ -67,5 +70,7 @@ namespace DenizenPastingWebsite
         public string ColorCSS;
 
         public string Footer;
+
+        public bool IsDark;
     }
 }

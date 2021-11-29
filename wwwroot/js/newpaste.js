@@ -1,7 +1,47 @@
+// Paste type related stuff
+function setAddr(addr) {
+    window.history.pushState(addr, document.title, addr);
+    document.getElementById('submitpost').action = addr;
+}
 function setPasteType(name) {
     document.title = "New " + name + " Paste | Denizen Pastebin";
-    window.history.pushState('/New/' + name, document.title, '/New/' + name);
+    if (name == "other") {
+        autoSetOtherType();
+    }
+    else {
+        setAddr('/New/' + name);
+    }
 }
+var lastSelection = "other-csharp";
+function autoSetOtherType() {
+    var selectedOption = document.getElementById('other_type_selection').selectedOptions[0];
+    var selectedName = selectedOption.getAttribute("name");
+    lastSelection = selectedName;
+    var selectedDisplayName = selectedOption.text;
+    document.title = "New Other: " + selectedDisplayName + " Paste | Denizen Pastebin";
+    setAddr('/New/Other?selected=' + selectedName);
+}
+function otherTypeEntryClick() {
+    var selectedOption = document.getElementById('other_type_selection').selectedOptions[0];
+    var selectedName = selectedOption.getAttribute("name");
+    if (selectedName != lastSelection) {
+        document.getElementById('other_button').click();
+    }
+}
+const urlParams = new URLSearchParams(window.location.search);
+var selectedOtherType = urlParams.get('selected');
+if (selectedOtherType === null) {
+    var origType = document.getElementById('orig_type').value;
+    if (origType.startsWith('other-')) {
+        selectedOtherType = origType;
+    }
+}
+if (selectedOtherType !== null) {
+    console.log(selectedOtherType);
+    document.getElementById('other_type_selection').children[selectedOtherType].selected = 'selected';
+    autoSetOtherType();
+}
+// Paste area related stuff
 var pasteArea = document.getElementById('pastecontents');
 var spacer = document.getElementById('paste_spacer');
 function resize() {

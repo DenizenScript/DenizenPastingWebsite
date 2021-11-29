@@ -79,15 +79,28 @@ namespace DenizenPastingWebsite.Controllers
             }
             Console.WriteLine($"Attempted paste from {realOrigin} as {sender}");
             IFormCollection form = controller.Request.Form;
-            if (!form.TryGetValue("pastetype", out StringValues pasteType) || !form.TryGetValue("pastetitle", out StringValues pasteTitle) || !form.TryGetValue("pastecontents", out StringValues pasteContents))
+            if (!form.TryGetValue("pastetitle", out StringValues pasteTitle) || !form.TryGetValue("pastecontents", out StringValues pasteContents))
             {
                 Console.Error.WriteLine("Refused paste: Form missing keys");
                 return RejectPaste(controller, type);
             }
-            if (pasteType.Count != 1 || pasteTitle.Count != 1 || pasteContents.Count != 1)
+            if (pasteTitle.Count != 1 || pasteContents.Count != 1)
             {
                 Console.Error.WriteLine("Refused paste: Improper form data");
                 return RejectPaste(controller, type);
+            }
+            if (edits == null && form.TryGetValue("editing", out StringValues editValue) && editValue.Count == 1 && editValue[0] != "")
+            {
+                if (!long.TryParse(editValue[0], out long editingID))
+                {
+                    Console.Error.WriteLine("Refused paste: Improper form data (editing key)");
+                    return RejectPaste(controller, type);
+                }
+                if (!PasteDatabase.TryGetPaste(editingID, out edits))
+                {
+                    Console.Error.WriteLine("Refused edit paste: unlisted ID");
+                    return RejectPaste(controller, type);
+                }
             }
             bool micro = form.TryGetValue("response", out StringValues responseValue) && responseValue.Count == 1 && responseValue[0].ToLowerFast() == "micro";
             bool microv2 = form.TryGetValue("v", out StringValues versionValue) && versionValue.Count == 1 && versionValue[0].ToLowerFast() == "200";
@@ -99,10 +112,9 @@ namespace DenizenPastingWebsite.Controllers
                     sender += "v2";
                 }
             }
-            string pasteTypeName = pasteType[0].ToLowerFast();
-            if (!PasteType.ValidPasteTypes.TryGetValue(pasteTypeName, out PasteType actualType))
+            if (!PasteType.ValidPasteTypes.TryGetValue(type, out PasteType actualType))
             {
-                Console.Error.WriteLine("Refused paste: Unknown type");
+                Console.Error.WriteLine($"Refused paste: Unknown type {type}");
                 return RejectPaste(controller, type);
             }
             string pasteTitleText = ForceCleanText(pasteTitle[0]);
@@ -304,6 +316,22 @@ namespace DenizenPastingWebsite.Controllers
                 return HandlePost(this, "text");
             }
             return View("Index", new NewPasteModel() { NewType = "text" });
+        }
+
+        public IActionResult Other()
+        {
+            Console.WriteLine(Request.Method + " to Other" + " as " + Request.QueryString);
+            ThemeHelper.HandleTheme(Request, ViewData);
+            string otherType = "csharp";
+            if (Request.Query.TryGetValue("selected", out StringValues selectionValues) && selectionValues.Any() && PasteType.ValidPasteTypes.ContainsKey(selectionValues[0]))
+            {
+                otherType = selectionValues[0];
+            }
+            if (Request.Method == "POST")
+            {
+                return HandlePost(this, otherType);
+            }
+            return View("Index", new NewPasteModel() { NewType = "other" });
         }
 
         public IActionResult Edit()
