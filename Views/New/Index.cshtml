@@ -46,6 +46,6 @@
             </span>
         }
     }
-    <span class="prefix_text">&gt;</span><div class="paste_spacer" id="paste_spacer"><textarea name="pastecontents" id="pastecontents" placeholder="Enter your paste contents here..." autofocus="true">@Model.PreFillContents</textarea></div>
+    <span class="prefix_text">&gt;</span><div class="paste_spacer" id="paste_spacer"><textarea maxlength="@Model.MaxLength" name="pastecontents" id="pastecontents" placeholder="Enter your paste contents here..." autofocus="true">@Model.PreFillContents</textarea></div>
 </form>
 <script src="/js/newpaste.js"></script>

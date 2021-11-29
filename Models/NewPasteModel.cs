@@ -26,6 +26,9 @@ namespace DenizenPastingWebsite.Models
         /// <summary>The sub-URL for the edit paste action.</summary>
         public string PasteURL => Edit == null ? $"/New/{NewType}" : $"/View/{Edit.ID}";
 
+        /// <summary>The limit on paste character length.</summary>
+        public int MaxLength => PasteServer.MaxPasteRawLength;
+
         /// <summary>Used to enable only the correct paste type radio button.</summary>
         public HtmlString Checked(string type)
         {
