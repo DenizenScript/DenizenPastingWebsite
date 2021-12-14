@@ -100,12 +100,12 @@ namespace DenizenPastingWebsite.Highlighters
                 string afterDash = trimmed[1..];
                 if (afterDash.Length != 0)
                 {
-                    int commandEnd = afterDash.IndexOf(' ', 1) + 1;
-                    string commandText = commandEnd == 0 ? afterDash : afterDash[0..commandEnd];
+                    int commandEnd = afterDash.IndexOf(' ', 1);
+                    string commandText = commandEnd == -1 ? afterDash : afterDash[0..commandEnd];
                     if (!afterDash.StartsWithFast(' '))
                     {
                         result.Append("<span class=\"script_bad_space\">").Append(commandText).Append("</span>");
-                        result.Append(ColorArgument(afterDash[commandText.Length..], false, "cmd:" + commandText.Trim()));
+                        result.Append(ColorArgument(afterDash[commandEnd..], false, "cmd:" + commandText.Trim()));
                     }
                     else
                     {
@@ -118,7 +118,7 @@ namespace DenizenPastingWebsite.Highlighters
                             result.Append($"<span class=\"script_command\">{commandText}</span>");
                             if (commandEnd > 0)
                             {
-                                result.Append(ColorArgument(afterDash[commandText.Length..], true, "cmd:" + commandText.Trim()));
+                                result.Append(ColorArgument(afterDash[commandEnd..], true, "cmd:" + commandText.Trim()));
                             }
                         }
                     }
@@ -221,7 +221,7 @@ namespace DenizenPastingWebsite.Highlighters
                     if (!quoted)
                     {
                         inTagCounter = 0;
-                        defaultColor = (spaces == 0 && (contextualLabel == "cmd:define" || contextualLabel == "cmd:definemap")) ? "def_name" : referenceDefault;
+                        defaultColor = referenceDefault;
                         spaces++;
                     }
                     int nextSpace = arg.IndexOf(' ', i + 1);
@@ -234,17 +234,31 @@ namespace DenizenPastingWebsite.Highlighters
                             i += nextArg.Length;
                             lastColor = i + 1;
                         }
-                        else if (nextArg.StartsWith("as:") && !nextArg.Contains('<') && (contextualLabel == "cmd:foreach" || contextualLabel == "cmd:repeat"))
+                        else if (!nextArg.Contains('<'))
                         {
-                            output.Append($"<span class=\"script_normal\">as:</span><span class=\"script_def_name\">{arg[(i + 1 + "as:".Length)..(i + 1 + nextArg.Length)]}</span>");
-                            i += nextArg.Length;
-                            lastColor = i + 1;
-                        }
-                        else if (nextArg.StartsWith("key:") && !nextArg.Contains('<') && contextualLabel == "cmd:foreach")
-                        {
-                            output.Append($"<span class=\"script_normal\">key:</span><span class=\"script_def_name\">{arg[(i + 1 + "key:".Length)..(i + 1 + nextArg.Length)]}</span>");
-                            i += nextArg.Length;
-                            lastColor = i + 1;
+                            if (nextArg.StartsWith("as:") && (contextualLabel == "cmd:foreach" || contextualLabel == "cmd:repeat"))
+                            {
+                                output.Append($"<span class=\"script_normal\">as:</span><span class=\"script_def_name\">{arg[(i + 1 + "as:".Length)..(i + 1 + nextArg.Length)]}</span>");
+                                i += nextArg.Length;
+                                lastColor = i + 1;
+                            }
+                            else if (nextArg.StartsWith("key:") && contextualLabel == "cmd:foreach")
+                            {
+                                output.Append($"<span class=\"script_normal\">key:</span><span class=\"script_def_name\">{arg[(i + 1 + "key:".Length)..(i + 1 + nextArg.Length)]}</span>");
+                                i += nextArg.Length;
+                                lastColor = i + 1;
+                            }
+                            else if (spaces == 1 && (contextualLabel == "cmd:define" || contextualLabel == "cmd:definemap"))
+                            {
+                                int colonIndex = nextArg.IndexOf(':');
+                                if (colonIndex == -1)
+                                {
+                                    colonIndex = nextArg.Length;
+                                }
+                                output.Append($"<span class=\"script_def_name\">{arg[(i + 1)..(i + 1 + colonIndex)]}</span>");
+                                i += colonIndex;
+                                lastColor = i + 1;
+                            }
                         }
                     }
                 }
