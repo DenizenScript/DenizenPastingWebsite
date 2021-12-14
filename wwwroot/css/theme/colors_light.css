@@ -23,6 +23,7 @@ hr {border-color:#333333;}
 .script_colon{color:#0000FF;font-weight:bold;}
 .script_bad_space{color:#000000;background-color:#FF6666;}
 .script_normal{color:#000000;}
+.script_def_name{color:#006699;font-style:italic;}
 /* Diff colors */
 .diff_added{color:#008800;}
 .diff_removed{color:#880000;}

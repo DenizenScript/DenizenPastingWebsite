@@ -46,6 +46,10 @@ namespace DenizenPastingWebsite.Highlighters
 
         public static HashSet<string> IfOperators = new() { CHAR_TAG_START.ToString(), CHAR_TAG_END.ToString(), CHAR_TAG_START + "=", CHAR_TAG_END + "=", "==", "!=", "||", "&&", "(", ")", "or", "and", "not", "in", "contains", "!in", "!contains" };
 
+        public static HashSet<string> IfCommandLabels = new() { "cmd:if", "cmd:while", "cmd:waituntil" };
+
+        public static HashSet<string> DeffableCommandLabels = new() { "cmd:run", "cmd:runlater", "cmd:clickable", "cmd:bungeerun" };
+
         public static string ColorLine(string line, string lastKey)
         {
             string trimmed = line.Trim();
@@ -85,7 +89,7 @@ namespace DenizenPastingWebsite.Highlighters
                 result.Append("<span class=\"script_normal\">").Append(line[0..(preSpaces + 1)]).Append("</span>");
                 if (DefiniteNotScriptKeys.Contains(lastKey))
                 {
-                    result.Append(ColorArgument(line[(preSpaces + 1)..], false));
+                    result.Append(ColorArgument(line[(preSpaces + 1)..], false, "non-script"));
                     return result.ToString();
                 }
                 bool appendColon = trimmed.EndsWithFast(':');
@@ -101,20 +105,20 @@ namespace DenizenPastingWebsite.Highlighters
                     if (!afterDash.StartsWithFast(' '))
                     {
                         result.Append("<span class=\"script_bad_space\">").Append(commandText).Append("</span>");
-                        result.Append(ColorArgument(afterDash[commandText.Length..], false));
+                        result.Append(ColorArgument(afterDash[commandText.Length..], false, "cmd:" + commandText.Trim()));
                     }
                     else
                     {
                         if (commandText.Contains('\'') || commandText.Contains('"') || commandText.Contains('['))
                         {
-                            result.Append(ColorArgument(afterDash, false));
+                            result.Append(ColorArgument(afterDash, false, "non-cmd"));
                         }
                         else
                         {
                             result.Append($"<span class=\"script_command\">{commandText}</span>");
                             if (commandEnd > 0)
                             {
-                                result.Append(ColorArgument(afterDash[commandText.Length..], true));
+                                result.Append(ColorArgument(afterDash[commandText.Length..], true, "cmd:" + commandText.Trim()));
                             }
                         }
                     }
@@ -132,12 +136,13 @@ namespace DenizenPastingWebsite.Highlighters
             int colonIndex = line.IndexOf(':');
             if (colonIndex != -1)
             {
-                return $"<span class=\"script_key\">{line[0..colonIndex]}</span><span class=\"script_colon\">:</span>{ColorArgument(line[(colonIndex + 1)..], false)}";
+                string key = line[0..colonIndex];
+                return $"<span class=\"script_key\">{key}</span><span class=\"script_colon\">:</span>{ColorArgument(line[(colonIndex + 1)..], false, "key:" + key)}";
             }
             return $"<span class=\"script_bad_space\">{line}</span>";
         }
 
-        public static string ColorArgument(string arg, bool canQuote)
+        public static string ColorArgument(string arg, bool canQuote, string contextualLabel)
         {
             arg = arg.Replace("&lt;", CHAR_TAG_START.ToString()).Replace("&gt;", CHAR_TAG_END.ToString());
             StringBuilder output = new(arg.Length * 2);
@@ -145,9 +150,11 @@ namespace DenizenPastingWebsite.Highlighters
             char quoteMode = 'x';
             int inTagCounter = 0;
             int tagStart = 0;
-            string defaultColor = "normal";
+            string referenceDefault = contextualLabel == "key:definitions" ? "def_name" : "normal";
+            string defaultColor = referenceDefault;
             int lastColor = 0;
             bool hasTagEnd = CheckIfHasTagEnd(arg, false, 'x', canQuote);
+            int spaces = 0;
             for (int i = 0; i < arg.Length; i++)
             {
                 char c = arg[i];
@@ -157,7 +164,7 @@ namespace DenizenPastingWebsite.Highlighters
                     {
                         output.Append($"<span class=\"script_{defaultColor}\">{arg[lastColor..(i + 1)]}</span>");
                         lastColor = i + 1;
-                        defaultColor = "normal";
+                        defaultColor = referenceDefault;
                         quoted = false;
                     }
                     else if (!quoted)
@@ -188,8 +195,22 @@ namespace DenizenPastingWebsite.Highlighters
                     {
                         output.Append(ColorTag(arg[(tagStart + 1)..i]));
                         output.Append($"<span class=\"script_tag\">{arg[i..(i + 1)]}</span>");
-                        defaultColor = quoted ? (quoteMode == '"' ? "quote_double" : "quote_single") : "normal";
+                        defaultColor = quoted ? (quoteMode == '"' ? "quote_double" : "quote_single") : referenceDefault;
                         lastColor = i + 1;
+                    }
+                }
+                else if (inTagCounter == 0 && c == '|' && contextualLabel == "key:definitions")
+                {
+                    output.Append($"<span class=\"script_{defaultColor}\">{arg[lastColor..i]}</span><span class=\"script_normal\">|</span>");
+                    lastColor = i + 1;
+                }
+                else if (inTagCounter == 0 && c == ':' && DeffableCommandLabels.Contains(contextualLabel))
+                {
+                    string part = arg[lastColor..i];
+                    if (part.StartsWith("def.") && !part.Contains('<') && !part.Contains(' '))
+                    {
+                        output.Append($"<span class=\"script_{defaultColor}\">def.</span><span class=\"script_def_name\">{arg[(lastColor + "def.".Length)..i]}</span>");
+                        lastColor = i;
                     }
                 }
                 else if (c == ' ' && ((!quoted && canQuote) || inTagCounter == 0))
@@ -200,15 +221,31 @@ namespace DenizenPastingWebsite.Highlighters
                     if (!quoted)
                     {
                         inTagCounter = 0;
-                        defaultColor = "normal";
+                        defaultColor = (spaces == 0 && (contextualLabel == "cmd:define" || contextualLabel == "cmd:definemap")) ? "def_name" : referenceDefault;
+                        spaces++;
                     }
                     int nextSpace = arg.IndexOf(' ', i + 1);
                     string nextArg = nextSpace == -1 ? arg[(i + 1)..] : arg[(i + 1)..nextSpace];
-                    if (!quoted && canQuote && IfOperators.Contains(nextArg))
+                    if (!quoted && canQuote)
                     {
-                        output.Append($"<span class=\"script_colon\">{arg[(i + 1)..(i + 1 + nextArg.Length)]}</span>");
-                        i += nextArg.Length;
-                        lastColor = i + 1;
+                        if (IfOperators.Contains(nextArg) && IfCommandLabels.Contains(contextualLabel))
+                        {
+                            output.Append($"<span class=\"script_colon\">{arg[(i + 1)..(i + 1 + nextArg.Length)]}</span>");
+                            i += nextArg.Length;
+                            lastColor = i + 1;
+                        }
+                        else if (nextArg.StartsWith("as:") && !nextArg.Contains('<') && (contextualLabel == "cmd:foreach" || contextualLabel == "cmd:repeat"))
+                        {
+                            output.Append($"<span class=\"script_normal\">as:</span><span class=\"script_def_name\">{arg[(i + 1 + "as:".Length)..(i + 1 + nextArg.Length)]}</span>");
+                            i += nextArg.Length;
+                            lastColor = i + 1;
+                        }
+                        else if (nextArg.StartsWith("key:") && !nextArg.Contains('<') && contextualLabel == "cmd:foreach")
+                        {
+                            output.Append($"<span class=\"script_normal\">key:</span><span class=\"script_def_name\">{arg[(i + 1 + "key:".Length)..(i + 1 + nextArg.Length)]}</span>");
+                            i += nextArg.Length;
+                            lastColor = i + 1;
+                        }
                     }
                 }
             }
@@ -288,7 +325,14 @@ namespace DenizenPastingWebsite.Highlighters
                     {
                         output.Append($"<span class=\"script_{defaultColor}\">{tag[lastColor..i]}</span><span class=\"script_tag_param_bracket\">[</span>");
                         lastColor = i + 1;
-                        defaultColor = "tag_param";
+                        if (i == 0)
+                        {
+                            defaultColor = "def_name";
+                        }
+                        else
+                        {
+                            defaultColor = "tag_param";
+                        }
                     }
                 }
                 else if (c == ']' && inTagCounter == 0)
