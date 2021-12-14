@@ -7,7 +7,7 @@ Paste website (like pastebin), primarily for Denizen scripts and server logs.
 
 Designed for and tested on Debian Linux.
 
-- Make sure you have `screen` and `dotnet-5-sdk` available
+- Make sure you have `screen` and `dotnet-6-sdk` available
 - Add a user for the service (via `adduser` generally, then `su` to that user)
 - Clone the git repo (`git clone https://github.com/DenizenScript/DenizenPastingWebsite`) and enter the folder
 - Make a folder labeled `config`, inside it make a text file labeled `config.fds`, and fill it with the config sample below (and change values to fit your configuration needs).

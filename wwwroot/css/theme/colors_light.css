@@ -19,6 +19,7 @@ hr {border-color:#333333;}
 .script_tag{color:#444444;}
 .script_tag_dot{color:#000000;}
 .script_tag_param{color:#5500FF;}
+.script_tag_param_bracket{color:#5500FF;}
 .script_colon{color:#0000FF;font-weight:bold;}
 .script_bad_space{color:#000000;background-color:#FF6666;}
 .script_normal{color:#000000;}

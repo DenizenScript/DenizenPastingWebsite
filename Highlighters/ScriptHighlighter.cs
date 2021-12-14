@@ -286,8 +286,8 @@ namespace DenizenPastingWebsite.Highlighters
                     inTagParamCounter++;
                     if (inTagParamCounter == 1)
                     {
-                        output.Append($"<span class=\"script_{defaultColor}\">{tag[lastColor..i]}</span>");
-                        lastColor = i;
+                        output.Append($"<span class=\"script_{defaultColor}\">{tag[lastColor..i]}</span><span class=\"script_tag_param_bracket\">[</span>");
+                        lastColor = i + 1;
                         defaultColor = "tag_param";
                     }
                 }
@@ -296,7 +296,7 @@ namespace DenizenPastingWebsite.Highlighters
                     inTagParamCounter--;
                     if (inTagParamCounter == 0)
                     {
-                        output.Append($"<span class=\"script_{defaultColor}\">{tag[lastColor..(i + 1)]}</span>");
+                        output.Append($"<span class=\"script_{defaultColor}\">{tag[lastColor..i]}</span><span class=\"script_tag_param_bracket\">]</span>");
                         defaultColor = "tag";
                         lastColor = i + 1;
                     }
