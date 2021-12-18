@@ -234,27 +234,28 @@ namespace DenizenPastingWebsite.Highlighters
                             i += nextArg.Length;
                             lastColor = i + 1;
                         }
-                        else if (!nextArg.Contains('<'))
+                        if (nextArg.StartsWith("as:") && !nextArg.Contains('<') && (contextualLabel == "cmd:foreach" || contextualLabel == "cmd:repeat"))
                         {
-                            if (nextArg.StartsWith("as:") && (contextualLabel == "cmd:foreach" || contextualLabel == "cmd:repeat"))
+                            output.Append($"<span class=\"script_normal\">as:</span><span class=\"script_def_name\">{arg[(i + 1 + "as:".Length)..(i + 1 + nextArg.Length)]}</span>");
+                            i += nextArg.Length;
+                            lastColor = i + 1;
+                        }
+                        else if (nextArg.StartsWith("key:") && !nextArg.Contains('<') && contextualLabel == "cmd:foreach")
+                        {
+                            output.Append($"<span class=\"script_normal\">key:</span><span class=\"script_def_name\">{arg[(i + 1 + "key:".Length)..(i + 1 + nextArg.Length)]}</span>");
+                            i += nextArg.Length;
+                            lastColor = i + 1;
+                        }
+                        else if (spaces == 1 && (contextualLabel == "cmd:define" || contextualLabel == "cmd:definemap"))
+                        {
+                            int colonIndex = nextArg.IndexOf(':');
+                            if (colonIndex == -1)
                             {
-                                output.Append($"<span class=\"script_normal\">as:</span><span class=\"script_def_name\">{arg[(i + 1 + "as:".Length)..(i + 1 + nextArg.Length)]}</span>");
-                                i += nextArg.Length;
-                                lastColor = i + 1;
+                                colonIndex = nextArg.Length;
                             }
-                            else if (nextArg.StartsWith("key:") && contextualLabel == "cmd:foreach")
+                            int tagMark = nextArg.IndexOf('<');
+                            if (tagMark == -1 || tagMark > colonIndex)
                             {
-                                output.Append($"<span class=\"script_normal\">key:</span><span class=\"script_def_name\">{arg[(i + 1 + "key:".Length)..(i + 1 + nextArg.Length)]}</span>");
-                                i += nextArg.Length;
-                                lastColor = i + 1;
-                            }
-                            else if (spaces == 1 && (contextualLabel == "cmd:define" || contextualLabel == "cmd:definemap"))
-                            {
-                                int colonIndex = nextArg.IndexOf(':');
-                                if (colonIndex == -1)
-                                {
-                                    colonIndex = nextArg.Length;
-                                }
                                 output.Append($"<span class=\"script_def_name\">{arg[(i + 1)..(i + 1 + colonIndex)]}</span>");
                                 i += colonIndex;
                                 lastColor = i + 1;
