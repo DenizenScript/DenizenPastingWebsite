@@ -234,7 +234,7 @@ namespace DenizenPastingWebsite.Highlighters
                             i += nextArg.Length;
                             lastColor = i + 1;
                         }
-                        if (nextArg.StartsWith("as:") && !nextArg.Contains('<') && (contextualLabel == "cmd:foreach" || contextualLabel == "cmd:repeat"))
+                        else if (nextArg.StartsWith("as:") && !nextArg.Contains('<') && (contextualLabel == "cmd:foreach" || contextualLabel == "cmd:repeat"))
                         {
                             output.Append($"<span class=\"script_normal\">as:</span><span class=\"script_def_name\">{arg[(i + 1 + "as:".Length)..(i + 1 + nextArg.Length)]}</span>");
                             i += nextArg.Length;
