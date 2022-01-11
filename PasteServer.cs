@@ -40,6 +40,9 @@ namespace DenizenPastingWebsite
         /// <summary>A list of titles to automatically block when set as a new paste title.</summary>
         public static string[] SpamBlockTitles;
 
+        /// <summary>A list of titles to automatically block when contained within a new paste title.</summary>
+        public static string[] SpamBlockPartialTitles;
+
         /// <summary>Loads the paste config.</summary>
         public static void LoadConfig()
         {
@@ -52,6 +55,7 @@ namespace DenizenPastingWebsite
             SpamBlockKeywords = (Config.GetStringList("spam-block-keyphrases") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
             SpamBlockShortKeywords = (Config.GetStringList("spam-block-short-keyphrases") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
             SpamBlockTitles = (Config.GetStringList("spam-block-titles") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
+            SpamBlockPartialTitles = (Config.GetStringList("spam-block-partial-titles") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
             Console.WriteLine($"Loaded at URL-base {URL_BASE} with max length {MaxPasteRawLength} with ratelimit {MaxPastesPerMinute} and x-forwarded-for set {TrustXForwardedFor}");
         }
 

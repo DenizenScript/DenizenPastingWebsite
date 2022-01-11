@@ -222,6 +222,14 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused paste: spam-bot title");
                 return false;
             }
+            foreach (string block in PasteServer.SpamBlockPartialTitles)
+            {
+                if (titleLow.Contains(block))
+                {
+                    Console.Error.WriteLine("Refused paste: spam-block-partial-titles in title");
+                    return false;
+                }
+            }
             foreach (string block in PasteServer.SpamBlockTitles)
             {
                 if (titleLow == block)

@@ -39,6 +39,9 @@ spam-block-short-keyphrases:
 # Optionally specify a list of (case-insensitive) title text (in full) to auto-block if detected.
 spam-block-titles:
 - some bad title
+# Optionally specify a list of (case-insensitive) title text to auto-block if detected contained in a paste title.
+spam-block-partial-titles:
+- some bad title
 ```
 
 ### Licensing pre-note:
