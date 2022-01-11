@@ -217,14 +217,22 @@ namespace DenizenPastingWebsite.Controllers
                 }
             }
             string titleLow = title.ToLowerFast();
-            if (titleLow.Contains("<a href=") || titleLow.Contains("viagra") || titleLow.Contains("cialis"))
+            if (titleLow.Contains("<a href="))
             {
                 Console.Error.WriteLine("Refused paste: spam-bot title");
                 return false;
             }
+            foreach (string block in PasteServer.SpamBlockTitles)
+            {
+                if (titleLow == block)
+                {
+                    Console.Error.WriteLine("Refused paste: spam-block-titles in title");
+                    return false;
+                }
+            }
             if (PasteServer.SpamBlockKeywords.Length > 0)
             {
-                String contentLow = content.ToLowerFast();
+                string contentLow = content.ToLowerFast();
                 foreach (string block in PasteServer.SpamBlockKeywords)
                 {
                     if (titleLow.Contains(block))
@@ -263,6 +271,23 @@ namespace DenizenPastingWebsite.Controllers
                 {
                     Console.Error.WriteLine($"Refused paste: link spambot? {linkLines} linkLines and {normalLines} normal lines");
                     return false;
+                }
+                if (normalLines < 20 && PasteServer.SpamBlockKeywords.Length > 0)
+                {
+                    string contentLow = content.ToLowerFast();
+                    foreach (string block in PasteServer.SpamBlockShortKeywords)
+                    {
+                        if (titleLow.Contains(block))
+                        {
+                            Console.Error.WriteLine("Refused paste: spam-block-short-keyphrase in title");
+                            return false;
+                        }
+                        if (contentLow.Contains(block))
+                        {
+                            Console.Error.WriteLine("Refused paste: spam-block-short-keyphrase in paste content");
+                            return false;
+                        }
+                    }
                 }
             }
             return true;

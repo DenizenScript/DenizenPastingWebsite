@@ -33,6 +33,12 @@ webhooks:
 # Optionally specify a list of (case-insensitive) text to check new pastes for to trigger automatic spam blocking.
 spam-block-keyphrases:
 - some naughty thing
+# Optionally specify a list of (case-insensitive) text only short (less than 20 line) pastes for.
+spam-block-short-keyphrases:
+- some phrase
+# Optionally specify a list of (case-insensitive) title text (in full) to auto-block if detected.
+spam-block-titles:
+- some bad title
 ```
 
 ### Licensing pre-note:
@@ -49,7 +55,7 @@ You can do basically whatever you want, except you may not hold any developer li
 
 The MIT License (MIT)
 
-Copyright (c) 2021 The Denizen Script Team
+Copyright (c) 2021-2022 The Denizen Script Team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

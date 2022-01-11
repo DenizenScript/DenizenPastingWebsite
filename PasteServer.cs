@@ -34,6 +34,12 @@ namespace DenizenPastingWebsite
         /// <summary>A list of keywords to automatically block when present in a new paste.</summary>
         public static string[] SpamBlockKeywords;
 
+        /// <summary>A list of short keywords to automatically block when present in a new short paste.</summary>
+        public static string[] SpamBlockShortKeywords;
+
+        /// <summary>A list of titles to automatically block when set as a new paste title.</summary>
+        public static string[] SpamBlockTitles;
+
         /// <summary>Loads the paste config.</summary>
         public static void LoadConfig()
         {
@@ -44,6 +50,8 @@ namespace DenizenPastingWebsite
             MaxPastesPerMinute = Config.GetInt("max-pastes-per-minute").Value;
             NewPasteWebhooks = (Config.GetStringList("webhooks.new-paste") ?? new List<string>()).ToArray();
             SpamBlockKeywords = (Config.GetStringList("spam-block-keyphrases") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
+            SpamBlockShortKeywords = (Config.GetStringList("spam-block-short-keyphrases") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
+            SpamBlockTitles = (Config.GetStringList("spam-block-titles") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
             Console.WriteLine($"Loaded at URL-base {URL_BASE} with max length {MaxPasteRawLength} with ratelimit {MaxPastesPerMinute} and x-forwarded-for set {TrustXForwardedFor}");
         }
 
