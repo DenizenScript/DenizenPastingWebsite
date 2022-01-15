@@ -209,10 +209,10 @@ namespace DenizenPastingWebsite.Controllers
             }
             if (content.Length < 1024)
             {
-                int lines = content.SplitFast('\n').Select(s => s.Trim().Length > 5).Count();
-                if (lines < 3)
+                int nonEmptyLines = content.SplitFast('\n').Select(s => s.Trim().Length > 5).Count();
+                if (nonEmptyLines < 3)
                 {
-                    Console.Error.WriteLine($"Refused paste: too-few lines {lines} (c.Len = {content.Length})");
+                    Console.Error.WriteLine($"Refused paste: too-few lines {nonEmptyLines} (c.Len = {content.Length})");
                     return false;
                 }
             }
@@ -255,46 +255,53 @@ namespace DenizenPastingWebsite.Controllers
                     }
                 }
             }
-            if (content.Length < 100 * 1024)
+            if (content.Length > 100 * 1024)
             {
-                string[] lines = content.SplitFast('\n');
-                int linkLines = 0;
-                int normalLines = 0;
-                foreach (string line in lines)
+                int newLines = content.CountCharacter('\n');
+                if (newLines < 20)
                 {
-                    if (line.Trim().Length < 5)
-                    {
-                        continue;
-                    }
-                    if (line.Contains("http"))
-                    {
-                        linkLines++;
-                    }
-                    else
-                    {
-                        normalLines++;
-                    }
-                }
-                if (linkLines >= normalLines || (linkLines > 0 && normalLines < 4))
-                {
-                    Console.Error.WriteLine($"Refused paste: link spambot? {linkLines} linkLines and {normalLines} normal lines");
+                    Console.Error.WriteLine($"Refused paste: massive paste with too few lines {newLines} (c.Len = {content.Length})");
                     return false;
                 }
-                if (normalLines < 20 && PasteServer.SpamBlockKeywords.Length > 0)
+                return true;
+            }
+            string[] lines = content.SplitFast('\n');
+            int linkLines = 0;
+            int normalLines = 0;
+            foreach (string line in lines)
+            {
+                if (line.Trim().Length < 5)
                 {
-                    string contentLow = content.ToLowerFast();
-                    foreach (string block in PasteServer.SpamBlockShortKeywords)
+                    continue;
+                }
+                if (line.Contains("http"))
+                {
+                    linkLines++;
+                }
+                else
+                {
+                    normalLines++;
+                }
+            }
+            if (linkLines >= normalLines || (linkLines > 0 && normalLines < 4))
+            {
+                Console.Error.WriteLine($"Refused paste: link spambot? {linkLines} linkLines and {normalLines} normal lines");
+                return false;
+            }
+            if (normalLines < 20 && PasteServer.SpamBlockKeywords.Length > 0)
+            {
+                string contentLow = content.ToLowerFast();
+                foreach (string block in PasteServer.SpamBlockShortKeywords)
+                {
+                    if (titleLow.Contains(block))
                     {
-                        if (titleLow.Contains(block))
-                        {
-                            Console.Error.WriteLine("Refused paste: spam-block-short-keyphrase in title");
-                            return false;
-                        }
-                        if (contentLow.Contains(block))
-                        {
-                            Console.Error.WriteLine("Refused paste: spam-block-short-keyphrase in paste content");
-                            return false;
-                        }
+                        Console.Error.WriteLine("Refused paste: spam-block-short-keyphrase in title");
+                        return false;
+                    }
+                    if (contentLow.Contains(block))
+                    {
+                        Console.Error.WriteLine("Refused paste: spam-block-short-keyphrase in paste content");
+                        return false;
                     }
                 }
             }
