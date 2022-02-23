@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 using DenizenPastingWebsite.Utilities;
 using DenizenPastingWebsite.Pasting;
+using DenizenPastingWebsite.Highlighters;
+
 namespace DenizenPastingWebsite.Models
 {
     public class ViewPasteModel
@@ -38,5 +40,9 @@ namespace DenizenPastingWebsite.Models
         public HtmlString Content => new(Paste.Formatted);
 
         public string LengthText => $"{Paste.Raw.Length} characters across {Paste.Raw.CountCharacter('\n')} lines";
+
+        public bool IsMarkedAsSpam => Paste.HistoricalContent is not null;
+
+        public HtmlString RenderHistorical => new(HighlighterCore.HighlightPlainText(Paste.HistoricalContent));
     }
 }

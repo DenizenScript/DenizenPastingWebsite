@@ -397,14 +397,31 @@ namespace DenizenPastingWebsite.Controllers
             {
                 return Redirect($"/View/{paste.ID}");
             }
-            if (Request.Form.TryGetValue("is_edit_button", out StringValues editButtonVal) && editButtonVal.Count == 1 && editButtonVal[0] == "yes")
+            if (Request.Form.TryGetValue("button_type", out StringValues buttonTypeVal) && buttonTypeVal.Count == 1)
             {
-                return View("Index", new NewPasteModel() { NewType = paste.Type, Edit = paste });
+                switch (buttonTypeVal[0])
+                {
+                    case "edit":
+                        return View("Index", new NewPasteModel() { NewType = paste.Type, Edit = paste });
+                    case "spamblock":
+                        if ((bool)ViewData["auth_isloggedin"] && paste.HistoricalContent is null)
+                        {
+                            paste.Type = "text";
+                            paste.Title = "REMOVED SPAM POST";
+                            if (string.IsNullOrWhiteSpace(paste.HistoricalContent))
+                            {
+                                paste.HistoricalContent = paste.Title + "\n\n" + paste.Raw;
+                            }
+                            paste.Raw = "Spam post removed from view.";
+                            paste.Formatted = HighlighterCore.HighlightPlainText("Spam post removed from view.");
+                            PasteDatabase.SubmitPaste(paste);
+                            Console.WriteLine($"paste {pasteId} removed by logged in staff - {(ulong)ViewData["auth_userid"]}");
+                            return Redirect($"/View/{paste.ID}");
+                        }
+                        break;
+                }
             }
-            else
-            {
-                return HandlePost(this, paste.Type, paste);
-            }
+            return HandlePost(this, paste.Type, paste);
         }
     }
 }

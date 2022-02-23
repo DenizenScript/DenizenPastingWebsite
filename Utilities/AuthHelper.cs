@@ -87,6 +87,7 @@ namespace DenizenPastingWebsite.Utilities
                 });
             }
             viewData["auth_isloggedin"] = true;
+            viewData["auth_userid"] = user.UserID;
         }
 
         public static long CurrentTimestamp()
@@ -144,6 +145,8 @@ namespace DenizenPastingWebsite.Utilities
                 {
                     return Fail("user no longer staff");
                 }
+                user.LastTimeVerified = CurrentTimestamp();
+                PasteDatabase.Internal.UserCollection.Upsert(user);
                 locker.Result = true;
                 return true;
             }

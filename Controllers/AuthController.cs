@@ -81,6 +81,7 @@ namespace DenizenPastingWebsite.Controllers
             TimeSpan maxAge = TimeSpan.FromSeconds(token.ExpiresSeconds + AuthHelper.InvalidateDelay);
             Response.Cookies.Append("paste_session_token", session, new() { MaxAge = maxAge, IsEssential = true, SameSite = SameSiteMode.Strict, HttpOnly = true });
             Setup();
+            ViewData["auth_isloggedin"] = true;
             return View("LoginSuccess");
         }
 
@@ -108,7 +109,11 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused auth log out: auth not enabled");
                 return Redirect("/Error/Error404");
             }
-            // TODO: ... POST?
+            if (Request.Method != "POST")
+            {
+                Console.Error.WriteLine("Refused auth log out: not POST");
+                return Redirect("/Error/Error404");
+            }
             string sessTok = Request.Cookies["paste_session_token"];
             if (string.IsNullOrWhiteSpace(sessTok))
             {

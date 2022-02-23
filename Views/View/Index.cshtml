@@ -25,24 +25,63 @@
             <a class="btn btn-secondary btn-sm" href="/View/@Model.Paste.DiffReport">View Edit Report</a>
         }
         <form name="edit_button" id="edit_button" method="POST" action="/View/@Model.Paste.ID" style="display:inline;">
-            <input type="hidden" id="is_edit_button" name="is_edit_button" value="yes">
+            <input type="hidden" name="button_type" value="edit">
             <input type="submit" class="btn btn-secondary btn-sm" value="Edit This Paste">
         </form>
         <a class="btn btn-secondary btn-sm" id="copybutton" onclick="navigator.clipboard.writeText(document.location);doPopover('copybutton', 'Copied!');">Copy Link</a>
 	<script src="/js/button.js"></script>
     </div>
     </div>
-    <br>
-    <span class="centering_helper">
-        <span class="center_auto">
-            @Model.Content
-        </span>
-        @if (Model.IsOtherType)
+    @if ((bool)ViewData["auth_isloggedin"])
+    {
+        <br><br>
+        <div class="card border-secondary" style="max-width: 90%;">
+        <div class="card-header">Staff Tools</div>
+        <div class="card-body">
+        @if (!Model.IsMarkedAsSpam)
         {
-            <script src="/js/highlight.min.js"></script>
-            <script>hljs.highlightElement(document.getElementById("js_higlight_codeblock"));</script>
-            <hr>
-            <span>Highlighting for 'Other' types handled by <a href="https://highlightjs.org/">Highlight.JS</a>, which was released under the <a href="https://github.com/highlightjs/highlight.js/blob/10b322dc436333b04df8295c9bdf4bad324849e0/LICENSE">BSD 3-Clause License</a>.</span>
+            <form name="spamblock_button" id="spamblock_button" method="POST" action="/View/@Model.Paste.ID" style="display:inline;" onsubmit="return confirm('Are you sure you want to block this paste?');">
+                <input type="hidden" name="button_type" value="spamblock">
+                <input type="submit" class="btn btn-danger btn-sm" value="Block This Paste As Spam">
+            </form>
         }
-    </span>
+        </div>
+        </div>
+    }
+    <br>
+    @if (Model.IsMarkedAsSpam)
+    {
+        <br>
+        <div class="alert alert-warning" style="max-width:80%;">
+            <h4 class="alert-heading">Spam Blocked</h4>
+            <p class="mb-0">This paste was marked and spam, and thus deleted.</p>
+        </div>
+        @if ((bool)ViewData["auth_isloggedin"])
+        {
+            <div class="alert alert-secondary" style="max-width:80%;">
+                <h4 class="alert-heading">Admin Bypass</h4>
+                <p class="mb-0">You are viewing the historical content from before this post was marked as spam. Non-staff cannot view it.</p>
+            </div>
+            <span class="centering_helper">
+                <span class="center_auto">
+                    @Model.RenderHistorical
+                </span>
+            </span>
+        }
+    }
+    else
+    {
+        <span class="centering_helper">
+            <span class="center_auto">
+                @Model.Content
+            </span>
+            @if (Model.IsOtherType)
+            {
+                <script src="/js/highlight.min.js"></script>
+                <script>hljs.highlightElement(document.getElementById("js_higlight_codeblock"));</script>
+                <hr>
+                <span>Highlighting for 'Other' types handled by <a href="https://highlightjs.org/">Highlight.JS</a>, which was released under the <a href="https://github.com/highlightjs/highlight.js/blob/10b322dc436333b04df8295c9bdf4bad324849e0/LICENSE">BSD 3-Clause License</a>.</span>
+            }
+        </span>
+    }
 </center>

@@ -37,22 +37,21 @@
                 </li>
                 @if ((bool)ViewData["auth_canlogin"])
                 {
-                    @if ((bool)ViewData["auth_isloggedin"])
-                    {
-                        <span class="top_login_button">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Auth/Logout">Log out</a>
-                            </li>
-                        </span>
-                    }
-                    else
-                    {
-                        <span class="top_login_button">
+                    <span class="top_login_button">
+                        @if ((bool)ViewData["auth_isloggedin"])
+                        {
+                            <form name="logout_button" id="logout_button" method="POST" action="/Auth/Logout" style="display:inline;">
+                                <input type="hidden" name="button_type" value="logout">
+                                <input type="submit" class="btn btn-secondary btn-sm" value="Log out">
+                            </form>
+                        }
+                        else
+                        {
                             <li class="nav-item">
                                 <a class="nav-link" href="/Auth/Login">Login</a>
                             </li>
-                        </span>
-                    }
+                        }
+                    </span>
                 }
             </ul>
         </div>
