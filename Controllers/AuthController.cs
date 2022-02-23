@@ -79,7 +79,7 @@ namespace DenizenPastingWebsite.Controllers
             }
             string session = AuthHelper.GenerateAuthenticationSession(user.ID, token.ExpiresSeconds, token.AccessTok, token.RefreshTok);
             TimeSpan maxAge = TimeSpan.FromSeconds(token.ExpiresSeconds + AuthHelper.InvalidateDelay);
-            Response.Cookies.Append("paste_session_token", session, new() { MaxAge = maxAge, IsEssential = true, SameSite = SameSiteMode.Strict, HttpOnly = true });
+            Response.Cookies.Append("paste_session_token", session, new() { MaxAge = maxAge, IsEssential = true, SameSite = SameSiteMode.Strict, Secure = true, HttpOnly = true });
             Setup();
             ViewData["auth_isloggedin"] = true;
             return View("LoginSuccess");
@@ -98,7 +98,7 @@ namespace DenizenPastingWebsite.Controllers
                 return Redirect("/");
             }
             string redirUrl = AuthHelper.GenerateAuthorizationURL(out string state);
-            Response.Cookies.Append("discord_auth_state_key", state, new CookieOptions() { HttpOnly = true, IsEssential = true, SameSite = SameSiteMode.None, MaxAge = TimeSpan.FromHours(12) });
+            Response.Cookies.Append("discord_auth_state_key", state, new CookieOptions() { HttpOnly = true, IsEssential = true, SameSite = SameSiteMode.None, Secure = true, MaxAge = TimeSpan.FromHours(1) });
             return Redirect(redirUrl);
         }
 
