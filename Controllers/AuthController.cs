@@ -98,7 +98,7 @@ namespace DenizenPastingWebsite.Controllers
                 return Redirect("/");
             }
             string redirUrl = AuthHelper.GenerateAuthorizationURL(out string state);
-            Response.Cookies.Append("discord_auth_state_key", state, new CookieOptions() { HttpOnly = true, IsEssential = true, SameSite = SameSiteMode.Strict, MaxAge = TimeSpan.FromHours(12) });
+            Response.Cookies.Append("discord_auth_state_key", state, new CookieOptions() { HttpOnly = true, IsEssential = true, SameSite = SameSiteMode.None, MaxAge = TimeSpan.FromHours(12) });
             return Redirect(redirUrl);
         }
 
