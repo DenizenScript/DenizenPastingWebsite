@@ -32,7 +32,7 @@
 	<script src="/js/button.js"></script>
     </div>
     </div>
-    @if ((bool)ViewData["auth_isloggedin"])
+    @if ((bool)ViewData["auth_canlogin"] && (bool)ViewData["auth_isloggedin"])
     {
         <br><br>
         <div class="card border-secondary" style="max-width: 90%;">
@@ -60,7 +60,7 @@
             <h4 class="alert-heading">Spam Blocked</h4>
             <p class="mb-0">This paste was marked and spam, and thus deleted.</p>
         </div>
-        @if ((bool)ViewData["auth_isloggedin"])
+        @if ((bool)ViewData["auth_canlogin"] && (bool)ViewData["auth_isloggedin"])
         {
             <div class="alert alert-secondary" style="max-width:80%;">
                 <h4 class="alert-heading">Admin Bypass</h4>
