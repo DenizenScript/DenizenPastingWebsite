@@ -259,6 +259,13 @@ namespace DenizenPastingWebsite.Highlighters
                                 output.Append($"<span class=\"script_def_name\">{arg[(i + 1)..(i + 1 + colonIndex)]}</span>");
                                 i += colonIndex;
                                 lastColor = i + 1;
+                                char argStart = nextArg[0];
+                                if (!quoted && canQuote && (argStart == '"' || argStart == '\''))
+                                {
+                                    quoted = true;
+                                    defaultColor = argStart == '"' ? "quote_double" : "quote_single";
+                                    quoteMode = argStart;
+                                }
                             }
                         }
                     }

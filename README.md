@@ -26,7 +26,7 @@ trust-x-forwarded-for: true
 url-base: https://paste.denizenscript.com
 # How many pastes from a single origin can come through per minute (a simple flood protection tool). If set to 0, the paste website is effectively read-only.
 max-pastes-per-minute: 3
-# Optionally specify a list of webhooks to run when new pastes are sent. Webhook content will be a simple JSON-formatted payload with key "content" sent to simple displayable text.
+# Optionally specify a list of webhooks to run when new pastes are sent. Webhook content will be a simple JSON-formatted payload with key "content" set to simple displayable text.
 webhooks:
     new-paste:
     - https://example.com/webhook
