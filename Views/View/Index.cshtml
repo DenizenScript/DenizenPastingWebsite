@@ -45,6 +45,10 @@
                 <input type="submit" class="btn btn-danger btn-sm" value="Block This Paste As Spam">
             </form>
         }
+        <form name="rerender_button" id="rerender_button" method="POST" action="/View/@Model.Paste.ID" style="display:inline;" onsubmit="return confirm('Are you sure you want to rerender this paste?');">
+            <input type="hidden" name="button_type" value="rerender">
+            <input type="submit" class="btn btn-danger btn-sm" value="Rerender Paste">
+        </form>
         </div>
         </div>
     }

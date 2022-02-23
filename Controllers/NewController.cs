@@ -419,6 +419,31 @@ namespace DenizenPastingWebsite.Controllers
                             return Redirect($"/View/{paste.ID}");
                         }
                         break;
+                    case "rerender":
+                        if ((bool)ViewData["auth_isloggedin"] && paste.HistoricalContent is null)
+                        {
+                            try
+                            {
+                                Console.WriteLine($"Rerender paste {paste.ID} on behalf of staff {(ulong)ViewData["auth_userid"]}");
+                                PasteDatabase.FillPaste(paste);
+                                string origFormat = paste.Formatted;
+                                if (PasteType.ValidPasteTypes.TryGetValue(paste.Type, out PasteType type))
+                                {
+                                    paste.Formatted = type.Highlight(paste.Raw);
+                                    if (origFormat.TrimEnd() != paste.Formatted.TrimEnd())
+                                    {
+                                        Console.WriteLine($"Updating paste {paste.ID} (was {origFormat.Length} now {paste.Formatted.Length})...");
+                                        PasteDatabase.SubmitPaste(paste);
+                                    }
+                                    return Redirect($"/View/{paste.ID}");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Failed to rerender paste {paste.ID}: {ex}");
+                            }
+                        }
+                        break;
                 }
             }
             return HandlePost(this, paste.Type, paste);
