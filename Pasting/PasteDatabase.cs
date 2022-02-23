@@ -9,7 +9,7 @@ using LiteDB.Engine;
 using System.Text;
 using FreneticUtilities.FreneticToolkit;
 
-namespace DenizenPastingWebsite
+namespace DenizenPastingWebsite.Pasting
 {
     public static class PasteDatabase
     {

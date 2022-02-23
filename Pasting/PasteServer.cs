@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace DenizenPastingWebsite
+namespace DenizenPastingWebsite.Pasting
 {
     public static class PasteServer
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,8 @@ using FreneticUtilities.FreneticToolkit;
 using FreneticUtilities.FreneticExtensions;
 using DenizenPastingWebsite.Models;
 using DenizenPastingWebsite.Highlighters;
-using System.Net;
+using DenizenPastingWebsite.Utilities;
+using DenizenPastingWebsite.Pasting;
 
 namespace DenizenPastingWebsite.Controllers
 {

@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DenizenPastingWebsite.Pasting;
 
-namespace DenizenPastingWebsite
+namespace DenizenPastingWebsite.Utilities
 {
     /// <summary>Very simplistic ratelimiting helper.</summary>
     public class RateLimiter

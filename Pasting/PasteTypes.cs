@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DenizenPastingWebsite.Highlighters;
 using Microsoft.AspNetCore.Html;
 
-namespace DenizenPastingWebsite
+namespace DenizenPastingWebsite.Pasting
 {
     /// <summary>Helper class for the different paste types available.</summary>
     public class PasteType
@@ -24,7 +24,7 @@ namespace DenizenPastingWebsite
             ValidPasteTypes["diff"] = new PasteType() { Name = "Diff", DisplayName = "Diff Report", FileExtension = "diff", Highlight = DiffHighlighter.Highlight, MetaColor = "#00FF00" };
             ValidPasteTypes["bbcode"] = new PasteType() { Name = "BBCode", DisplayName = "BBCode", FileExtension = "txt", Highlight = BBCodeHighlighter.Highlight, MetaColor = "#FFFFFF" };
             ValidPasteTypes["text"] = new PasteType() { Name = "Text", DisplayName = "Plain Text", FileExtension = "txt", Highlight = HighlighterCore.HighlightPlainText, MetaColor = "#A0A0A0" };
-            StringBuilder optionsBuilder = new StringBuilder();
+            StringBuilder optionsBuilder = new();
             foreach ((string rawLang, string ext, string display) in AltLanguages)
             {
                 ValidPasteTypes[$"other-{rawLang}"] = new PasteType() { Name = $"other-{rawLang}", DisplayName = $"Other: {display}", FileExtension = ext, Highlight = (s) => OtherLanguageHighlighter.Highlight(rawLang, s), MetaColor = "#55BB88" };

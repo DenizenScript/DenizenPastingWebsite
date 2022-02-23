@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DenizenPastingWebsite
+namespace DenizenPastingWebsite.Utilities
 {
     /// <summary>Helper class that handles theme processing.</summary>
     public class ThemeHelper

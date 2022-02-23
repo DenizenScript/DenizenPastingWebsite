@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DenizenPastingWebsite.Models;
+using DenizenPastingWebsite.Utilities;
+using DenizenPastingWebsite.Pasting;
 
 namespace DenizenPastingWebsite.Controllers
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LiteDB;
 
-namespace DenizenPastingWebsite
+namespace DenizenPastingWebsite.Pasting
 {
     public class Paste
     {
