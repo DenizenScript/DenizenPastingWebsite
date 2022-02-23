@@ -10,7 +10,7 @@
     <meta name="description" content="@ViewData["Description"]" />
     <meta name="theme-color" content="@ViewData["MetaColor"]" />
 	<script src="/js/jquery.min.js"></script>
-	<script src="/js/flasher.js?vary=1"></script>
+	<script src="/js/flasher.js?vary=2"></script>
 	<script src="/js/themes.js"></script>
     @ViewData["OtherHeaderLines"]
 </head>
@@ -35,6 +35,25 @@
                         <a class="dropdown-item" title="created by Alex 'mcmonkey' Goodwin" onclick="changetheme('light')">Quite Light</a>
                     </div>
                 </li>
+                @if ((bool)ViewData["auth_canlogin"])
+                {
+                    @if ((bool)ViewData["auth_isloggedin"])
+                    {
+                        <span class="top_login_button">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Auth/Logout">Log out</a>
+                            </li>
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="top_login_button">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Auth/Login">Login</a>
+                            </li>
+                        </span>
+                    }
+                }
             </ul>
         </div>
     </nav>

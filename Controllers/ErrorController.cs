@@ -7,11 +7,11 @@ using DenizenPastingWebsite.Utilities;
 
 namespace DenizenPastingWebsite.Controllers
 {
-    public class ErrorController : Controller
+    public class ErrorController : PasteController
     {
         public IActionResult Any()
         {
-            ThemeHelper.HandleTheme(Request, ViewData);
+            Setup();
             if (Response.StatusCode == 200 && !Response.HasStarted)
             {
                 Response.StatusCode = 400;
@@ -21,7 +21,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Error404()
         {
-            ThemeHelper.HandleTheme(Request, ViewData);
+            Setup();
             if (Response.StatusCode == 200 && !Response.HasStarted)
             {
                 Response.StatusCode = 404;

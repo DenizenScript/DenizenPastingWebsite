@@ -8,6 +8,7 @@ using System.Threading;
 using LiteDB.Engine;
 using System.Text;
 using FreneticUtilities.FreneticToolkit;
+using DenizenPastingWebsite.Utilities;
 
 namespace DenizenPastingWebsite.Pasting
 {
@@ -19,6 +20,8 @@ namespace DenizenPastingWebsite.Pasting
             public static LiteDatabase DB;
 
             public static ILiteCollection<Paste> PasteCollection;
+
+            public static ILiteCollection<AuthHelper.UserDatabaseEntry> UserCollection;
 
             public class DataTracker
             {
@@ -43,6 +46,7 @@ namespace DenizenPastingWebsite.Pasting
             }
             Internal.DB = new LiteDatabase("data/pastes.ldb");
             Internal.PasteCollection = Internal.DB.GetCollection<Paste>("pastes");
+            Internal.UserCollection = Internal.DB.GetCollection<AuthHelper.UserDatabaseEntry>("users");
             Internal.DataCollection = Internal.DB.GetCollection<Internal.DataTracker>("data");
             Internal.DataInstance = Internal.DataCollection.FindById(0);
             if (Internal.DataInstance == null)
@@ -51,6 +55,17 @@ namespace DenizenPastingWebsite.Pasting
                 Internal.DataCollection.Insert(0, Internal.DataInstance);
             }
             Internal.FileStorage = Internal.DB.FileStorage;
+            Task.Factory.StartNew(() =>
+            {
+                Task.Delay(TimeSpan.FromSeconds(5)).Wait();
+                foreach (AuthHelper.UserDatabaseEntry user in Internal.UserCollection.FindAll())
+                {
+                    if (user.LastTimeVerified + AuthHelper.InvalidateDelay < AuthHelper.CurrentTimestamp())
+                    {
+                        Internal.UserCollection.Delete(user.UserID);
+                    }
+                }
+            });
         }
 
         public static void Shutdown()

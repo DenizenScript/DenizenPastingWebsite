@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using DenizenPastingWebsite.Utilities;
 
 namespace DenizenPastingWebsite.Pasting
 {
@@ -15,6 +16,8 @@ namespace DenizenPastingWebsite.Pasting
     {
         /// <summary>The URL base for this paste server.</summary>
         public static string URL_BASE;
+
+        public const string USER_AGENT = "DenizenPastingWebsite/1.0";
 
         /// <summary>
         /// Maximum raw length (in characters) of a paste.
@@ -56,11 +59,20 @@ namespace DenizenPastingWebsite.Pasting
             SpamBlockShortKeywords = (Config.GetStringList("spam-block-short-keyphrases") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
             SpamBlockTitles = (Config.GetStringList("spam-block-titles") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
             SpamBlockPartialTitles = (Config.GetStringList("spam-block-partial-titles") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
+            if (Config.HasKey("discord_oauth"))
+            {
+                AuthHelper.LoadConfig(Config.GetSection("discord_oauth"));
+            }
             Console.WriteLine($"Loaded at URL-base {URL_BASE} with max length {MaxPasteRawLength} with ratelimit {MaxPastesPerMinute} and x-forwarded-for set {TrustXForwardedFor}");
         }
 
         /// <summary>Webclient used for webhooks.</summary>
         public static HttpClient ReusableWebClient = new();
+
+        static PasteServer()
+        {
+            ReusableWebClient.DefaultRequestHeaders.UserAgent.ParseAdd(USER_AGENT);
+        }
 
         /// <summary>Locker for running webhooks.</summary>
         public static LockObject WebhookLock = new();
@@ -84,7 +96,6 @@ namespace DenizenPastingWebsite.Pasting
                         try
                         {
                             HttpRequestMessage request = new(HttpMethod.Post, hookURL);
-                            request.Headers.UserAgent.ParseAdd("DenizenPastingWebsite/1.0");
                             string sender = AllowedSenderText.TrimToMatches(paste.PostSourceData);
                             if (sender.Length > 512)
                             {

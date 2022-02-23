@@ -10,11 +10,11 @@ using DenizenPastingWebsite.Pasting;
 
 namespace DenizenPastingWebsite.Controllers
 {
-    public class ViewController : Controller
+    public class ViewController : PasteController
     {
         public IActionResult Index()
         {
-            ThemeHelper.HandleTheme(Request, ViewData);
+            Setup();
             if (!Request.HttpContext.Items.TryGetValue("viewable", out object pasteIdObject) || pasteIdObject is not string pasteIdText)
             {
                 Console.Error.WriteLine("Refused view: ID missing");

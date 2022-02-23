@@ -18,7 +18,7 @@ using DenizenPastingWebsite.Pasting;
 namespace DenizenPastingWebsite.Controllers
 {
     [RequestFormLimits(ValueLengthLimit = 1024 * 1024 * 30)]
-    public class NewController : Controller
+    public class NewController : PasteController
     {
         public NewController()
         {
@@ -312,7 +312,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Index()
         {
-            ThemeHelper.HandleTheme(Request, ViewData);
+            Setup();
             if (Request.Method == "POST")
             {
                 return HandlePost(this, "script");
@@ -322,7 +322,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Script()
         {
-            ThemeHelper.HandleTheme(Request, ViewData);
+            Setup();
             if (Request.Method == "POST")
             {
                 return HandlePost(this, "script");
@@ -332,7 +332,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Log()
         {
-            ThemeHelper.HandleTheme(Request, ViewData);
+            Setup();
             if (Request.Method == "POST")
             {
                 return HandlePost(this, "log");
@@ -342,7 +342,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult BBCode()
         {
-            ThemeHelper.HandleTheme(Request, ViewData);
+            Setup();
             if (Request.Method == "POST")
             {
                 return HandlePost(this, "bbcode");
@@ -352,7 +352,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Text()
         {
-            ThemeHelper.HandleTheme(Request, ViewData);
+            Setup();
             if (Request.Method == "POST")
             {
                 return HandlePost(this, "text");
@@ -362,8 +362,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Other()
         {
-            Console.WriteLine(Request.Method + " to Other" + " as " + Request.QueryString);
-            ThemeHelper.HandleTheme(Request, ViewData);
+            Setup();
             string otherType = "csharp";
             if (Request.Query.TryGetValue("selected", out StringValues selectionValues) && selectionValues.Any() && PasteType.ValidPasteTypes.ContainsKey(selectionValues[0]))
             {
@@ -378,7 +377,7 @@ namespace DenizenPastingWebsite.Controllers
 
         public IActionResult Edit()
         {
-            ThemeHelper.HandleTheme(Request, ViewData);
+            Setup();
             if (!Request.HttpContext.Items.TryGetValue("viewable", out object pasteIdObject) || pasteIdObject is not string pasteIdText)
             {
                 Console.Error.WriteLine("Refused edit: ID missing");

@@ -105,3 +105,8 @@ h4 {
 .hljs {
     display: block;
 }
+.top_login_button {
+    text-align: right;
+    position: absolute;
+    right: 16px;
+}

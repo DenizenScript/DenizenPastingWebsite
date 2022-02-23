@@ -18,6 +18,8 @@ Designed for and tested on Debian Linux.
 ### Configuration
 
 ```yml
+### GENERAL
+
 # Maximum paste size (in number of characters). Pastes longer than this will be trimmed.
 max-paste-size: 5000000
 # Set to 'true' if running behind a reverse-proxy, 'false' if directly exposed.
@@ -26,10 +28,13 @@ trust-x-forwarded-for: true
 url-base: https://paste.denizenscript.com
 # How many pastes from a single origin can come through per minute (a simple flood protection tool). If set to 0, the paste website is effectively read-only.
 max-pastes-per-minute: 3
-# Optionally specify a list of webhooks to run when new pastes are sent. Webhook content will be a simple JSON-formatted payload with key "content" set to simple displayable text.
+# Optionally specify a list of webhooks to run when new pastes are sent. Webhook content will be a simple JSON-formatted payload with key "content" set to simple displayable text (intended for use as a Discord webhook).
 webhooks:
     new-paste:
     - https://example.com/webhook
+
+### SPAM BLOCKING
+
 # Optionally specify a list of (case-insensitive) text to check new pastes for to trigger automatic spam blocking.
 spam-block-keyphrases:
 - some naughty thing
@@ -42,6 +47,25 @@ spam-block-titles:
 # Optionally specify a list of (case-insensitive) title text to auto-block if detected contained in a paste title.
 spam-block-partial-titles:
 - some bad title
+
+### OAUTH
+
+discord_oauth:
+    # To use Discord OAuth2, you must register an application at https://discord.com/developers/applications
+    # Change to 'true' if in use.
+    enabled: false
+    # Discord client ID. Generated on Discord's OAuth2 page.
+    client-id: 123
+    # Discord client secret Generated on Discord's OAuth2 page.
+    client-secret: abc
+    # Discord redirect URL. Must be added under "Redirects" on the OAuth2 page.
+    # In most cases: The "/Auth/DiscordAuthConfirm" portion should be left as-is and the base URL should match 'url-base'.
+    redirect-url: https://paste.denizenscript.com/Auth/DiscordAuthConfirm
+    # ID of the Discord guild relevant to this paste server, used for roles check.
+    guild-id: 123
+    # Guild role ID(s) that identity the user as an admin of the paste site.
+    guild-roles-admin:
+    - 123
 ```
 
 ### Licensing pre-note:
