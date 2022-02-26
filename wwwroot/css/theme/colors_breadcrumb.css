@@ -3,12 +3,12 @@
 /* Breadcrumb Dark: created by Breadcrumb */
 .script_key{color:#FF69B4;}
 .script_key_inline{color:#F92672;font-style:italic;}
-.script_colon{color:#FFFFFF;font-style:bold;}
+.script_colon{color:#FFFFFF;font-weight:bold;}
 .script_command{color:#00BFFF;font-style:italic;}
 .script_quote_double{color:#E6DB74;}
 .script_quote_single{color: #E6DB74;}
-.script_tag_param{color:#6DD78E;font-style:bold;}
-.script_tag{color:#C1C0C0;font-style:bold;}
-.script_comment_todo{color:#2A56FF;font-style:bold;}
+.script_tag_param{color:#6DD78E;font-weight:bold;}
+.script_tag{color:#C1C0C0;font-weight:bold;}
+.script_comment_todo{color:#2A56FF;font-weight:bold;}
 .script_comment_code{color:#F49658;font-style:italic;}
 .script_comment_normal{color:#007700;font-style:italic;}
