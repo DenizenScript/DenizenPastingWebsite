@@ -61,6 +61,10 @@ namespace DenizenPastingWebsite.Utilities
             chrispy.ColorCSS = "/css/theme/colors_chrispy.css";
             chrispy.Footer = "Theme: Chrispy Dark, created by Chris|LordNoob";
             Themes.Add("chrispy", chrispy);
+            ThemeHelper breadcrumb = Dark.MemberwiseClone() as ThemeHelper;
+            breadcrumb.ColorCSS = "/css/theme/colors_breadcrumb.css";
+            breadcrumb.Footer = "Theme: Breadcrumb Dark, created by Breadcrumb";
+            Themes.Add("breadcrumb", breadcrumb);
         }
 
         public string BootstrapURL;
