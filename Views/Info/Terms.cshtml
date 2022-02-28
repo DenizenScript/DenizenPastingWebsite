@@ -1,0 +1,116 @@
+@{
+    ViewData["Title"] = "Terms of Service, Privacy Policy, Etc.";
+    ViewData["Description"] = "Terms of Service, Privacy Policy, Etc.";
+    ViewData["MetaColor"] = "#FFFF00";
+    ViewData["OtherHeaderLines"] = "";
+}
+
+<span class="center_helper">
+
+    <div class="card text-white bg-secondary mb-3" style="max-width: 80rem;">
+        <div class="card-header"><a id="privacy-policy" href="#privacy-policy">#</a>Privacy Policy</div>
+        <div class="card-body">
+            <p class="card-text" style="text-align: left;">
+                No information about most users is gathered or exposed in any way.
+                <br>Once you make a paste, the content of that paste is stored and exposed to the public permanently. The IP address you used while uploading it is tracked internally for spam-prevention purposes and is not exposed to the public.
+                <br>All content/data exposed to the public is necessarily exclusively information an end-user willfully published themself.
+                <br>
+                <br>This service does not provide the tools to delete any content uploaded to it.
+                <br>All pastes are indexable, searchable, and findable, without exception.
+                <br>Therefore, any content you upload is effectively public in perpetuity.
+                <br>
+                <br>Staff have tools to limit the visibility of specific pastes in case of spam, emergencies, or legal violations.
+                <br>
+            </p>
+        </div>
+    </div>
+    <br>
+
+    <div class="card text-white bg-secondary mb-3" style="max-width: 80rem;">
+        <div class="card-header"><a id="privacy-additional" href="#privacy-additional">#</a>Additional Information To Protect Your Own Privacy</div>
+        <div class="card-body">
+            <p class="card-text" style="text-align: left;">
+                <br>Remember: you can never delete anything from the public web forever. Even if the copy on this webservice is gone, that does not delete Google's cache (or any other webcrawler's cache), web.archive.org's copy, the cache in the browser of any user who opened the page, the copy anybody downloaded, ...
+                <br>
+                <br>If you mistakenly posted a password / authentication token / ... to <b>ANY</b> web service, the only solution is to immediately change that password / reset that token / ... - it is exposed and potentially in the hands of malicious actors. Any deletion buttons provided to you by any other services give a false sense of security and do not actually protect you.
+                <br>
+                <br>THINK BEFORE YOU PASTEBIN. DO NOT PASTE PRIVATE INFORMATION OR CONTENT. NOT HERE NOR ON ANY OTHER PUBLIC PASTEBIN SERVICE. ONCE IT'S PUBLIC, IT'S PUBLIC FOREVER.
+            </p>
+        </div>
+    </div>
+    <br>
+    <hr>
+
+    <div class="card text-white bg-secondary mb-3" style="max-width: 80rem;">
+        <div class="card-header"><a id="terms" href="#terms">#</a>Terms of Service</div>
+        <div class="card-body">
+            <p class="card-text" style="text-align: left;">
+                @Model.Terms
+            </p>
+        </div>
+    </div>
+    <br>
+    <hr>
+
+    <div class="card text-white bg-secondary mb-3" style="max-width: 80rem;">
+        <div class="card-header"><a id="cookies" href="#cookies">#</a>Cookie Policy</div>
+        <div class="card-body">
+            <p class="card-text" style="text-align: left;">
+                This web service does not store any cookies on your browser until
+                <br>&bullet; you use the Theme selector <span class="text-muted">(theme choice is stored as a cookie, with no personal identification)</span>
+                <br>&bullet; or log in to a staff account <span class="text-muted">(staff account login session is stored as a cookie)</span>
+                <br>No other cookies are used. We do not use any cookies to track users.
+            </p>
+        </div>
+    </div>
+    <br>
+    <hr>
+
+    <div class="card text-white bg-secondary mb-3" style="max-width: 80rem;">
+        <div class="card-header"><a id="contact" href="#contact">#</a>Contact</div>
+        <div class="card-body">
+            <p class="card-text" style="text-align: left;">
+                If you need to contact the operator of this pastebin:
+                <br>
+                @Model.Contact
+            </p>
+        </div>
+    </div>
+    <br>
+    <hr>
+
+    <div class="card text-white bg-secondary mb-3" style="max-width: 80rem;">
+        <div class="card-header"><a id="license" href="#license">#</a>DenizenPastingWebsite Software License</div>
+        <div class="card-body">
+            <p class="card-text" style="text-align: left;">
+                <br>The following is the license for "DenizenPastingWebsite", the software used to host this webservice.
+                <br>Each instance of the webservice may have been modified from the original form, and those modifications are the copyright of their developers.
+                <br>You can view the original source code and license <a href="https://github.com/DenizenScript/DenizenPastingWebsite">on GitHub here</a>.
+                <br>
+                <pre>
+The MIT License (MIT)
+
+Copyright (c) 2021-2022 The Denizen Script Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+                </pre>
+            </p>
+        </div>
+    </div>
+</span>

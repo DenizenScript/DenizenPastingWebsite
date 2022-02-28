@@ -5,7 +5,9 @@ Paste website (like pastebin), primarily for Denizen scripts and server logs.
 
 ### How To Install/Run
 
-Designed for and tested on Debian Linux.
+Designed for and tested on a Debian Linux server.
+
+Usage on other Linux distros is likely very similar. Usage outside Linux may require independent research regarding how to install DotNet 6, and how to run a generic executable service perpetually.
 
 - Make sure you have `screen` and `dotnet-6-sdk` available
 - Add a user for the service (via `adduser` generally, then `su` to that user)
@@ -13,20 +15,23 @@ Designed for and tested on Debian Linux.
 - Make a folder labeled `config`, inside it make a text file labeled `config.fds`, and fill it with the config sample below (and change values to fit your configuration needs).
 - Call `./update.sh`
 - Will by default open on port 8096. To change this, edit `start.sh`
-- It is strongly recommended you run this webserver behind a reverse proxy like Apache2.
+- It is strongly recommended you run this webserver behind a reverse proxy like Apache2 or Nginx.
+
+For testing on Windows, `start.ps1` is also available to run via powershell.
 
 ### Configuration
 
 ```yml
 ### GENERAL
 
-# Maximum paste size (in number of characters). Pastes longer than this will be trimmed.
+# Maximum paste size (in number of characters). Pastes longer than this will be trimmed. Reference value is 5 million, or approximately 5 megabytes.
 max-paste-size: 5000000
-# Set to 'true' if running behind a reverse-proxy, 'false' if directly exposed.
+# Whether to test the "X-Forwarded-For" web header.
+# Set to 'true' if running behind a reverse-proxy (like Apache2 or Nginx), 'false' if directly exposed.
 trust-x-forwarded-for: true
 # Set to the base URL for the paste service.
-url-base: https://paste.denizenscript.com
-# How many pastes from a single origin can come through per minute (a simple flood protection tool). If set to 0, the paste website is effectively read-only.
+url-base: https://example.com
+# How many pastes from a single origin can come through per minute (a simple flood protection tool). If set to 0, the paste website is effectively read-only. Set to '99999' if you want effectively unlimited pastes.
 max-pastes-per-minute: 3
 # Optionally specify a list of webhooks to run when new pastes are sent. Webhook content will be a simple JSON-formatted payload with key "content" set to simple displayable text (intended for use as a Discord webhook).
 webhooks:
@@ -34,6 +39,7 @@ webhooks:
     - https://example.com/webhook
 
 ### SPAM BLOCKING
+# New pastes that match these tests will automatically be blocked.
 
 # Optionally specify a list of (case-insensitive) text to check new pastes for to trigger automatic spam blocking.
 spam-block-keyphrases:
@@ -49,6 +55,7 @@ spam-block-partial-titles:
 - some bad title
 
 ### OAUTH
+# The paste service can optionally use Discord as a staff login tool, using Discord OAuth, and a role to mark staff in your Discord guild.
 
 discord_oauth:
     # To use Discord OAuth2, you must register an application at https://discord.com/developers/applications
@@ -60,12 +67,21 @@ discord_oauth:
     client-secret: abc
     # Discord redirect URL. Must be added under "Redirects" on the OAuth2 page.
     # In most cases: The "/Auth/DiscordAuthConfirm" portion should be left as-is and the base URL should match 'url-base'.
-    redirect-url: https://paste.denizenscript.com/Auth/DiscordAuthConfirm
+    redirect-url: https://example.com/Auth/DiscordAuthConfirm
     # ID of the Discord guild relevant to this paste server, used for roles check.
     guild-id: 123
     # Guild role ID(s) that identity the user as an admin of the paste site.
     guild-roles-admin:
     - 123
+
+### TERMS OF SERVICE
+# This will show up at "/Info/Terms"
+
+# Contact information. HTML allowed.
+tos_contact: Ask on Discord @ <a href="https://discord.gg/Q6pZGSR">https://discord.gg/Q6pZGSR</a> or send an email to <code>webmaster@example.com</code>.
+# Text body of Terms of Service. HTML allowed.
+tos_text: Legal stuff here, etc. Terms regarding takedown policy, etc. Probably include something like:<br>Pastes sent as spam or for advertising or "SEO" reasons will result in the uploader being blocked (if/when discovered).<br>Large numbers of pastes from a single user for any purpose may be ratelimited or blocked either automatically or manually.
+# To customize any other part of the terms page, edit the file "Views/Info/Terms.cshtml"
 ```
 
 ### Licensing pre-note:

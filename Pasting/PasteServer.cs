@@ -46,6 +46,12 @@ namespace DenizenPastingWebsite.Pasting
         /// <summary>A list of titles to automatically block when contained within a new paste title.</summary>
         public static string[] SpamBlockPartialTitles;
 
+        /// <summary>Contact information for the terms page.</summary>
+        public static string ContactInfo = "Contact info unset!";
+
+        /// <summary>Terms of Service information for the terms page.</summary>
+        public static string TermsOfService = "Terms of Service info unset!";
+
         /// <summary>Loads the paste config.</summary>
         public static void LoadConfig()
         {
@@ -59,6 +65,8 @@ namespace DenizenPastingWebsite.Pasting
             SpamBlockShortKeywords = (Config.GetStringList("spam-block-short-keyphrases") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
             SpamBlockTitles = (Config.GetStringList("spam-block-titles") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
             SpamBlockPartialTitles = (Config.GetStringList("spam-block-partial-titles") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
+            ContactInfo = Config.GetString("tos_contact", ContactInfo);
+            TermsOfService = Config.GetString("tos_text", TermsOfService);
             if (Config.HasKey("discord_oauth"))
             {
                 AuthHelper.LoadConfig(Config.GetSection("discord_oauth"));
