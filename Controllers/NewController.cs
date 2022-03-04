@@ -364,15 +364,20 @@ namespace DenizenPastingWebsite.Controllers
         {
             Setup();
             string otherType = "csharp";
-            if (Request.Query.TryGetValue("selected", out StringValues selectionValues) && selectionValues.Any() && PasteType.ValidPasteTypes.ContainsKey(selectionValues[0]))
+            if (Request.Query.TryGetValue("selected", out StringValues selectionValues) && selectionValues.Any())
             {
                 otherType = selectionValues[0];
+            }
+            if (!PasteType.ValidPasteTypes.TryGetValue(selectionValues[0], out PasteType actualType))
+            {
+                Console.Error.WriteLine("Refused new-other: invalid type");
+                return Redirect("/Error/Error404");
             }
             if (Request.Method == "POST")
             {
                 return HandlePost(this, otherType);
             }
-            return View("Index", new NewPasteModel() { NewType = "other" });
+            return View("Index", new NewPasteModel() { NewType = "other", OtherType = actualType.DisplayName });
         }
 
         public IActionResult Edit()
@@ -390,7 +395,7 @@ namespace DenizenPastingWebsite.Controllers
             }
             if (!PasteDatabase.TryGetPaste(pasteId, out Paste paste))
             {
-                Console.Error.WriteLine("Refused view: unlisted ID");
+                Console.Error.WriteLine("Refused edit: unlisted ID");
                 return Redirect("/Error/Error404");
             }
             if (Request.Method != "POST")

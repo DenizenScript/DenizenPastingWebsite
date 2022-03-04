@@ -27,7 +27,7 @@ namespace DenizenPastingWebsite.Pasting
             StringBuilder optionsBuilder = new();
             foreach ((string rawLang, string ext, string display) in AltLanguages)
             {
-                ValidPasteTypes[$"other-{rawLang}"] = new PasteType() { Name = $"other-{rawLang}", DisplayName = $"Other: {display}", FileExtension = ext, Highlight = (s) => OtherLanguageHighlighter.Highlight(rawLang, s), MetaColor = "#55BB88" };
+                ValidPasteTypes[$"other-{rawLang}"] = new PasteType() { Name = $"other-{rawLang}", DisplayName = display, FileExtension = ext, Highlight = (s) => OtherLanguageHighlighter.Highlight(rawLang, s), MetaColor = "#55BB88" };
                 optionsBuilder.Append($"<option name=\"other-{rawLang}\">{display}</option>");
             }
             OtherLangOptions = new HtmlString(optionsBuilder.ToString());

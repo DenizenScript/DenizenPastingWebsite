@@ -13,6 +13,12 @@ namespace DenizenPastingWebsite.Models
         /// <summary>The type of paste to be submitted.</summary>
         public string NewType = "script";
 
+        /// <summary>The "other" type, if any.</summary>
+        public string OtherType = null;
+
+        /// <summary>A display name of the type to be submitted.</summary>
+        public string NewTypeDisplay => OtherType is null ? NewType : OtherType;
+
         /// <summary>If true, a rejection message will show to the user.</summary>
         public bool ShowRejection = false;
 
