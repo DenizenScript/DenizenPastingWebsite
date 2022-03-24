@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FreneticUtilities.FreneticExtensions;
 using FreneticUtilities.FreneticToolkit;
+using DenizenPastingWebsite.Pasting;
 
 namespace DenizenPastingWebsite.Highlighters
 {
@@ -18,6 +19,114 @@ namespace DenizenPastingWebsite.Highlighters
             text = HighlighterCore.EscapeForHTML(text);
             text = ColorLog(text);
             return HighlighterCore.HandleLines(text);
+        }
+
+        public static (string, string[]) DoFilterMethod(string text, string[] filters)
+        {
+            if (filters is null || filters.IsEmpty())
+            {
+                return (text, null);
+            }
+            bool filterIPs = filters.Contains("playerip"), filterChat = filters.Contains("playerchat");
+            if (!filterIPs && !filterChat)
+            {
+                return (text, null);
+            }
+            string[] lines = text.SplitFast('\n');
+            List<string> filtered = new();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string line = lines[i];
+                if (filterIPs)
+                {
+                    line = FilterIPs(line, filtered);
+                }
+                if (filterChat)
+                {
+                    line = FilterChat(line, filtered);
+                }
+                lines[i] = line;
+
+            }
+            if (filtered.IsEmpty())
+            {
+                return (text, null);
+            }
+            return (string.Join('\n', lines), filtered.ToArray());
+        }
+
+        /// <summary>Text that can appear in an IP string.</summary>
+        public static AsciiMatcher IP_TEXT_MATCHER = new(AsciiMatcher.Digits + ".:");
+
+        public static string FilterizeText(string line, int start, int end, string reason, List<string> output)
+        {
+            output.Add(line[start..end]);
+            int index = output.Count;
+            return string.Concat(line[..start], PasteType.FilterChar, index, '=', (end - start), '=', reason, PasteType.FilterChar, line[end..]);
+        }
+
+        public static string FilterIPs(string line, List<string> output)
+        {
+            if (line.Contains(PasteType.FilterChar))
+            {
+                return line;
+            }
+            // 'latest.log' as of 1.18.x: [01:01:01] [Server thread/INFO]: name[/123.123.123.123:1234] logged in with entity id 123 at ([world]1.0, 2.0, 3.0)
+            // in-console as of 1.18.x: [01:01:01 INFO]: name[/123.123.123.123:1234] logged in with entity id 123 at ([world]1.0, 2.0, 3.0)
+            int loggedIn = line.IndexOf("] logged in with entity id");
+            if (loggedIn == -1)
+            {
+                return line;
+            }
+            int endName = line.IndexOf("[/");
+            if (endName == -1 || endName > loggedIn)
+            {
+                return line;
+            }
+            endName += 2;
+            if (loggedIn <= endName + 5)
+            {
+                return line;
+            }
+            if (!IP_TEXT_MATCHER.IsOnlyMatches(line[endName..loggedIn]))
+            {
+                return line;
+            }
+            return FilterizeText(line, endName, loggedIn, "ip", output);
+        }
+
+        public static AsciiMatcher TimePrefixMatcher = new(AsciiMatcher.Digits + ":");
+
+        public static string FilterChat(string line, List<string> output)
+        {
+            if (line.Contains(PasteType.FilterChar))
+            {
+                return line;
+            }
+            // Denizen debug as of 1.18.x: 01:02:03 §e+> [BukkitWorldS...] §f§2CHAT: name: words <chat=123abc-123abc-123abc>
+            const string debugMatchText = " §e+> [BukkitWorldS...] §f§2CHAT: ";
+            int denizenDebugChat = line.IndexOf(debugMatchText);
+            // Note: these matchers are intentionally a bit loose to compensate for possible format differences in some pastes
+            if (denizenDebugChat != -1 && denizenDebugChat < 12)
+            {
+                return FilterizeText(line, denizenDebugChat + debugMatchText.Length, line.Length, "chat", output);
+            }
+            // 'latest.log' as of 1.18.x: [01:02:03] [Async Chat Thread - #1/INFO]: <name> words
+            int asyncChat = line.IndexOf("[Async Chat Thread -");
+            if (asyncChat != -1 && asyncChat < 15)
+            {
+                int endChatPrefix = line.IndexOf("]: ");
+                if (endChatPrefix > asyncChat)
+                {
+                    return FilterizeText(line, endChatPrefix + 3, line.Length, "chat", output);
+                }
+            }
+            // in-console as of 1.18.x: [15:07:27 INFO]: <name> words
+            if (line.IndexOf(" INFO]: <") == 9 && line.StartsWith("[") && TimePrefixMatcher.IsOnlyMatches(line[1..9]))
+            {
+                return FilterizeText(line, 17, line.Length, "chat", output);
+            }
+            return line;
         }
 
         public static Dictionary<string, char> MinecraftLogColorMap = new()

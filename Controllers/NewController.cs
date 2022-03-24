@@ -104,6 +104,7 @@ namespace DenizenPastingWebsite.Controllers
                     return RejectPaste(controller, type);
                 }
             }
+            string[] filters = form.Keys.Where(s => s.StartsWith("privacy_filter_") && form.TryGetValue(s, out StringValues val) && val.Count == 1 && val[0].ToLowerFast() == "on").Select(s => s["privacy_filter_".Length..]).ToArray();
             bool micro = form.TryGetValue("response", out StringValues responseValue) && responseValue.Count == 1 && responseValue[0].ToLowerFast() == "micro";
             bool microv2 = form.TryGetValue("v", out StringValues versionValue) && versionValue.Count == 1 && versionValue[0].ToLowerFast() == "200";
             if (micro)
@@ -133,7 +134,7 @@ namespace DenizenPastingWebsite.Controllers
             {
                 pasteContentText = pasteContentText[0..PasteServer.MaxPasteRawLength];
             }
-            pasteContentText = pasteContentText.Replace('\0', ' ');
+            pasteContentText = pasteContentText.Replace('\0', ' ').Replace(PasteType.FilterChar, ' ');
             if (!IsValidPaste(pasteTitleText, pasteContentText))
             {
                 return RejectPaste(controller, type);
@@ -143,6 +144,11 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused paste: spam");
                 return RejectPaste(controller, type);
             }
+            string[] filterOutput = null;
+            if (filters != null && filters.Any() && actualType.Filter is not null)
+            {
+                (pasteContentText, filterOutput) = actualType.Filter(pasteContentText, filters);
+            }
             Paste newPaste = new()
             {
                 Title = pasteTitleText,
@@ -151,7 +157,8 @@ namespace DenizenPastingWebsite.Controllers
                 Date = StringConversionHelper.DateTimeToString(DateTimeOffset.Now, false),
                 Raw = pasteContentText,
                 Formatted = actualType.Highlight(pasteContentText),
-                Edited = (edits == null ? 0 : edits.ID)
+                Edited = (edits == null ? 0 : edits.ID),
+                FilteredBlocks = filterOutput
             };
             if (newPaste.Formatted.Length > PasteServer.MaxPasteRawLength * 5)
             {

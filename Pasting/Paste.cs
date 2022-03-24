@@ -41,5 +41,8 @@ namespace DenizenPastingWebsite.Pasting
 
         /// <summary>Some deleted pastes have a historical record of their content.</summary>
         public string HistoricalContent { get; set; }
+
+        /// <summary>Text in the original paste pulled out by privacy filters.</summary>
+        public string[] FilteredBlocks { get; set; }
     }
 }

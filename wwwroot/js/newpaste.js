@@ -3,6 +3,7 @@ function setAddr(addr) {
     window.history.pushState(addr, document.title, addr);
     document.getElementById('submitpost').action = addr;
 }
+var privacyFilterDiv = document.getElementById("log_privacy_filter_options");
 function setPasteType(name) {
     document.title = "New " + name + " Paste | Denizen Pastebin";
     if (name.toLowerCase() == "other") {
@@ -11,6 +12,16 @@ function setPasteType(name) {
     else {
         setAddr('/New/' + name);
     }
+    if (name.toLowerCase() == "log") {
+        privacyFilterDiv.style.display = "block";
+    }
+    else {
+        privacyFilterDiv.style.display = "none";
+        Array.from(privacyFilterDiv.getElementsByClassName("btn-check")).forEach(element => {
+            element.checked = false;
+        });
+    }
+    resize();
 }
 var lastSelection = "other-csharp";
 function autoSetOtherType() {

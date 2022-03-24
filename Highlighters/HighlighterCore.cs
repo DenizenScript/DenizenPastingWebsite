@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FreneticUtilities.FreneticExtensions;
 using FreneticUtilities.FreneticToolkit;
+using DenizenPastingWebsite.Pasting;
 
 namespace DenizenPastingWebsite.Highlighters
 {
@@ -47,7 +48,49 @@ namespace DenizenPastingWebsite.Highlighters
             {
                 lineNumbers.Append($"<a id=\"{i}\" href=\"#{i}\">{i}</a>\n");
             }
+            text = PatchForFilter(text);
             return $"<div class=\"line_numbers\"><pre><code>\n{lineNumbers}\n</code></pre></div>\n<div class=\"paste_body\"><pre><code>\n{text}\n</code></pre></div>\n";
+        }
+
+        /// <summary>Applies privacy-filter formatting as-needed to the paste format.</summary>
+        public static string PatchForFilter(string text)
+        {
+            int filterIndex = text.IndexOf(PasteType.FilterChar);
+            if (filterIndex == -1)
+            {
+                return text;
+            }
+            int start = 0;
+            StringBuilder output = new(text.Length * 2);
+            while (filterIndex != -1)
+            {
+                output.Append(text[start..filterIndex]);
+                int endIndex = text.IndexOf(PasteType.FilterChar, filterIndex + 1);
+                if (endIndex == -1 || endIndex > filterIndex + 20)
+                {
+                    return text;
+                }
+                string[] filterInfo = text[(filterIndex + 1)..endIndex].SplitFast('=');
+                if (filterInfo.Length != 3)
+                {
+                    return text;
+                }
+                int index = int.Parse(filterInfo[0]);
+                int length = int.Parse(filterInfo[1]);
+                string reason = filterInfo[2];
+                string filterHolder = new(' ', length);
+                if (length > reason.Length)
+                {
+                    int halfLen = length / 2;
+                    string prefix = new(' ', halfLen);
+                    filterHolder = prefix + reason + prefix + (halfLen * 2 == length ? "" : " ");
+                }
+                output.Append($"<span class=\"filtered_block\" id=\"filtered_block_{index}\" title=\"This section hidden by privacy filter '{reason}'\">{filterHolder}</span>");
+                start = endIndex + 1;
+                filterIndex = text.IndexOf(PasteType.FilterChar, start);
+            }
+            output.Append(text[start..]);
+            return output.ToString();
         }
     }
 }

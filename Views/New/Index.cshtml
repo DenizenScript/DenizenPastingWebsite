@@ -30,6 +30,17 @@
             </label>
         </div>
         &nbsp;<input type="submit" class="btn btn-success" value="Submit">
+        <div id="log_privacy_filter_options" class="log_privacy_filter_options" style="display:none;">
+            <br>Optional Privacy Filters:
+            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                <label class="btn btn-primary" for="privacy_filter_playerip" title="If enabled, automatically hides player IPs">
+                    <input type="checkbox" name="privacy_filter_playerip" class="btn-check" id="privacy_filter_playerip" autocomplete="off"> Player IPs
+                </label>
+                <label class="btn btn-primary" for="privacy_filter_playerchat" title="If enabled, automatically hides player chat messages">
+                    <input type="checkbox" name="privacy_filter_playerchat" class="btn-check" id="privacy_filter_playerchat" autocomplete="off"> Player Chat
+                </label>
+            </div>
+        </div>
     </span>
         @{
             @if (Model.Edit is not null)
@@ -40,11 +51,13 @@
             {
                 <span class="center_helper">
                     <br><br>
-                    <div class="card text-white bg-danger mb-3" style="max-width: 20rem;">
+                    <div class="card text-white bg-danger mb-3" style="max-width: 40rem;">
                         <div class="card-header">Submission Refused</div>
                         <div class="card-body">
                             <p class="card-text">If you're a spammer, go away. If you're not, ask on Discord for help.
-                                <br>This message usually indicates that you tried to paste a very small bit of text - make sure you have the FULL content you intended to paste. If it really is only a couple lines, just share that directly instead of using pastebin.
+                                <br>This message usually indicates that you tried to paste a very small bit of text
+                                <br>- make sure you have the FULL content you intended to paste.
+                                <br>If it really is only a couple lines, just share that directly instead of using pastebin.
                             </p>
                         </div>
                     </div>

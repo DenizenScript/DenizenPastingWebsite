@@ -104,3 +104,11 @@ h4 {
     position: absolute;
     right: 16px;
 }
+.filtered_block {
+    background-color: #555500;
+    border-radius: 4px;
+    color: #000000;
+}
+.filtered_block:hover {
+    background-color: #888800;
+}
