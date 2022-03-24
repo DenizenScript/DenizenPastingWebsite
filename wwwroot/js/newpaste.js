@@ -5,7 +5,7 @@ function setAddr(addr) {
 }
 function setPasteType(name) {
     document.title = "New " + name + " Paste | Denizen Pastebin";
-    if (name == "other") {
+    if (name == "Other") {
         autoSetOtherType();
     }
     else {

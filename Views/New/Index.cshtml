@@ -13,20 +13,20 @@
         <input type="hidden" id="orig_type" name="orig_type" value="@Model.NewType">
         <input type="hidden" name="editing" value="@Model.EditID">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <label class="btn btn-primary">
+            <label class="btn btn-primary" title="Paste a Denizen Script (.dsc)">
                 <input type="radio" name="pastetype" value="script" @Model.Checked("script") onclick="setPasteType('Script')"> Denizen Script
             </label>
-            <label class="btn btn-primary">
+            <label class="btn btn-primary" title="Paste a Minecraft Server Log (.log)">
                 <input type="radio" name="pastetype" value="log" @Model.Checked("log") onclick="setPasteType('Log')"> Server Log
             </label>
-            <label class="btn btn-primary">
+            <label class="btn btn-primary" title="Paste a custom BBCode message">
                 <input type="radio" name="pastetype" value="bbcode" @Model.Checked("bbcode") onclick="setPasteType('BBCode')"> BBCode
             </label>
-            <label class="btn btn-primary">
+            <label class="btn btn-primary" title="Paste a generic plaintext message">
                 <input type="radio" id="text_button" name="pastetype" value="text" @Model.Checked("text") onclick="setPasteType('Text')"> Plain Text
             </label>
-            <label class="btn btn-primary">
-                <input type="radio" id="other_button" name="pastetype" value="other" @Model.Checked("other") onclick="autoSetOtherType()"> Other <select id="other_type_selection" class="form-select" name="other_type" onclick="otherTypeEntryClick()">@Model.OtherLangOptions</select>
+            <label class="btn btn-primary" title="Select some other common paste type">
+                <input type="radio" id="other_button" name="pastetype" value="other" @Model.Checked("other") onclick="setPasteType('Other')"> Other <select id="other_type_selection" class="form-select" name="other_type" onclick="setPasteType('Other')">@Model.OtherLangOptions</select>
             </label>
         </div>
         &nbsp;<input type="submit" class="btn btn-success" value="Submit">
@@ -58,4 +58,4 @@
     }
     <span class="prefix_text">&gt;</span><div class="paste_spacer" id="paste_spacer"><textarea maxlength="@Model.MaxLength" name="pastecontents" id="pastecontents" placeholder="Enter your paste contents here..." autofocus="true">@Model.PreFillContents</textarea></div>
 </form>
-<script src="/js/newpaste.js?vary=1"></script>
+<script src="/js/newpaste.js?vary=2"></script>
