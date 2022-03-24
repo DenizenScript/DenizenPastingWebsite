@@ -13,10 +13,10 @@ function setPasteType(name) {
         setAddr('/New/' + name);
     }
     if (name.toLowerCase() == "log") {
-        privacyFilterDiv.style.display = "block";
+        privacyFilterDiv.style.visibility = "visible";
     }
     else {
-        privacyFilterDiv.style.display = "none";
+        privacyFilterDiv.style.visibility = "hidden";
         Array.from(privacyFilterDiv.getElementsByClassName("btn-check")).forEach(element => {
             element.checked = false;
         });

@@ -30,7 +30,7 @@
             </label>
         </div>
         &nbsp;<input type="submit" class="btn btn-success" value="Submit">
-        <div id="log_privacy_filter_options" class="log_privacy_filter_options" style="display:none;">
+        <div id="log_privacy_filter_options" class="log_privacy_filter_options" style="visibility:hidden;">
             <br>Optional Privacy Filters:
             <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
                 <label class="btn btn-primary" for="privacy_filter_playerip" title="If enabled, automatically hides player IPs">
@@ -42,31 +42,32 @@
             </div>
         </div>
     </span>
-        @{
-            @if (Model.Edit is not null)
-            {
-                <span class="center_helper">Editing Paste @Model.EditID<br></span>
-            }
-            if (Model.ShowRejection)
-            {
-                <span class="center_helper">
-                    <br><br>
-                    <div class="card text-white bg-danger mb-3" style="max-width: 40rem;">
-                        <div class="card-header">Submission Refused</div>
-                        <div class="card-body">
-                            <p class="card-text">If you're a spammer, go away. If you're not, ask on Discord for help.
-                                <br>This message usually indicates that you tried to paste a very small bit of text
-                                <br>- make sure you have the FULL content you intended to paste.
-                                <br>If it really is only a couple lines, just share that directly instead of using pastebin.
-                            </p>
-                        </div>
-                    </div>
-                </span>
-            }
-        }
-    </div>
     <br><hr>
     <span class="prefix_text">&gt;</span><textarea class="textarea_title" maxlength="200" name="pastetitle" wrap="off" rows="1" placeholder="Give your paste a title here...">@Model.PreFillTitle</textarea>
+    </div>
+    <div class="lock_top_spacer"></div>
+    @{
+        @if (Model.Edit is not null)
+        {
+            <span class="center_helper">Editing Paste @Model.EditID<br></span>
+        }
+        if (Model.ShowRejection)
+        {
+            <span class="center_helper">
+                <br><br>
+                <div class="card text-white bg-danger mb-3" style="max-width: 40rem;">
+                    <div class="card-header">Submission Refused</div>
+                    <div class="card-body">
+                        <p class="card-text">If you're a spammer, go away. If you're not, ask on Discord for help.
+                            <br>This message usually indicates that you tried to paste a very small bit of text
+                            <br>- make sure you have the FULL content you intended to paste.
+                            <br>If it really is only a couple lines, just share that directly instead of using pastebin.
+                        </p>
+                    </div>
+                </div>
+            </span>
+        }
+    }
     <br><hr>
     <span class="prefix_text" id="paste_prefix_text">&gt;</span><div class="paste_spacer" id="paste_spacer"><textarea maxlength="@Model.MaxLength" name="pastecontents" id="pastecontents" placeholder="Enter your paste contents here..." autofocus="true">@Model.PreFillContents</textarea></div>
 </form>
