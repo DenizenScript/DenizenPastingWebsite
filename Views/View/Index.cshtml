@@ -40,6 +40,7 @@
         <div class="card-body">
         @if (!Model.IsMarkedAsSpam)
         {
+            <button type="button" class="btn btn-info btn-sm" onclick="loadprivateinfo('@Model.PrivateInfoLink');">Load Private Info</button>
             <form name="spamblock_button" id="spamblock_button" method="POST" action="/View/@Model.Paste.ID" style="display:inline;" onsubmit="return confirm('Are you sure you want to block this paste?');">
                 <input type="hidden" name="button_type" value="spamblock">
                 <input type="submit" class="btn btn-danger btn-sm" value="Block This Paste As Spam">
@@ -49,6 +50,9 @@
             <input type="hidden" name="button_type" value="rerender">
             <input type="submit" class="btn btn-danger btn-sm" value="Rerender Paste">
         </form>
+        <div id="staff_private_info" style="display:none">
+            <br>Submitted by: <span id="staff_private_submitter" class="staff_private_submitter">Unknown</span>
+        </div>
         </div>
         </div>
     }
@@ -89,3 +93,4 @@
         </span>
     }
 </center>
+<script src="/js/viewpaste.js?vary=1"></script>

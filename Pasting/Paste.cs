@@ -42,7 +42,7 @@ namespace DenizenPastingWebsite.Pasting
         /// <summary>Some deleted pastes have a historical record of their content.</summary>
         public string HistoricalContent { get; set; }
 
-        /// <summary>Text in the original paste pulled out by privacy filters.</summary>
-        public string[] FilteredBlocks { get; set; }
+        /// <summary>An internal JSON object of staff info to be loaded by javascript from an admin.</summary>
+        public string StaffInfo { get; set; }
     }
 }

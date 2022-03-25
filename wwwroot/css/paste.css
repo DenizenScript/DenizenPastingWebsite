@@ -119,3 +119,13 @@ h4 {
 .filtered_block:hover {
     background-color: #888800;
 }
+.private_block {
+    background-color: #AAAA77;
+    border-radius: 4px;
+    color: #000000;
+}
+.staff_private_submitter {
+    background-color: #AAAA77;
+    border-radius: 4px;
+    color: #000000;
+}

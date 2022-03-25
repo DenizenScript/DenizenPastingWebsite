@@ -14,6 +14,7 @@ using DenizenPastingWebsite.Models;
 using DenizenPastingWebsite.Highlighters;
 using DenizenPastingWebsite.Utilities;
 using DenizenPastingWebsite.Pasting;
+using Newtonsoft.Json;
 
 namespace DenizenPastingWebsite.Controllers
 {
@@ -144,6 +145,7 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused paste: spam");
                 return RejectPaste(controller, type);
             }
+            pasteContentText = pasteContentText.Replace("\r\n", "\n");
             string[] filterOutput = null;
             if (filters != null && filters.Any() && actualType.Filter is not null)
             {
@@ -158,7 +160,7 @@ namespace DenizenPastingWebsite.Controllers
                 Raw = pasteContentText,
                 Formatted = actualType.Highlight(pasteContentText),
                 Edited = (edits == null ? 0 : edits.ID),
-                FilteredBlocks = filterOutput
+                StaffInfo = GenerateStaffInfo(sender, filterOutput)
             };
             if (newPaste.Formatted.Length > PasteServer.MaxPasteRawLength * 5)
             {
@@ -207,6 +209,18 @@ namespace DenizenPastingWebsite.Controllers
                 return controller.Ok(microv2 ? $"{PasteServer.URL_BASE}/View/{newPaste.ID}\n" : $"/paste/{newPaste.ID}\n");
             }
             return controller.Redirect($"/View/{newPaste.ID}");
+        }
+
+        public static string GenerateStaffInfo(string submitter, string[] filteredOutput)
+        {
+            Dictionary<string, object> jsonObj = new();
+            jsonObj["submitter"] = submitter;
+            if (filteredOutput is not null && filteredOutput.Any())
+            {
+                jsonObj["filtered"] = filteredOutput;
+            }
+            Console.WriteLine("debug" + JsonConvert.SerializeObject(jsonObj));
+            return JsonConvert.SerializeObject(jsonObj);
         }
 
         public static bool IsValidPaste(string title, string content)

@@ -62,7 +62,7 @@ namespace DenizenPastingWebsite
                 if (path.StartsWith("/view/") && !path.StartsWith("/view/index"))
                 {
                     context.Items["viewable"] = path[("/view/".Length)..];
-                    context.Request.Path = context.Request.Method == "POST" ? "/New/Edit" : "/View/Index";
+                    context.Request.Path = context.Request.Method == "POST" && !context.Request.Path.ToString().Contains('.') ? "/New/Edit" : "/View/Index";
                 }
                 await next();
             });

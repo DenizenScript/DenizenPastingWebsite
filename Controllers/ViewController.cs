@@ -25,6 +25,21 @@ namespace DenizenPastingWebsite.Controllers
             {
                 pasteIdText = pasteIdText[0..^".txt".Length];
             }
+            bool priv = !raw && pasteIdText.EndsWith(".priv.json");
+            if (priv)
+            {
+                if (Request.Method != "POST")
+                {
+                    Console.Error.WriteLine("Refused view: non-POST access of private info");
+                    return Redirect("/Error/Error404");
+                }
+                if (!(bool)ViewData["auth_isloggedin"])
+                {
+                    Console.Error.WriteLine("Refused view: non-admin access of private info");
+                    return Redirect("/Error/Error404");
+                }
+                pasteIdText = pasteIdText[0..^".priv.json".Length];
+            }
             if (!long.TryParse(pasteIdText, out long pasteId))
             {
                 Console.Error.WriteLine("Refused view: non-numeric ID");
@@ -39,6 +54,11 @@ namespace DenizenPastingWebsite.Controllers
             {
                 Response.ContentType = "text/plain";
                 return Ok(paste.Raw);
+            }
+            else if (priv)
+            {
+                Response.ContentType = "application/json";
+                return Ok(paste.StaffInfo ?? "{}");
             }
             return View(new ViewPasteModel() { Paste = paste });
         }

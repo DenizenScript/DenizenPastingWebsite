@@ -37,6 +37,8 @@ namespace DenizenPastingWebsite.Models
 
         public string RawLink => $"/View/{Paste.ID}.txt";
 
+        public string PrivateInfoLink => $"/View/{Paste.ID}.priv.json";
+
         public HtmlString Content => new(Paste.Formatted);
 
         public string LengthText => $"{Paste.Raw.Length} characters across {Paste.Raw.CountCharacter('\n')} lines";
