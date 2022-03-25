@@ -219,7 +219,6 @@ namespace DenizenPastingWebsite.Controllers
             {
                 jsonObj["filtered"] = filteredOutput;
             }
-            Console.WriteLine("debug" + JsonConvert.SerializeObject(jsonObj));
             return JsonConvert.SerializeObject(jsonObj);
         }
 
