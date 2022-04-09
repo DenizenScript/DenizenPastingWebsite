@@ -46,7 +46,7 @@ namespace DenizenPastingWebsite.Highlighters
 
         public static HashSet<string> IfOperators = new() { CHAR_TAG_START.ToString(), CHAR_TAG_END.ToString(), CHAR_TAG_START + "=", CHAR_TAG_END + "=", "==", "!=", "||", "&amp;&amp;", "(", ")", "or", "and", "not", "in", "contains", "!in", "!contains" };
 
-        public static HashSet<string> IfCommandLabels = new() { "cmd:if", "cmd:while", "cmd:waituntil" };
+        public static HashSet<string> IfCommandLabels = new() { "cmd:if", "cmd:else", "cmd:while", "cmd:waituntil" };
 
         public static HashSet<string> DeffableCommandLabels = new() { "cmd:run", "cmd:runlater", "cmd:clickable", "cmd:bungeerun" };
 
