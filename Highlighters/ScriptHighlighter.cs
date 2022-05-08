@@ -44,7 +44,7 @@ namespace DenizenPastingWebsite.Highlighters
         /// <summary>Special helper characters to avoid HTML validity mixups.</summary>
         public const char CHAR_TAG_START = (char)0x01, CHAR_TAG_END = (char)0x02;
 
-        public static HashSet<string> IfOperators = new() { CHAR_TAG_START.ToString(), CHAR_TAG_END.ToString(), CHAR_TAG_START + "=", CHAR_TAG_END + "=", "==", "!=", "||", "&amp;&amp;", "(", ")", "or", "and", "not", "in", "contains", "!in", "!contains" };
+        public static HashSet<string> IfOperators = new() { CHAR_TAG_START.ToString(), CHAR_TAG_END.ToString(), CHAR_TAG_START + "=", CHAR_TAG_END + "=", "==", "!=", "||", "&amp;&amp;", "(", ")", "or", "and", "not", "in", "contains", "!in", "!contains", "matches", "!matches" };
 
         public static HashSet<string> IfCommandLabels = new() { "cmd:if", "cmd:else", "cmd:while", "cmd:waituntil" };
 

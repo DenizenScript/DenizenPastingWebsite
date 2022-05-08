@@ -110,7 +110,11 @@ namespace DenizenPastingWebsite.Pasting
                                 sender = sender[..512];
                             }
                             string content = $"New **{PasteType.ValidPasteTypes[paste.Type].Name}** paste: {URL_BASE}/View/{paste.ID} sent by `{sender}`";
-                            request.Content = new ByteArrayContent(StringConversionHelper.UTF8Encoding.GetBytes("{\"content\":\"" + content + "\"}"));
+                            if (paste.Raw.Length < 1024 * 20 && (paste.Raw.Contains("http://") || paste.Raw.Contains("https://")))
+                            {
+                                content += "... 🚩 potential spam - paste contains URLs.";
+                            }
+                            request.Content = new ByteArrayContent(StringConversionHelper.UTF8Encoding.GetBytes("{\"content\":\"" + content.Replace('\\', '/').Replace('"', '\'') + "\"}"));
                             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                             ReusableWebClient.Send(request);
                         }
