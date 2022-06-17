@@ -106,6 +106,7 @@ namespace DenizenPastingWebsite.Pasting
             {
                 Internal.FileStorage.Delete($"/paste/raw/{paste.ID}.txt");
                 Internal.FileStorage.Delete($"/paste/formatted/{paste.ID}.txt");
+                paste.IsInFileStore = false;
             }
             paste.StoredRaw = GZip(Encoding.UTF8.GetBytes(paste.Raw));
             paste.StoredFormatted = GZip(Encoding.UTF8.GetBytes(paste.Formatted));
@@ -117,10 +118,6 @@ namespace DenizenPastingWebsite.Pasting
                 paste.IsInFileStore = true;
                 Internal.FileStorage.Upload($"/paste/raw/{paste.ID}.txt", $"{paste.ID}.txt", new MemoryStream(paste.StoredRaw));
                 Internal.FileStorage.Upload($"/paste/formatted/{paste.ID}.txt", $"{paste.ID}.txt", new MemoryStream(paste.StoredFormatted));
-            }
-            else
-            {
-                paste.IsInFileStore = false;
             }
             Internal.PasteCollection.Upsert(paste.ID, paste);
         }

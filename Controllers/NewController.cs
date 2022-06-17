@@ -198,9 +198,11 @@ namespace DenizenPastingWebsite.Controllers
                 };
                 newPaste.DiffReport = diffPaste.ID;
                 PasteDatabase.SubmitPaste(diffPaste);
+                diffPaste.Raw = diffText;
                 PasteServer.RunNewPasteWebhook(diffPaste);
             }
             PasteDatabase.SubmitPaste(newPaste);
+            newPaste.Raw = pasteContentText;
             PasteServer.RunNewPasteWebhook(newPaste);
             Console.Error.WriteLine($"Accepted new paste: {newPaste.ID} from {newPaste.PostSourceData}");
             if (micro)
