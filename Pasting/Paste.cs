@@ -44,5 +44,14 @@ namespace DenizenPastingWebsite.Pasting
 
         /// <summary>An internal JSON object of staff info to be loaded by javascript from an admin.</summary>
         public string StaffInfo { get; set; }
+
+        /// <summary>If true, the internal data of this paste is compressed.</summary>
+        public bool IsCompressed { get; set; }
+
+        /// <summary>Raw text, stored with GZip compression.</summary>
+        public byte[] StoredRaw { get; set; }
+
+        /// <summary>Formatted text, stored with GZip compression.</summary>
+        public byte[] StoredFormatted { get; set; }
     }
 }

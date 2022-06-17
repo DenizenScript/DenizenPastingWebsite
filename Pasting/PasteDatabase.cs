@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using System.IO.Compression;
 using LiteDB;
 using System.Threading;
 using LiteDB.Engine;
@@ -77,6 +78,15 @@ namespace DenizenPastingWebsite.Pasting
             }
         }
 
+        /// <summary>Gets the next paste ID number without incrementing.</summary>
+        public static long GetTotalPasteCount()
+        {
+            lock (Internal.IDLocker)
+            {
+                return Internal.DataInstance.Value;
+            }
+        }
+
         /// <summary>Gets the next paste ID, automatically incrementing the ID in the process.</summary>
         public static long GetNextPasteID()
         {
@@ -88,22 +98,25 @@ namespace DenizenPastingWebsite.Pasting
             }
         }
 
-        /// <summary>Submits a new paste, adding it to the database.</summary>
+        /// <summary>Submits a new paste, translating raw data to binary compressed data, and adding it to the database.</summary>
         /// <param name="paste">The paste to insert.</param>
         public static void SubmitPaste(Paste paste)
         {
-            if (paste.Raw.Length + paste.Formatted.Length > 7 * 1024 * 1024)
+            if (paste.IsInFileStore)
             {
-                if (paste.IsInFileStore)
-                {
-                    Internal.FileStorage.Delete($"/paste/raw/{paste.ID}.txt");
-                    Internal.FileStorage.Delete($"/paste/formatted/{paste.ID}.txt");
-                }
+                Internal.FileStorage.Delete($"/paste/raw/{paste.ID}.txt");
+                Internal.FileStorage.Delete($"/paste/formatted/{paste.ID}.txt");
+            }
+            paste.StoredRaw = GZip(Encoding.UTF8.GetBytes(paste.Raw));
+            paste.StoredFormatted = GZip(Encoding.UTF8.GetBytes(paste.Formatted));
+            paste.Raw = null;
+            paste.Formatted = null;
+            paste.IsCompressed = true;
+            if (paste.StoredRaw.Length + paste.StoredFormatted.Length > 7 * 1024 * 1024)
+            {
                 paste.IsInFileStore = true;
-                Internal.FileStorage.Upload($"/paste/raw/{paste.ID}.txt", $"{paste.ID}.txt", new MemoryStream(Encoding.UTF8.GetBytes(paste.Raw)));
-                Internal.FileStorage.Upload($"/paste/formatted/{paste.ID}.txt", $"{paste.ID}.txt", new MemoryStream(Encoding.UTF8.GetBytes(paste.Formatted)));
-                paste.Raw = null;
-                paste.Formatted = null;
+                Internal.FileStorage.Upload($"/paste/raw/{paste.ID}.txt", $"{paste.ID}.txt", new MemoryStream(paste.StoredRaw));
+                Internal.FileStorage.Upload($"/paste/formatted/{paste.ID}.txt", $"{paste.ID}.txt", new MemoryStream(paste.StoredFormatted));
             }
             else
             {
@@ -112,17 +125,39 @@ namespace DenizenPastingWebsite.Pasting
             Internal.PasteCollection.Upsert(paste.ID, paste);
         }
 
-        /// <summary>Fills content of a paste object from file store if necessary.</summary>
+        /// <summary>Fills text content of a paste object from file store or compressed data.</summary>
         public static void FillPaste(Paste paste)
         {
-            if (paste != null && paste.IsInFileStore)
+            if (paste is null)
+            {
+                return;
+            }
+            if (paste.IsInFileStore)
             {
                 MemoryStream stream = new();
                 Internal.FileStorage.Download($"/paste/raw/{paste.ID}.txt", stream);
-                paste.Raw = Encoding.UTF8.GetString(stream.ToArray());
+                paste.StoredRaw = stream.ToArray();
                 stream = new MemoryStream();
                 Internal.FileStorage.Download($"/paste/formatted/{paste.ID}.txt", stream);
-                paste.Formatted = Encoding.UTF8.GetString(stream.ToArray());
+                paste.StoredFormatted = stream.ToArray();
+                if (!paste.IsCompressed)
+                {
+                    paste.Raw = Encoding.UTF8.GetString(paste.StoredRaw);
+                    paste.Formatted = Encoding.UTF8.GetString(paste.StoredFormatted);
+                    paste.StoredRaw = null;
+                    paste.StoredFormatted = null;
+                }
+            }
+            if (paste.IsCompressed)
+            {
+                if (paste.Raw is null && paste.StoredRaw is not null)
+                {
+                    paste.Raw = Encoding.UTF8.GetString(UnGZip(paste.StoredRaw));
+                }
+                if (paste.Formatted is null && paste.StoredFormatted is not null)
+                {
+                    paste.Formatted = Encoding.UTF8.GetString(UnGZip(paste.StoredFormatted));
+                }
             }
         }
 
@@ -132,6 +167,32 @@ namespace DenizenPastingWebsite.Pasting
             paste = Internal.PasteCollection.FindById(id);
             FillPaste(paste);
             return paste != null;
+        }
+
+
+        /// <summary>Compresses a byte array using the GZip algorithm.</summary>
+        /// <param name="input">Non-compressed data.</param>
+        /// <returns>Compressed data.</returns>
+        public static byte[] GZip(byte[] input)
+        {
+            using MemoryStream memstream = new();
+            using GZipStream GZStream = new(memstream, CompressionMode.Compress);
+            GZStream.Write(input, 0, input.Length);
+            GZStream.Flush();
+            return memstream.ToArray();
+        }
+
+        /// <summary>Decompress a byte array using the GZip algorithm.</summary>
+        /// <param name="input">Compressed data.</param>
+        /// <returns>Non-compressed data.</returns>
+        public static byte[] UnGZip(byte[] input)
+        {
+            using MemoryStream output = new();
+            using MemoryStream memstream = new(input);
+            using GZipStream GZStream = new(memstream, CompressionMode.Decompress);
+            GZStream.CopyTo(output);
+            GZStream.Flush();
+            return output.ToArray();
         }
     }
 }
