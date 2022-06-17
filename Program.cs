@@ -100,6 +100,45 @@ namespace DenizenPastingWebsite
                             }
                         }
                         break;
+                    case "resubmit_all":
+                        {
+                            int count = 0;
+                            long cap = PasteDatabase.GetTotalPasteCount();
+                            for (long i = 0; i < cap; i++)
+                            {
+                                try
+                                {
+                                    if (PasteDatabase.TryGetPaste(i, out Paste paste))
+                                    {
+                                        if (count % 1000 == 0)
+                                        {
+                                            Console.WriteLine($"Resubmitted {count} pastes thus far...");
+                                            PasteDatabase.Internal.DB.Checkpoint();
+                                        }
+                                        count++;
+                                        PasteDatabase.SubmitPaste(paste);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"Failed to resubmit paste {i}: {ex}");
+                                }
+                            }
+                            Console.WriteLine($"Resubmitting done, {count} total.");
+                        }
+                        break;
+                    case "flush":
+                        {
+                            PasteDatabase.Internal.DB.Checkpoint();
+                            Console.WriteLine("Flushed.");
+                        }
+                        break;
+                    case "rebuild":
+                        {
+                            PasteDatabase.Internal.DB.Rebuild();
+                            Console.WriteLine("Rebuild complete.");
+                        }
+                        break;
                     case "stop":
                         {
                             PasteDatabase.Shutdown();
