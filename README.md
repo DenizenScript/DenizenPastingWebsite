@@ -3,6 +3,21 @@ DenizenPastingWebsite
 
 Paste website (like pastebin), primarily for Denizen scripts and server logs.
 
+Primary server this is intended for: https://paste.denizenscript.com
+
+### Features
+
+- Server-side syntax pre-highlighting for a few core types.
+- Clientside (JavaScript) syntax highlighting for a wide range of common languages.
+- Highly configurable.
+- Hackability: If the config isn't enough, this pastebin is fully open source and welcomes you to do whatever you want with it, including easily adding different paste types or whatever else.
+- Spam bot detection and blocking: not perfect but it works, and more importantly provides tools for you to do your own blocking with as-needed.
+- Permanent pastes: this paste server doesn't delete your pastes over time as many others do.
+- Privacy filter capability: this server can apply privacy filters to some paste types (in the main version, only for Server Logs), hiding private information within a paste for only staff to see.
+- Webhook output to log incoming new pastes (intended to output to a Discord channel but works for other things).
+- Admin tools (via Discord OAuth login) for blocking spambots, viewing filtered out information, etc.
+- Simple but efficient local data storage of pastes ([LiteDB](https://www.litedb.org/))
+
 ### How To Install/Run
 
 Designed for and tested on a Debian Linux server.
@@ -18,6 +33,15 @@ Usage on other Linux distros is likely very similar. Usage outside Linux may req
 - It is strongly recommended you run this webserver behind a reverse proxy like Apache2 or Nginx.
 
 For testing on Windows, `start.ps1` is also available to run via powershell.
+
+### Console Commands Available
+
+- `stop`: close the server.
+- `rebuild`: Internal LiteDB rebuild.
+- `flush`: Internal LiteDB checkpoint flush.
+- `resubmit_all`: Resubmits all pastes internally. Useful to apply data format changes if relevant.
+- `render_type (type)`: rerenders all pastes of a given type. Useful to apply render output changes if relevant.
+- `remove_bot_post (id)`: marks a paste as a spambot paste and removes it from public view (the on-page admin button is preferred).
 
 ### Configuration
 
