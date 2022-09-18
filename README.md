@@ -34,6 +34,15 @@ Usage on other Linux distros is likely very similar. Usage outside Linux may req
 
 For testing on Windows, `start.ps1` is also available to run via powershell.
 
+
+### Testing on Windows
+
+- Install [DotNET 6](https://dotnet.microsoft.com/download/dotnet/6.0)
+- Make a folder labeled `config`, inside it make a text file labeled `config.fds`, and fill it with the config sample below (and change values to fit your configuration needs).
+- Open this folder in VS Code
+- Use the terminal at the bottom of VS Code, run `.\start.ps1`
+- Open `localhost:8096` in your browser
+
 ### Console Commands Available
 
 - `stop`: close the server.
