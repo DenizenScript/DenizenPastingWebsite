@@ -65,6 +65,10 @@ namespace DenizenPastingWebsite.Utilities
             breadcrumb.ColorCSS = "/css/theme/colors_breadcrumb.css";
             breadcrumb.Footer = "Theme: Breadcrumb Dark, created by Breadcrumb";
             Themes.Add("breadcrumb", breadcrumb);
+            ThemeHelper baguette = Dark.MemberwiseClone() as ThemeHelper;
+            baguette.ColorCSS = "/css/theme/colors_apademide.css";
+            baguette.Footer = "Theme: Baguette, created by Apademide";
+            Themes.Add("baguette", baguette);
         }
 
         public string BootstrapURL;

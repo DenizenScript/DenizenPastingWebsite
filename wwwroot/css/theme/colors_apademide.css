@@ -1,0 +1,95 @@
+/* General Page */
+body {background-color:#0f0f0a;color:#e0e0ef}
+hr {border-color:#0f0f0a;}
+.line_numbers a {color:#777788;}
+/* Denizen Script Colors */
+.script_comment_header{color:#f47d78;}
+.script_comment_normal{color:#777788;}
+.script_comment_code{color:#7fff7f;}
+.script_comment_todo{color:#fee75c;font-weight:bold;}
+.script_key{color:#f79f57;}
+.script_key_inline{color:#f79f57;font-style:italic;}
+.script_command{color:#ff8bf3;font-style:italic;}
+.script_quote_double{color:#8aecf3;}
+.script_quote_single{color:#8aecf3;}
+.script_tag{color:#a1a1ac;}
+.script_tag_dot{color:#d951ff;}
+.script_tag_param{color:#696cfc;}
+.script_tag_param_bracket{color:#7777FF;}
+.script_colon{color:#00bacc;font-weight:bold;}
+.script_bad_space{color:#FFFFFF;background-color:#bc4b4b;}
+.script_normal{color:#FFFFFF;}
+.script_def_name{color:#fee75c;text-transform:uppercase;}
+/* Diff colors */
+.diff_added{color:#7fff7f;}
+.diff_removed{color:#f47d78;}
+.diff_special{color:#f79f57;}
+/* MC Log Colors */
+.mc_0{color:#e0e0ef;}
+.mc_1{color:#696cfc;}
+.mc_2{color:#7fff7f;}
+.mc_3{color:#00bacc;}
+.mc_4{color:#bc4b4b;}
+.mc_5{color:#d951ff;}
+.mc_6{color:#f79f57;}
+.mc_7{color:#a1a1ac;}
+.mc_8{color:#777788;}
+.mc_9{color:#7777FF;}
+.mc_a{color:#7fff7f;}
+.mc_b{color:#8aecf3;}
+.mc_c{color:#f47d78;}
+.mc_d{color:#ff8bf3;}
+.mc_e{color:#fee75c;}
+.mc_f{color:#e0e0ef;}
+.mc_n{border-bottom:1px solid white;}
+.mc_m{text-decoration:line-through;}
+.mc_l{font-weight:bold;}
+.mc_o{font-style:italic;}
+.mc_r{font-size:100%;font-style:normal;font-weight:normal;color:#e0e0ef;}
+.mc_k{font-style:italic;font-weight:bold;}
+/* Server log colors */
+.log_timestamp{color:#777788;}
+.log_info{color:#e0e0ef;}
+.log_warn{color:#f79f57;}
+.log_error{color:#f47d78;}
+.log_thread_main{color:#7fff7f;}
+.log_thread_user_auth{color:#8aecf3;}
+.log_thread_async{color:#696cfc;}
+.log_plugin{color:#005533;}
+.log_plugin_generic{color:#e0e0ef;}
+.log_plugin_load{color:#fee75c;}
+.log_plugin_enable{color:#fee75c;}
+.log_plugin_disable{color:#bc4b4b;}
+.log_plugin_denizen{color:#d951ff;}
+.log_plugin_citizens{color:#ff8bf3;}
+.log_plugin_sentinel{color:#ff8bf3;}
+.log_user_chat{color:#a1a1ac;}
+.log_user_join{color:#a1a1ac;}
+.log_user_cmd{color:#a1a1ac;}
+.log_autocolor_0,.log_autocolor_1,.log_autocolor_2,.log_autocolor_3,.log_autocolor_4,.log_autocolor_5,.log_autocolor_6,.log_autocolor_7,.log_autocolor_8,.log_autocolor_9,.log_autocolor_10,.log_autocolor_11,.log_autocolor_12,.log_autocolor_13,.log_autocolor_14,.log_autocolor_15,.log_autocolor_16,.log_autocolor_17,.log_autocolor_18,.log_autocolor_19{color:#8aecf3;}
+/* HLJS */
+pre code.hljs{display:block;overflow-x:auto;padding:1em;}
+code.hljs{padding:3px 5px;}
+.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#0066FF;}
+.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#000000;}
+.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#f79f57;}
+.hljs-attr,.hljs-attribute{color:#0000FF;}
+.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#e0e0ef;}
+.hljs-built_in,.hljs-symbol{color:#0066FF;}
+.hljs-code,.hljs-comment,.hljs-formula{color:#007700;}
+.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#0099BB;}
+.hljs-subst{color:#5500FF;}
+.hljs-section{color:#0000FF;font-weight:700;}
+.hljs-bullet{color:#000000;}
+.hljs-doctag{color:#AA2020;}
+.hljs-emphasis{color:#24292e;font-style:italic;}
+.hljs-strong{color:#24292e;font-weight:700;}
+.hljs-addition{color:#22863a;background-color:#f0fff4;}
+.hljs-deletion{color:#b31d28;background-color:#ffeef0;}
+/* Hidden content */
+.filtered_block {background-color:#373748;border-radius:1px;color:#000000;}
+.filtered_block:hover {background-color:#373748;}
+/* UI colors */
+nav.bg-primary{background-color:#fff48f!important;height:40px}
+nav a{color:#0f0f0a!important;}
+a:not([id],.nav-link,.navbar-brand),a:not([id],.nav-link,.navbar-brand):hover,.btn-secondary{text-decoration: underline;text-decoration-color:#299b7d;text-decoration-thickness:2px;color:#e0e0ef;}
