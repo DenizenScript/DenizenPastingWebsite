@@ -20,8 +20,8 @@ namespace DenizenPastingWebsite.Utilities
 {
     public class AuthHelper
     {
-        public static long HardReverifyDelay = 3 * 24 * 60 * 60, SoftReverifyDelay = 3 * 60 * 60,
-            InvalidateDelay = 2 * 31 * 24 * 60 * 60, RefreshEarlyBy = 7 * 24 * 60 * 60;
+        public static double HardReverifyDelay = TimeSpan.FromDays(3).TotalSeconds, SoftReverifyDelay = TimeSpan.FromHours(3).TotalSeconds,
+            InvalidateDelay = TimeSpan.FromDays(2 * 31).TotalSeconds, RefreshEarlyBy = TimeSpan.FromDays(3).TotalSeconds;
 
         public static void HandleAuth(HttpRequest request, HttpResponse response, ViewDataDictionary viewData)
         {
@@ -45,13 +45,13 @@ namespace DenizenPastingWebsite.Utilities
                 response.Cookies.Delete("paste_session_token");
                 return;
             }
-            if (user.RefreshTime - RefreshEarlyBy > CurrentTimestamp())
+            if (user.RefreshTime - RefreshEarlyBy < CurrentTimestamp())
             {
                 UserReverifyHelper locker = Locks[Math.Abs((int)(user.UserID % 32))];
                 lock (locker)
                 {
                     user = PasteDatabase.Internal.UserCollection.FindById(sessTok);
-                    if (user is not null && user.RefreshTime - RefreshEarlyBy > CurrentTimestamp())
+                    if (user is not null && user.RefreshTime - RefreshEarlyBy < CurrentTimestamp())
                     {
                         TokenResults token = RefreshToken(user.RefreshToken);
                         if (token is null)
@@ -61,6 +61,7 @@ namespace DenizenPastingWebsite.Utilities
                             response.Cookies.Delete("paste_session_token");
                             return;
                         }
+                        Console.WriteLine("Token is valid for " + TimeSpan.FromSeconds(token.ExpiresSeconds).SimpleFormat(false));
                         user.RefreshTime = CurrentTimestamp() + token.ExpiresSeconds;
                         user.DiscordToken = token.AccessTok;
                         user.RefreshToken = token.RefreshTok;
@@ -70,7 +71,7 @@ namespace DenizenPastingWebsite.Utilities
                     }
                 }
             }
-            if (user.LastTimeVerified + HardReverifyDelay > CurrentTimestamp())
+            if (user.LastTimeVerified + HardReverifyDelay < CurrentTimestamp())
             {
                 if (!Reverify(user))
                 {
@@ -79,7 +80,7 @@ namespace DenizenPastingWebsite.Utilities
                     return;
                 }
             }
-            else if (user.LastTimeVerified + SoftReverifyDelay > CurrentTimestamp())
+            else if (user.LastTimeVerified + SoftReverifyDelay < CurrentTimestamp())
             {
                 Task.Factory.StartNew(() =>
                 {
@@ -233,6 +234,7 @@ namespace DenizenPastingWebsite.Utilities
 
         public static UserGuildData GetUserGuildData(string token)
         {
+            Console.WriteLine("Doing an auth user data check");
             HttpRequestMessage request = new(HttpMethod.Get, $"{DISCORD_API_BASE}/users/@me/guilds/{GuildID}/member");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             try
@@ -290,11 +292,13 @@ namespace DenizenPastingWebsite.Utilities
 
         public static TokenResults RefreshToken(string refreshTok)
         {
+            Console.WriteLine("Doing an auth token refresh");
             return DoTokenPost($"client_id={ClientID}&client_secret={ClientSecret}&grant_type=refresh_token&refresh_token={HttpUtility.UrlEncode(refreshTok)}&redirect_uri={RedirectURL}");
         }
 
         public static TokenResults RequestTokenFor(string code)
         {
+            Console.WriteLine("Doing an auth token request");
             return DoTokenPost($"client_id={ClientID}&client_secret={ClientSecret}&grant_type=authorization_code&code={HttpUtility.UrlEncode(code)}&redirect_uri={RedirectURL}");
         }
 
@@ -310,7 +314,7 @@ namespace DenizenPastingWebsite.Utilities
         public static string GenerateAuthorizationURL(out string state)
         {
             state = GenerateRandomHexString(16);
-            MemoryCache.Default.Add($"auth_state_{state}", "active", new CacheItemPolicy() {  AbsoluteExpiration = DateTime.UtcNow.AddMinutes(15) });
+            MemoryCache.Default.Add($"auth_state_{state}", "active", new CacheItemPolicy() { AbsoluteExpiration = DateTime.UtcNow.AddMinutes(15) });
             return $"{DISCORD_OAUTH_BASE}/authorize?response_type=code&client_id={ClientID}&scope=identify%20guilds%20guilds.members.read&state={state}&redirect_uri={RedirectURL}&prompt=consent";
         }
     }
