@@ -108,7 +108,7 @@ namespace DenizenPastingWebsite.Pasting
         }
 
         /// <summary>Runs the new-paste webhooks, if needed.</summary>
-        public static void RunNewPasteWebhook(Paste paste)
+        public static void RunNewPasteWebhook(Paste paste, PasteUser user)
         {
             if (NewPasteWebhooks.Length == 0)
             {
@@ -132,6 +132,10 @@ namespace DenizenPastingWebsite.Pasting
                             if (paste.Raw.Length < 1024 * 10 && paste.Raw.CountCharacter('\n') < 15 && (paste.Raw.Contains("http://") || paste.Raw.Contains("https://")))
                             {
                                 content += "... 🚩 potential spam - paste contains URLs.";
+                            }
+                            else if (user.CurrentStatus == PasteUser.Status.POTENTIAL_SPAMMER)
+                            {
+                                content += "... 🚩 potential spam - user has previously had spam blocked.";
                             }
                             request.Content = new ByteArrayContent(StringConversionHelper.UTF8Encoding.GetBytes("{\"content\":\"" + content.Replace('\\', '/').Replace('"', '\'') + "\"}"));
                             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");

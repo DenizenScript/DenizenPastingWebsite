@@ -116,6 +116,12 @@ namespace DenizenPastingWebsite.Controllers
                     sender += "v2";
                 }
             }
+            PasteUser user = PasteDatabase.GetUser(sender); // Note: intentionally use 'sender' not 'realOrigin'
+            if (user.CurrentStatus == PasteUser.Status.BLOCKED)
+            {
+                Console.Error.WriteLine("Refused paste: blocked sender");
+                return RejectPaste(controller, type);
+            }
             if (!PasteType.ValidPasteTypes.TryGetValue(type, out PasteType actualType))
             {
                 Console.Error.WriteLine($"Refused paste: Unknown type {type}");
@@ -138,9 +144,13 @@ namespace DenizenPastingWebsite.Controllers
             pasteContentText = pasteContentText.Replace('\0', ' ').Replace(PasteType.FilterChar, ' ');
             if (!IsValidPaste(pasteTitleText, pasteContentText))
             {
-                return RejectPaste(controller, type);
+                if (user.CurrentStatus != PasteUser.Status.WHITELIST)
+                {
+                    return RejectPaste(controller, type);
+                }
+                Console.WriteLine("Paste allowed to bypass due to whitelisted sender");
             }
-            if (!RateLimiter.TryUser(realOrigin))
+            if (user.CurrentStatus != PasteUser.Status.WHITELIST && !RateLimiter.TryUser(realOrigin)) // Note: intentionally use 'realOrigin'
             {
                 Console.Error.WriteLine("Refused paste: spam");
                 return RejectPaste(controller, type);
@@ -199,11 +209,11 @@ namespace DenizenPastingWebsite.Controllers
                 newPaste.DiffReport = diffPaste.ID;
                 PasteDatabase.SubmitPaste(diffPaste);
                 diffPaste.Raw = diffText;
-                PasteServer.RunNewPasteWebhook(diffPaste);
+                PasteServer.RunNewPasteWebhook(diffPaste, user);
             }
             PasteDatabase.SubmitPaste(newPaste);
             newPaste.Raw = pasteContentText;
-            PasteServer.RunNewPasteWebhook(newPaste);
+            PasteServer.RunNewPasteWebhook(newPaste, user);
             Console.Error.WriteLine($"Accepted new paste: {newPaste.ID} from {newPaste.PostSourceData}");
             if (micro)
             {
@@ -443,6 +453,22 @@ namespace DenizenPastingWebsite.Controllers
                             paste.Formatted = HighlighterCore.HighlightPlainText("Spam post removed from view.");
                             PasteDatabase.SubmitPaste(paste);
                             Console.WriteLine($"paste {pasteId} removed by logged in staff - {(ulong)ViewData["auth_userid"]}");
+                            PasteUser user = PasteDatabase.GetUser(paste.PostSourceData);
+                            if (user.CurrentStatus == PasteUser.Status.NORMAL)
+                            {
+                                user.CurrentStatus = PasteUser.Status.POTENTIAL_SPAMMER;
+                                PasteDatabase.ResubmitUser(user);
+                            }
+                            return Redirect($"/View/{paste.ID}");
+                        }
+                        break;
+                    case "statuschange":
+                        if ((bool)ViewData["auth_isloggedin"] && Request.Form.TryGetValue("status", out StringValues statusVal) && statusVal.Count == 1 && Enum.TryParse<PasteUser.Status>(statusVal[0], true, out PasteUser.Status statusEnum))
+                        {
+                            Console.WriteLine($"User {paste.PostSourceData} status changed to {statusEnum} by logged in staff - {(ulong)ViewData["auth_userid"]}");
+                            PasteUser user = PasteDatabase.GetUser(paste.PostSourceData);
+                            user.CurrentStatus = statusEnum;
+                            PasteDatabase.ResubmitUser(user);
                             return Redirect($"/View/{paste.ID}");
                         }
                         break;

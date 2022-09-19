@@ -38,9 +38,9 @@
         <div class="card border-secondary" style="max-width: 90%;">
         <div class="card-header">Staff Tools</div>
         <div class="card-body">
+        <button type="button" class="btn btn-info btn-sm" onclick="loadprivateinfo('@Model.PrivateInfoLink');">Load Private Info</button>
         @if (!Model.IsMarkedAsSpam)
         {
-            <button type="button" class="btn btn-info btn-sm" onclick="loadprivateinfo('@Model.PrivateInfoLink');">Load Private Info</button>
             <form name="spamblock_button" id="spamblock_button" method="POST" action="/View/@Model.Paste.ID" style="display:inline;" onsubmit="return confirm('Are you sure you want to block this paste?');">
                 <input type="hidden" name="button_type" value="spamblock">
                 <input type="submit" class="btn btn-danger btn-sm" value="Block This Paste As Spam">
@@ -52,6 +52,17 @@
         </form>
         <div id="staff_private_info" style="display:none">
             <br>Submitted by: <span id="staff_private_submitter" class="staff_private_submitter">Unknown</span>
+            <br>Status:
+            <form name="userstatus_button" id="userstatus_button" method="POST" action="/View/@Model.Paste.ID" style="display:inline;" onsubmit="return confirm('Are you sure you want to apply a user status change?');">
+                <input type="hidden" name="button_type" value="statuschange">
+                <select name="status" class="btn btn-secondary btn-sm" id="staff_submitter_status_selector">
+                    <option value="Blocked">Blocked</option>
+                    <option value="Potential_Spammer">Potential_Spammer</option>
+                    <option value="Normal" selected>Normal</option>
+                    <option value="Whitelist">Whitelist</option>
+                </select>
+                <input type="submit" class="btn btn-warning btn-sm" value="Update User Status">
+            </form>
         </div>
         </div>
         </div>
@@ -93,4 +104,4 @@
         </span>
     }
 </center>
-<script src="/js/viewpaste.js?vary=1"></script>
+<script src="/js/viewpaste.js?vary=2"></script>

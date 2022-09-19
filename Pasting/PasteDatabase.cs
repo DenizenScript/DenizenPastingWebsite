@@ -24,6 +24,8 @@ namespace DenizenPastingWebsite.Pasting
 
             public static ILiteCollection<AuthHelper.UserDatabaseEntry> UserCollection;
 
+            public static ILiteCollection<PasteUser> TrackedSenders;
+
             public class DataTracker
             {
                 public long Value { get; set; }
@@ -49,6 +51,7 @@ namespace DenizenPastingWebsite.Pasting
             Internal.PasteCollection = Internal.DB.GetCollection<Paste>("pastes");
             Internal.UserCollection = Internal.DB.GetCollection<AuthHelper.UserDatabaseEntry>("users");
             Internal.DataCollection = Internal.DB.GetCollection<Internal.DataTracker>("data");
+            Internal.TrackedSenders = Internal.DB.GetCollection<PasteUser>("tracked_senders");
             Internal.DataInstance = Internal.DataCollection.FindById(0);
             if (Internal.DataInstance == null)
             {
@@ -166,6 +169,24 @@ namespace DenizenPastingWebsite.Pasting
             return paste != null;
         }
 
+        /// <summary>Gets the user data for a specified sender address.</summary>
+        public static PasteUser GetUser(string origin)
+        {
+            origin = origin.Replace(", response=microv2", "").Replace("X-Forwarded-For: ", "");
+            origin = PasteServer.AllowedSenderText.TrimToMatches(origin);
+            PasteUser user = Internal.TrackedSenders.FindById(origin);
+            if (user is not null)
+            {
+                return user;
+            }
+            return new PasteUser() { SenderID = origin, CurrentStatus = PasteUser.Status.NORMAL };
+        }
+
+        /// <summary>Adds or updates user data to the database.</summary>
+        public static void ResubmitUser(PasteUser user)
+        {
+            Internal.TrackedSenders.Upsert(user);
+        }
 
         /// <summary>Compresses a byte array using the GZip algorithm.</summary>
         /// <param name="input">Non-compressed data.</param>

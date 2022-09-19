@@ -57,8 +57,10 @@ namespace DenizenPastingWebsite.Controllers
             }
             else if (priv)
             {
+                PasteUser user = PasteDatabase.GetUser(paste.PostSourceData);
                 Response.ContentType = "application/json";
-                return Ok(paste.StaffInfo ?? "{}");
+                string staffData = paste.StaffInfo ?? "{}";
+                return Ok("{" + $"\"paste\":{staffData},\"userStatus\":\"{user.CurrentStatus}\"" + "}");
             }
             return View(new ViewPasteModel() { Paste = paste });
         }
