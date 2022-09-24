@@ -1,0 +1,168 @@
+@import "colors_light.css";
+/* Baguette (Light): created by apademide */
+/* Matching MetaDocs Version: 1.1.0        */
+
+/* Global appearance */
+:root {
+  --very-black: #0f0f0f;
+  --black: #585858;
+  --gray: #cecece;
+  --background: #f7f7f7;
+  --green: #299b7d;
+  --tag: var(--gray);
+  --margin: 15vw;
+  --width: 70vw;
+  --font-mono: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  --font-regular: Arial,Helvetica,sans-serif;
+}
+@media (width < 1200px) {
+  :root {
+  --margin: 5vw;
+  --width: 90vw;
+  }
+}
+body {font-family: var(--font-regular);  background-color: var(--very-black); color: var(--black); }
+hr { border-top: 1.5px solid var(--gray); }
+/* Styling links */
+a:not(code a),a:not(code a):hover { text-decoration: underline; text-decoration-color: var(--green); text-decoration-thickness: 2px; color: var(--very-black); }
+/* NavBar */
+.navbar { font-size: 16px; padding: 10px var(--margin) 10px 20px; border-bottom: 1.5px solid var(--gray);}
+nav.bg-primary { background-color: #fff48f!important; } /* !important required because bootstrap is annoying */
+.navbar-dark .navbar-brand { font-size: 1rem; position: relative; font-weight: bold; text-decoration: none; text-shadow: 1px 0px #222,2px 2px 0px #222,3px 3px 0px #222,-1px 1px 0px #222,0px 2px 0px #222,1px 3px 0px #222,-1px -1px 0px #222,-1px 1px 0px #222,1px -1px 0px #222; }
+.navbar-dark .navbar-nav .nav-link,.navbar-dark .navbar-nav .nav-link:hover { color: var(--very-black); text-decoration: none; }
+/* Disables the "pusher" (empty div @ the top that should be as height as the navbar, but isn't(because i changed its height)) */
+body > div[style] {display: none;}
+/* Information card */
+center .card { display: block; padding: 60px 0 20px 0; background-color: var(--background); border-radius: 0; border: 0; max-width: unset !important; /* !important required because of inline style */ text-align: left; border-bottom: 1.5px solid var(--gray); }
+center .card .card-header { color: var(--very-black); font-size: 34px; margin: 0; padding: 70px 0 0 var(--margin); background-color: unset; font-weight: bold; border: 0; }
+center .card .card-body { padding: 21px 0 0 0; font-size: 19px; line-height: 24px; color: var(--black); }
+center .card .card-body .card-text { padding-left: var(--margin); padding-bottom: 50px; border-bottom: 1.5px solid var(--gray); }
+/* Format the buttons */
+center .card-body > a, #edit_button > input.btn.btn-secondary.btn-sm {  display: inline-block; text-decoration: none; background-color: var(--tag); border: 0; padding: 1px 6px; margin: 6px 6px 0 0; font-weight: 400; border-radius: 3px; font-family: var(--font-mono); color: var(--very-black); font-size: 14.5px }
+center .card-body > a:hover, #edit_button > input.btn.btn-secondary.btn-sm:hover { background-color: var(--gray); color: var(--very-black); }
+body > center > div > div.card-body > a:nth-child(2) {  margin-left: var(--margin); }
+#submitpost .center_helper .btn-group label { position: relative; background-color: var(--tag); border: 0; padding: 1px 6px; margin: 6px 6px 0 0; border-radius: 3px; font-family: var(--font-mono); color: var(--very-black); font-size: 14.5px }
+#submitpost .center_helper .btn-group label.active { transform: translateY(-3px); box-shadow: 0 3px 0 var(--black);}
+#other_type_selection { background-color: unset; outline: none; border: none; border-left: 1.5px solid var(--black); color: var(--very-black) }
+#submitpost > div.lock_top > span.center_helper > input.btn.btn-success { background-color: #7fff7f; border: 0; padding: 1px 6px; margin: 6px 6px 0 0; border-radius: 3px; font-family: var(--font-mono); color: var(--very-black); font-size: 14.5px}
+/* Handle "Copied!" popover for Copy btn */
+#copybutton { position: relative; }
+#copybutton .popover_box { position: absolute; display: block; top: 0%; padding: 1px 0; left: 0; width: 100%; border-radius: 3px; background-color: #7fff7f; color: var(--very-black); }
+/* Better legibility for code selection */
+code span::selection, code::selection { color: inherit; background-color: #0000A8; }
+/* Footer */
+footer center { padding: 0 var(--margin); text-align: left; border-top: var(--gray) 1.5px solid; margin-top: 50px; background-color: var(--background); }
+/* Hides footer's hr (replaced by the above border-top to be full width) */
+footer center hr { display: none }
+/* Fixes footer's font */
+body > footer > center > span { display: block; padding: 10px 0 20px 0; }
+/* Code container */
+center .center-auto { position: relative; width: 100%; }
+/* Line numbers */
+center .line_numbers { position: absolute; right: calc( 100% - var(--margin) + 20px );}
+center .line_numbers pre code a { color: #777788; text-decoration: none;}
+/* Code content */
+center .paste_body { position: relative; left: 0; }
+/* Paste area */
+textarea { color:#e0e0ef; font-family: var(--font-mono); }
+#pastecontents {
+  transform: translateY(140px);
+  color:#e0e0ef;
+  left: var(--margin);
+  right: var(--margin);
+  width: auto;
+}
+#submitpost .lock_top textarea {
+  transform: translateY(14px);
+  color: var(--very-black);
+  left: var(--margin)
+}
+/* Hides the lil ">" before the title's textarea */
+#submitpost .lock_top .prefix_text { display: none; }
+/* Denizen Script Colors */
+.script_comment_header{color:#f47d78;}
+.script_comment_normal{color:#777788;}
+.script_comment_code{color:#7fff7f;}
+.script_comment_todo{color:#fee75c;font-weight:bold;}
+.script_key{color:#f79f57;}
+.script_key_inline{color:#f79f57;font-style:italic;}
+.script_command{color:#ff8bf3;font-style:italic;}
+.script_quote_double{color:#8aecf3;}
+.script_quote_single{color:#8aecf3;}
+.script_tag{color:#a1a1ac;}
+.script_tag_dot{color:#d951ff;}
+.script_tag_param{color:#696cfc;}
+.script_tag_param_bracket{color:#7777FF;}
+.script_colon{color:#00bacc;font-weight:bold;}
+.script_bad_space{color:#FFFFFF;background-color:#bc4b4b;}
+.script_normal{color:#FFFFFF;}
+.script_def_name{color:#fee75c;text-transform:uppercase;font-style:normal;}
+/* Diff colors */
+.diff_added{color:#7fff7f;}
+.diff_removed{color:#f47d78;}
+.diff_special{color:#f79f57;}
+/* MC Log Colors */
+.mc_0{color:#e0e0ef;}
+.mc_1{color:#696cfc;}
+.mc_2{color:#7fff7f;}
+.mc_3{color:#00bacc;}
+.mc_4{color:#bc4b4b;}
+.mc_5{color:#d951ff;}
+.mc_6{color:#f79f57;}
+.mc_7{color:#a1a1ac;}
+.mc_8{color:#777788;}
+.mc_9{color:#7777FF;}
+.mc_a{color:#7fff7f;}
+.mc_b{color:#8aecf3;}
+.mc_c{color:#f47d78;}
+.mc_d{color:#ff8bf3;}
+.mc_e{color:#fee75c;}
+.mc_f{color:#e0e0ef;}
+.mc_n{border-bottom:1px solid white;}
+.mc_m{text-decoration:line-through;}
+.mc_l{font-weight:bold;}
+.mc_o{font-style:italic;}
+.mc_r{font-size:100%;font-style:normal;font-weight:normal;color:#e0e0ef;}
+.mc_k{font-style:italic;font-weight:bold;}
+/* Server log colors */
+.log_timestamp{color:#777788;}
+.log_info{color:#e0e0ef;}
+.log_warn{color:#f79f57;}
+.log_error{color:#f47d78;}
+.log_thread_main{color:#7fff7f;}
+.log_thread_user_auth{color:#8aecf3;}
+.log_thread_async{color:#696cfc;}
+.log_plugin{color:#005533;}
+.log_plugin_generic{color:#e0e0ef;}
+.log_plugin_load{color:#fee75c;}
+.log_plugin_enable{color:#fee75c;}
+.log_plugin_disable{color:#bc4b4b;}
+.log_plugin_denizen{color:#d951ff;}
+.log_plugin_citizens{color:#ff8bf3;}
+.log_plugin_sentinel{color:#ff8bf3;}
+.log_user_chat{color:#a1a1ac;}
+.log_user_join{color:#a1a1ac;}
+.log_user_cmd{color:#a1a1ac;}
+.log_autocolor_0,.log_autocolor_1,.log_autocolor_2,.log_autocolor_3,.log_autocolor_4,.log_autocolor_5,.log_autocolor_6,.log_autocolor_7,.log_autocolor_8,.log_autocolor_9,.log_autocolor_10,.log_autocolor_11,.log_autocolor_12,.log_autocolor_13,.log_autocolor_14,.log_autocolor_15,.log_autocolor_16,.log_autocolor_17,.log_autocolor_18,.log_autocolor_19{color:#8aecf3;}
+/* HLJS */
+pre code.hljs{display:block;overflow-x:auto;padding:1em;}
+code.hljs{padding:3px 5px;}
+.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#0066FF;}
+.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#000000;}
+.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#f79f57;}
+.hljs-attr,.hljs-attribute{color:#0000FF;}
+.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#e0e0ef;}
+.hljs-built_in,.hljs-symbol{color:#0066FF;}
+.hljs-code,.hljs-comment,.hljs-formula{color:#007700;}
+.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#0099BB;}
+.hljs-subst{color:#5500FF;}
+.hljs-section{color:#0000FF;font-weight:700;}
+.hljs-bullet{color:#000000;}
+.hljs-doctag{color:#AA2020;}
+.hljs-emphasis{color:#24292e;font-style:italic;}
+.hljs-strong{color:#24292e;font-weight:700;}
+.hljs-addition{color:#22863a;background-color:#f0fff4;}
+.hljs-deletion{color:#b31d28;background-color:#ffeef0;}
+/* Hidden content */
+.filtered_block {background-color:#373748;border-radius:1px;color:#000000;}
+.filtered_block:hover {background-color:#373748;}
