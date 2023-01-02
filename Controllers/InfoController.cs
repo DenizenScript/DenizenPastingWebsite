@@ -87,7 +87,7 @@ namespace DenizenPastingWebsite.Controllers
                 return Ok("{'error': 'too many search terms'}");
             }
             Console.WriteLine($"User ID {ViewData["auth_userid"]} is searching term `{string.Join("`, `", searches)}` at ind {startInd}...");
-            long[] res = DBSearchHelper.GetSearchResults(searches, startInd, 10000);
+            long[] res = DBSearchHelper.GetSearchResults(searches, startInd, 1000);
             if (res == null)
             {
                 Console.Error.WriteLine("Refused Search JSON: Search rejected by helper, invalid input");

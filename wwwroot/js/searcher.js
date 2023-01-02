@@ -67,7 +67,7 @@ function doSearch(searchTerm, searchMax, index) {
             searchEnded(`Search stopped early due to finding 500+ results.`);
             return;
         }
-        index += 10000;
+        index += 1000;
         if (index >= searchMax) {
             searchEnded(`Search hit maximum limit with ${currentResults.length} result(s)`);
             return;
