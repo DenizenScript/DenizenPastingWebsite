@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Search";
+    ViewData["Description"] = "Search";
+    ViewData["MetaColor"] = "#00FFFF";
+    ViewData["OtherHeaderLines"] = "";
+}
+
+<span class="center_helper">
+    <h1>Search Paste History</h1>
+    <h4>Note that searches can take a while, they're raw database string contains check spam. Please don't overdo them.</h4>
+    <h6>Searches are case-insensitive. You may use <code>|||</code> to separate multiple search terms. For example, <code>NameIThinkItIs|||sentence that was written in it|||some other thing</code>, up to 10 separate terms. Minimum 3 characters per term.</h6>
+    <div class="form-group has-success">
+        <label class="form-label mt-4" for="search_text">Search Text:</label>
+        <input type="text" style="display:inline;width:30rem;" value="" placeholder="Type your search text here..." class="form-control" id="search_text">
+        <br><br>
+        <label for="search_max">Search up to&nbsp;</label><input type="number" id="search_max" style="width:6rem;" name="quantity" min="10" max="10000" step="10" value="10">&nbsp;thousand pastes
+        <br><br><button type="submit" id="search_submit" class="btn btn-warning" onclick="javascript:begin_search();">Start search...</button>
+        <br>
+        <h5 id="search_ticker"></h5>
+    </div>
+    <br><br>
+    <h3>Results:</h3>
+    <div id="search_results_box" style="display: inline-block; width: 40rem; border: 1px solid black;">
+    </div>
+</span>
+
+<script src="/js/searcher.js?vary=1"></script>

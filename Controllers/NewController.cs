@@ -225,8 +225,10 @@ namespace DenizenPastingWebsite.Controllers
 
         public static string GenerateStaffInfo(string submitter, string[] filteredOutput)
         {
-            Dictionary<string, object> jsonObj = new();
-            jsonObj["submitter"] = submitter;
+            Dictionary<string, object> jsonObj = new()
+            {
+                ["submitter"] = submitter
+            };
             if (filteredOutput is not null && filteredOutput.Any())
             {
                 jsonObj["filtered"] = filteredOutput;

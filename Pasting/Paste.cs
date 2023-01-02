@@ -53,5 +53,27 @@ namespace DenizenPastingWebsite.Pasting
 
         /// <summary>Formatted text, stored with GZip compression.</summary>
         public byte[] StoredFormatted { get; set; }
+
+        /// <summary>Searches the various text fields of the paste, returns true if the term is contained (case-insensitive), or false if not.</summary>
+        public bool ContainsSearchText(string term)
+        {
+            if (Raw is not null && Raw.Contains(term, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+            if (HistoricalContent is not null && HistoricalContent.Contains(term, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+            if (Title is not null && Title.Contains(term, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+            if (PostSourceData is not null && PostSourceData.Contains(term, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
