@@ -21,7 +21,7 @@ namespace DenizenPastingWebsite.Pasting
                 return null;
             }
             string[] searches = term.Split("|||", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Where(s => s.Length >= 3).ToArray();
-            if (searches.Length == 0)
+            if (searches.Length == 0 || searches.Length > 10)
             {
                 return null;
             }
