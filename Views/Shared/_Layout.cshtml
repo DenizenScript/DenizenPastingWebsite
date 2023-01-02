@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="@ViewData["Bootstrap_URL"]" media="screen">
-    <link rel="stylesheet" href="/css/paste.css?vary=3">
+    <link rel="stylesheet" href="@ViewData["Bootstrap_URL"]?vary=2" media="screen">
+    <link rel="stylesheet" href="/css/paste.css?vary=4">
     <link rel="stylesheet" href="@ViewData["Theme_Colors"]?vary=2">
     <title>@ViewData["Title"] | Denizen Pastebin</title>
     <meta name="description" content="@ViewData["Description"]" />
     <meta name="theme-color" content="@ViewData["MetaColor"]" />
-    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.min.js?var=2"></script>
     <script src="/js/flasher.js?vary=2"></script>
     <script src="/js/themes.js"></script>
     @ViewData["OtherHeaderLines"]
@@ -26,7 +26,7 @@
                     <a class="nav-link" href="/New">New</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Theme</a>
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Theme</a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" title="created by Alex 'mcmonkey' Goodwin" onclick="changetheme('dark')">Standard Dark</a>
                         <a class="dropdown-item" title="created by Behr aka Hydra" onclick="changetheme('darkbehr')">Behrry Dark</a>
@@ -72,6 +72,6 @@
             <br><span class="text-muted">DenizenPastingWebsite is Copyright (C) 2021-2022 The Denizen Script Team, All Rights Reserved.</span>
         </center>
     </footer>
-    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.min.js?vary=2"></script>
 </body>
 </html>

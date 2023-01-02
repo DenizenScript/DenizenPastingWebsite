@@ -13,32 +13,29 @@
         <input type="hidden" id="orig_type" name="orig_type" value="@Model.NewType">
         <input type="hidden" name="editing" value="@Model.EditID">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <label class="btn btn-primary" title="Paste a Denizen Script (.dsc)">
-                <input type="radio" name="pastetype" value="script" @Model.Checked("script") onclick="setPasteType('Script')"> Denizen Script
+            <input type="radio" class="btn-check" name="pastetype" id="pastetype_script" value="script" autocomplete="off" onclick="setPasteType('Script')">
+            <label class="btn btn-outline-primary" title="Paste a Denizen Script (.dsc)" for="pastetype_script"> Denizen Script</label>
+            <input type="radio" class="btn-check" name="pastetype" id="pastetype_log" value="log" autocomplete="off" onclick="setPasteType('Log')">
+            <label class="btn btn-outline-primary" title="Paste a Minecraft Server Log (.log)" for="pastetype_log"> Server Log</label>
+            <input type="radio" class="btn-check" name="pastetype" id="pastetype_bbcode" value="bbcode" autocomplete="off" onclick="setPasteType('BBCode')">
+            <label class="btn btn-outline-primary" title="Paste a custom BBCode message" for="pastetype_bbcode"> BBCode</label>
+            <input type="radio" class="btn-check" id="pastetype_text" name="pastetype" value="text" autocomplete="off" onclick="setPasteType('Text')">
+            <label class="btn btn-outline-primary" title="Paste a generic plaintext message" for="pastetype_text"> Plain Text</label>
+            <input type="radio" class="btn-check" id="pastetype_other" name="pastetype" value="other" autocomplete="off" onclick="setPasteType('Other')">
+            <label class="btn btn-outline-primary" title="Select some other common paste type" for="pastetype_other"> Other <select id="other_type_selection" class="form-control form-select other_box" name="other_type" onclick="setPasteType('Other')">@Model.OtherLangOptions</select>
             </label>
-            <label class="btn btn-primary" title="Paste a Minecraft Server Log (.log)">
-                <input type="radio" name="pastetype" value="log" @Model.Checked("log") onclick="setPasteType('Log')"> Server Log
-            </label>
-            <label class="btn btn-primary" title="Paste a custom BBCode message">
-                <input type="radio" name="pastetype" value="bbcode" @Model.Checked("bbcode") onclick="setPasteType('BBCode')"> BBCode
-            </label>
-            <label class="btn btn-primary" title="Paste a generic plaintext message">
-                <input type="radio" id="text_button" name="pastetype" value="text" @Model.Checked("text") onclick="setPasteType('Text')"> Plain Text
-            </label>
-            <label class="btn btn-primary" title="Select some other common paste type">
-                <input type="radio" id="other_button" name="pastetype" value="other" @Model.Checked("other") onclick="setPasteType('Other')"> Other <select id="other_type_selection" class="form-select" name="other_type" onclick="setPasteType('Other')">@Model.OtherLangOptions</select>
-            </label>
+            <script>
+                document.getElementById("pastetype_@Model.NewType").click();
+            </script>
         </div>
         &nbsp;<input type="submit" class="btn btn-success" value="Submit">
         <div id="log_privacy_filter_options" class="log_privacy_filter_options" style="visibility:hidden;">
-            <br>Optional Privacy Filters:
+            <br>Optional Privacy Filters:&nbsp;&nbsp;
             <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                <label class="btn btn-primary" for="privacy_filter_playerip" title="If enabled, automatically hides player IPs">
-                    <input type="checkbox" name="privacy_filter_playerip" class="btn-check" id="privacy_filter_playerip" autocomplete="off"> Player IPs
-                </label>
-                <label class="btn btn-primary" for="privacy_filter_playerchat" title="If enabled, automatically hides player chat messages">
-                    <input type="checkbox" name="privacy_filter_playerchat" class="btn-check" id="privacy_filter_playerchat" autocomplete="off"> Player Chat
-                </label>
+                <input type="checkbox" name="privacy_filter_playerip" class="form-check-input" id="privacy_filter_playerip" autocomplete="off">
+                <label class="form-check-label" for="privacy_filter_playerip" title="If enabled, automatically hides player IPs">&nbsp;Player IPs&nbsp;&nbsp;</label>
+                <input type="checkbox" name="privacy_filter_playerchat" class="form-check-input" id="privacy_filter_playerchat" autocomplete="off">
+                <label class="form-check-label" for="privacy_filter_playerchat" title="If enabled, automatically hides player chat messages">&nbsp;Player Chat</label>
             </div>
         </div>
     </span>
