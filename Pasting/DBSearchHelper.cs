@@ -14,17 +14,8 @@ namespace DenizenPastingWebsite.Pasting
 {
     public static class DBSearchHelper
     {
-        public static long[] GetSearchResults(string term, long start, long max)
+        public static long[] GetSearchResults(string[] terms, long start, long max)
         {
-            if (start < 0 || term.Length > 10_000)
-            {
-                return null;
-            }
-            string[] searches = term.Split("|||", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Where(s => s.Length >= 3).ToArray();
-            if (searches.Length == 0 || searches.Length > 10)
-            {
-                return null;
-            }
             long firstInd = PasteDatabase.GetTotalPasteCount() - start;
             long lastInd = Math.Max(0, firstInd - max);
             if (firstInd < 0)
@@ -36,12 +27,16 @@ namespace DenizenPastingWebsite.Pasting
             {
                 if (PasteDatabase.TryGetPaste(index, out Paste paste))
                 {
-                    if (paste.ContainsSearchText(term))
+                    foreach (string term in terms)
                     {
-                        results.Add(index);
-                        if (results.Count > 500)
+                        if (paste.ContainsSearchText(term))
                         {
-                            return results.ToArray();
+                            results.Add(index);
+                            if (results.Count > 500)
+                            {
+                                return results.ToArray();
+                            }
+                            break;
                         }
                     }
                 }

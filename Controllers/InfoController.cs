@@ -65,8 +65,29 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused Search JSON: Invalid search term");
                 return Ok("{'error': 'search term too short'}");
             }
-            Console.WriteLine($"User ID {ViewData["auth_userid"]} is searching term {searchTerm[0]} at ind {startInd}...");
-            long[] res = DBSearchHelper.GetSearchResults(searchTerm, startInd, 10000);
+            if (startInd < 0)
+            {
+                Console.Error.WriteLine("Refused Search JSON: invalid start ind");
+                return Ok("{'error': 'cannot start negative'}");
+            }
+            if (searchTerm[0].Length > 10_000)
+            {
+                Console.Error.WriteLine("Refused Search JSON: too-long search");
+                return Ok("{'error': 'search term too long'}");
+            }
+            string[] searches = searchTerm[0].Split("|||", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Where(s => s.Length >= 3).ToArray();
+            if (searches.Length == 0)
+            {
+                Console.Error.WriteLine("Refused Search JSON: empty search");
+                return Ok("{'error': 'no valid searches given'}");
+            }
+            if (searches.Length > 10)
+            {
+                Console.Error.WriteLine("Refused Search JSON: too many searches");
+                return Ok("{'error': 'too many search terms'}");
+            }
+            Console.WriteLine($"User ID {ViewData["auth_userid"]} is searching term `{string.Join("`, `", searches)}` at ind {startInd}...");
+            long[] res = DBSearchHelper.GetSearchResults(searches, startInd, 10000);
             if (res == null)
             {
                 Console.Error.WriteLine("Refused Search JSON: Search rejected by helper, invalid input");
