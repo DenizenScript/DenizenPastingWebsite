@@ -46,5 +46,17 @@ namespace DenizenPastingWebsite.Models
         public bool IsMarkedAsSpam => Paste.HistoricalContent is not null;
 
         public HtmlString RenderHistorical => new(HighlighterCore.HighlightPlainText(Paste.HistoricalContent));
+
+        public string PreviewContent()
+        {
+            string[] split = Paste.Raw.SplitFast('\n', 2);
+            string combined = split[0] + (split.Length > 1 ? split[1] : "");
+            string cleaned = HighlighterCore.EscapeForHTML(combined.Replace('\r', '\n').Replace("\n", "  ")).Replace("\"", "&quot;").Replace("'", "").Replace("`", "");
+            if (cleaned.Length > 100)
+            {
+                cleaned = cleaned[0..100] + "...";
+            }
+            return cleaned;
+        }
     }
 }
