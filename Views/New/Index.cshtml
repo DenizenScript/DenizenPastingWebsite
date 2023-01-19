@@ -22,13 +22,13 @@
             <input type="radio" class="btn-check" id="pastetype_text" name="pastetype" value="text" autocomplete="off" onclick="setPasteType('Text')">
             <label class="btn btn-outline-primary" title="Paste a generic plaintext message" for="pastetype_text"> Plain Text</label>
             <input type="radio" class="btn-check" id="pastetype_other" name="pastetype" value="other" autocomplete="off" onclick="setPasteType('Other')">
-            <label class="btn btn-outline-primary" title="Select some other common paste type" for="pastetype_other"> Other <select id="other_type_selection" class="form-control form-select other_box" name="other_type" onclick="setPasteType('Other')">@Model.OtherLangOptions</select>
+            <label class="btn btn-outline-primary" title="Select some other common paste type" for="pastetype_other"> Other <select id="other_type_selection" class="form-control form-select other_box" name="other_type" onclick="setPasteType('Other')">
+                <option name="other-none">---</option>
+                @Model.OtherLangOptions
+                </select>
             </label>
-            <script>
-                document.getElementById("pastetype_@Model.NewType").click();
-            </script>
         </div>
-        &nbsp;<input type="submit" class="btn btn-success" value="Submit">
+        &nbsp;<input type="submit" id="newpaste_submit_button" class="btn btn-success" value="Submit">
         <div id="log_privacy_filter_options" class="log_privacy_filter_options" style="visibility:hidden;">
             <br>Optional Privacy Filters:&nbsp;&nbsp;
             <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
@@ -69,7 +69,23 @@
     <br><hr>
     <span class="prefix_text" id="paste_prefix_text">&gt;</span><div class="paste_spacer" id="paste_spacer"><textarea maxlength="@Model.MaxLength" name="pastecontents" id="pastecontents" placeholder="Enter your paste contents here..." autofocus="true">@Model.PreFillContents</textarea></div>
 </form>
+<div class="modal modal-fullscreen popup_modal_background" tabindex="-1" role="dialog" id="submit_confirm_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="">
+            <div class="modal-header">
+                <h5 class="modal-title">Are you sure?</h5>
+            </div>
+            <div class="modal-body">
+                <span id="submit_modal_text"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modal_yes_button" class="btn btn-primary">Yes I'm sure, submit anyway</button>
+                <button type="button" id="modal_no_button" class="btn btn-primary" data-dismiss="modal">No, go back</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="/js/newpaste.js?vary=2"></script>
 <script>
-    setPasteType("@Model.NewType");
+    document.getElementById("pastetype_@Model.NewType").click();
 </script>
