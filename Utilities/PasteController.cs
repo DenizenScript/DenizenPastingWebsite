@@ -47,7 +47,7 @@ namespace DenizenPastingWebsite.Utilities
         public void LogRefusal(string reason)
         {
             (string sender, string realOrigin) = GetSenderAndOrigin();
-            Console.Error.WriteLine($"Refuse page `{Request.Method}` call from sender=`{sender}`, realOrigin=`{realOrigin}`, path=`{Request.Path.Value}`, because: {reason}");
+            Console.Error.WriteLine($"Refuse page `{Request.Method}` call from sender=`{sender}`, realOrigin=`{realOrigin}`, path=`{Request.Path.Value}`, UA=`{string.Join(", ", Request.Headers.UserAgent)}`, because: {reason}");
         }
 
         [NonAction]
