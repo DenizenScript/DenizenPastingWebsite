@@ -17,8 +17,7 @@ namespace DenizenPastingWebsite.Controllers
             Setup();
             if (!Request.HttpContext.Items.TryGetValue("viewable", out object pasteIdObject) || pasteIdObject is not string pasteIdText)
             {
-                Console.Error.WriteLine("Refused view: ID missing");
-                return Redirect("/");
+                return Refuse("ID missing", "/");
             }
             bool raw = pasteIdText.EndsWith(".txt");
             if (raw)
@@ -30,25 +29,21 @@ namespace DenizenPastingWebsite.Controllers
             {
                 if (Request.Method != "POST")
                 {
-                    Console.Error.WriteLine("Refused view: non-POST access of private info");
-                    return Redirect("/Error/Error404");
+                    return Refuse("non-POST access of private info");
                 }
                 if (!(bool)ViewData["auth_isloggedin"])
                 {
-                    Console.Error.WriteLine("Refused view: non-admin access of private info");
-                    return Redirect("/Error/Error404");
+                    return Refuse("non-admin access of private info");
                 }
                 pasteIdText = pasteIdText[0..^".priv.json".Length];
             }
             if (!long.TryParse(pasteIdText, out long pasteId))
             {
-                Console.Error.WriteLine("Refused view: non-numeric ID");
-                return Redirect("/Error/Error404");
+                return Refuse($"non-numeric ID `{pasteIdText}`");
             }
             if (!PasteDatabase.TryGetPaste(pasteId, out Paste paste))
             {
-                Console.Error.WriteLine("Refused view: unlisted ID");
-                return Redirect("/Error/Error404");
+                return Refuse($"non-numeric unlisted ID `{pasteId}`");
             }
             if (raw)
             {

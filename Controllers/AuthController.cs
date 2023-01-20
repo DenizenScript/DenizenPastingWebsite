@@ -16,53 +16,44 @@ namespace DenizenPastingWebsite.Controllers
         {
             if (!AuthHelper.Enabled)
             {
-                Console.Error.WriteLine("Refused Discord auth confirm: auth not enabled");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Discord auth confirm: auth not enabled");
             }
             StringValues state = Request.Query["state"];
             StringValues codeVal = Request.Query["code"];
             if (!state.Any() || !codeVal.Any())
             {
-                Console.Error.WriteLine("Refused Discord auth confirm: missing state or code");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Discord auth confirm: missing state or code");
             }
             string cookieState = Request.Cookies["discord_auth_state_key"];
             if (cookieState is null)
             {
-                Console.Error.WriteLine("Refused Discord auth confirm: missing cookie state");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Discord auth confirm: missing cookie state");
             }
             if (cookieState != state)
             {
-                Console.Error.WriteLine("Refused Discord auth confirm: mismatched states");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Discord auth confirm: mismatched states");
             }
             if (!AuthHelper.CheckAndClearState(state))
             {
-                Console.Error.WriteLine("Refused Discord auth confirm: state does not exist on server");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Discord auth confirm: state does not exist on server");
             }
             string code = codeVal[0];
             if (code.Length < 10 || code.Length > 50)
             {
-                Console.Error.WriteLine("Refused Discord auth confirm: code looks invalid");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Discord auth confirm: code looks invalid");
             }
             AuthHelper.TokenResults token = AuthHelper.RequestTokenFor(code);
             if (token is null)
             {
-                Console.Error.WriteLine("Refused Discord auth confirm: can't get token");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Discord auth confirm: can't get token");
             }
             if (token.AccessTok.Length < 10 || token.AccessTok.Length > 100 || token.RefreshTok.Length < 10 || token.RefreshTok.Length > 100)
             {
-                Console.Error.WriteLine("Refused Discord auth confirm: token looks invalid");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Discord auth confirm: token looks invalid");
             }
             if (token.ExpiresSeconds <= 0)
             {
-                Console.Error.WriteLine("Refused Discord auth confirm: invalid expiration");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Discord auth confirm: invalid expiration");
             }
             AuthHelper.UserGuildData user = AuthHelper.GetUserGuildData(token.AccessTok);
             if (user is null)
@@ -89,13 +80,11 @@ namespace DenizenPastingWebsite.Controllers
         {
             if (!AuthHelper.Enabled)
             {
-                Console.Error.WriteLine("Refused auth login: auth not enabled");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused auth login: auth not enabled");
             }
             if (Request.Cookies["paste_session_token"] is not null)
             {
-                Console.Error.WriteLine("Refused auth login: already logged in?");
-                return Redirect("/");
+                return Refuse("Refused auth login: already logged in?", "/");
             }
             string redirUrl = AuthHelper.GenerateAuthorizationURL(out string state);
             Response.Cookies.Append("discord_auth_state_key", state, new CookieOptions() { HttpOnly = true, IsEssential = true, SameSite = SameSiteMode.None, Secure = true, MaxAge = TimeSpan.FromHours(1) });
@@ -106,19 +95,16 @@ namespace DenizenPastingWebsite.Controllers
         {
             if (!AuthHelper.Enabled)
             {
-                Console.Error.WriteLine("Refused auth log out: auth not enabled");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused auth log out: auth not enabled");
             }
             if (Request.Method != "POST")
             {
-                Console.Error.WriteLine("Refused auth log out: not POST");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused auth log out: not POST");
             }
             string sessTok = Request.Cookies["paste_session_token"];
             if (string.IsNullOrWhiteSpace(sessTok))
             {
-                Console.Error.WriteLine("Refused auth log out: no session");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused auth log out: no session");
             }
             AuthHelper.Logout(sessTok);
             Response.Cookies.Delete("discord_oauth_token");

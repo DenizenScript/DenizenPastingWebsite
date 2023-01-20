@@ -25,15 +25,12 @@ namespace DenizenPastingWebsite.Controllers
         {
         }
 
-        public static IActionResult RejectPaste(NewController controller, string type)
+        [NonAction]
+        public IActionResult RejectPaste(string type, string reason)
         {
-            return controller.View("Index", new NewPasteModel() { ShowRejection = true, NewType = type });
+            LogRefusal(reason);
+            return View("Index", new NewPasteModel() { ShowRejection = true, NewType = type });
         }
-
-        public static HashSet<string> IgnoredOrigins = new()
-        {
-            "127.0.0.1", "::1", "[::1]"
-        };
 
         /// <summary>Quickly cleans control codes from text and replaces them with spaces.</summary>
         public static string ForceCleanText(string text)
@@ -50,59 +47,33 @@ namespace DenizenPastingWebsite.Controllers
             return new string(chars);
         }
 
-        public static IActionResult HandlePost(NewController controller, string type, Paste edits = null)
+        [NonAction]
+        public IActionResult HandlePost(string type, Paste edits = null)
         {
-            if (controller.Request.Method != "POST" || controller.Request.Form.IsEmpty())
+            if (Request.Method != "POST" || Request.Form.IsEmpty())
             {
-                Console.Error.WriteLine("Refused paste: Non-Post");
-                return RejectPaste(controller, type);
+                return RejectPaste(type, "Refused paste: Non-Post");
             }
-            IPAddress remoteAddress = controller.Request.HttpContext.Connection.RemoteIpAddress;
-            string realOrigin = remoteAddress.ToString();
-            string sender = IgnoredOrigins.Contains(realOrigin) ? "" : $"Remote IP: {realOrigin}";
-            if (controller.Request.Headers.TryGetValue("X-Forwarded-For", out StringValues forwardHeader))
-            {
-                sender += ", X-Forwarded-For: " + string.Join(" / ", forwardHeader);
-                if (PasteServer.TrustXForwardedFor && forwardHeader.Count > 0)
-                {
-                    realOrigin = string.Join(" / ", forwardHeader);
-                }
-            }
-            if (controller.Request.Headers.TryGetValue("REMOTE_ADDR", out StringValues remoteAddr))
-            {
-                sender += ", REMOTE_ADDR: " + string.Join(" / ", remoteAddr);
-            }
-            if (sender.StartsWith(", "))
-            {
-                sender = sender[(", ".Length)..];
-            }
-            if (sender.Length == 0)
-            {
-                sender = "Unknown";
-            }
+            (string sender, string realOrigin) = GetSenderAndOrigin();
             Console.WriteLine($"Attempted paste from {realOrigin} as {sender}");
-            IFormCollection form = controller.Request.Form;
+            IFormCollection form = Request.Form;
             if (!form.TryGetValue("pastetitle", out StringValues pasteTitle) || !form.TryGetValue("pastecontents", out StringValues pasteContents))
             {
-                Console.Error.WriteLine("Refused paste: Form missing keys");
-                return RejectPaste(controller, type);
+                return RejectPaste(type, "Refused paste: Form missing keys");
             }
             if (pasteTitle.Count != 1 || pasteContents.Count != 1)
             {
-                Console.Error.WriteLine("Refused paste: Improper form data");
-                return RejectPaste(controller, type);
+                return RejectPaste(type, "Refused paste: Improper form data");
             }
             if (edits == null && form.TryGetValue("editing", out StringValues editValue) && editValue.Count == 1 && editValue[0] != "")
             {
                 if (!long.TryParse(editValue[0], out long editingID))
                 {
-                    Console.Error.WriteLine("Refused paste: Improper form data (editing key)");
-                    return RejectPaste(controller, type);
+                    return RejectPaste(type, "Refused paste: Improper form data (editing key)");
                 }
                 if (!PasteDatabase.TryGetPaste(editingID, out edits))
                 {
-                    Console.Error.WriteLine("Refused edit paste: unlisted ID");
-                    return RejectPaste(controller, type);
+                    return RejectPaste(type, "Refused edit paste: unlisted ID");
                 }
             }
             string[] filters = form.Keys.Where(s => s.StartsWith("privacy_filter_") && form.TryGetValue(s, out StringValues val) && val.Count == 1 && val[0].ToLowerFast() == "on").Select(s => s["privacy_filter_".Length..]).ToArray();
@@ -119,13 +90,11 @@ namespace DenizenPastingWebsite.Controllers
             PasteUser user = PasteDatabase.GetUser(sender); // Note: intentionally use 'sender' not 'realOrigin'
             if (user.CurrentStatus == PasteUser.Status.BLOCKED)
             {
-                Console.Error.WriteLine("Refused paste: blocked sender");
-                return RejectPaste(controller, type);
+                return RejectPaste(type, "Refused paste: blocked sender");
             }
             if (!PasteType.ValidPasteTypes.TryGetValue(type, out PasteType actualType))
             {
-                Console.Error.WriteLine($"Refused paste: Unknown type {type}");
-                return RejectPaste(controller, type);
+                return RejectPaste(type, $"Refused paste: Unknown type {type}");
             }
             string pasteTitleText = ForceCleanText(pasteTitle[0]);
             if (string.IsNullOrWhiteSpace(pasteTitleText))
@@ -146,14 +115,13 @@ namespace DenizenPastingWebsite.Controllers
             {
                 if (user.CurrentStatus != PasteUser.Status.WHITELIST)
                 {
-                    return RejectPaste(controller, type);
+                    return RejectPaste(type, "Invalid paste (spam)");
                 }
                 Console.WriteLine("Paste allowed to bypass due to whitelisted sender");
             }
             if (user.CurrentStatus != PasteUser.Status.WHITELIST && !RateLimiter.TryUser(realOrigin)) // Note: intentionally use 'realOrigin'
             {
-                Console.Error.WriteLine("Refused paste: spam");
-                return RejectPaste(controller, type);
+                return RejectPaste(type, "Refused paste: spam (RateLimiter)");
             }
             pasteContentText = pasteContentText.Replace("\r\n", "\n");
             string[] filterOutput = null;
@@ -174,22 +142,19 @@ namespace DenizenPastingWebsite.Controllers
             };
             if (newPaste.Formatted.Length > PasteServer.MaxPasteRawLength * 5)
             {
-                Console.Error.WriteLine("Refused paste: Massive formatted-content length");
-                return RejectPaste(controller, type);
+                return RejectPaste(type, "Refused paste: Massive formatted-content length");
             }
             if (newPaste.Formatted == null)
             {
-                Console.Error.WriteLine("Refused paste: format failed");
-                return RejectPaste(controller, type);
+                return RejectPaste(type, "Refused paste: format failed");
             }
             string diffText = null;
             if (edits != null)
             {
                 diffText = DiffHighlighter.GenerateDiff(edits.Raw, newPaste.Raw, out bool hasDifferences);
-                if (!hasDifferences)
+                if (!hasDifferences && edits.Type == newPaste.Type)
                 {
-                    Console.Error.WriteLine("Refused paste: edits nothing");
-                    return RejectPaste(controller, type);
+                    return RejectPaste(type, "Refused paste: edits nothing");
                 }
             }
             newPaste.ID = PasteDatabase.GetNextPasteID();
@@ -217,10 +182,10 @@ namespace DenizenPastingWebsite.Controllers
             Console.Error.WriteLine($"Accepted new paste: {newPaste.ID} from {newPaste.PostSourceData}");
             if (micro)
             {
-                controller.Response.ContentType = "text/plain";
-                return controller.Ok(microv2 ? $"{PasteServer.URL_BASE}/View/{newPaste.ID}\n" : $"/paste/{newPaste.ID}\n");
+                Response.ContentType = "text/plain";
+                return Ok(microv2 ? $"{PasteServer.URL_BASE}/View/{newPaste.ID}\n" : $"/paste/{newPaste.ID}\n");
             }
-            return controller.Redirect($"/View/{newPaste.ID}");
+            return Redirect($"/View/{newPaste.ID}");
         }
 
         public static string GenerateStaffInfo(string submitter, string[] filteredOutput)
@@ -349,7 +314,7 @@ namespace DenizenPastingWebsite.Controllers
             Setup();
             if (Request.Method == "POST")
             {
-                return HandlePost(this, "script");
+                return HandlePost("script");
             }
             return View(new NewPasteModel() { NewType = "script" });
         }
@@ -359,7 +324,7 @@ namespace DenizenPastingWebsite.Controllers
             Setup();
             if (Request.Method == "POST")
             {
-                return HandlePost(this, "script");
+                return HandlePost("script");
             }
             return View("Index", new NewPasteModel() { NewType = "script" });
         }
@@ -369,7 +334,7 @@ namespace DenizenPastingWebsite.Controllers
             Setup();
             if (Request.Method == "POST")
             {
-                return HandlePost(this, "log");
+                return HandlePost("log");
             }
             return View("Index", new NewPasteModel() { NewType = "log" });
         }
@@ -379,7 +344,7 @@ namespace DenizenPastingWebsite.Controllers
             Setup();
             if (Request.Method == "POST")
             {
-                return HandlePost(this, "bbcode");
+                return HandlePost("bbcode");
             }
             return View("Index", new NewPasteModel() { NewType = "bbcode" });
         }
@@ -389,7 +354,7 @@ namespace DenizenPastingWebsite.Controllers
             Setup();
             if (Request.Method == "POST")
             {
-                return HandlePost(this, "text");
+                return HandlePost("text");
             }
             return View("Index", new NewPasteModel() { NewType = "text" });
         }
@@ -404,12 +369,11 @@ namespace DenizenPastingWebsite.Controllers
             }
             if (!PasteType.ValidPasteTypes.TryGetValue(selectionValues[0], out PasteType actualType))
             {
-                Console.Error.WriteLine("Refused new-other: invalid type");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused new-other: invalid type");
             }
             if (Request.Method == "POST")
             {
-                return HandlePost(this, otherType);
+                return HandlePost(otherType);
             }
             return View("Index", new NewPasteModel() { NewType = "other", OtherType = actualType.DisplayName });
         }
@@ -419,18 +383,15 @@ namespace DenizenPastingWebsite.Controllers
             Setup();
             if (!Request.HttpContext.Items.TryGetValue("viewable", out object pasteIdObject) || pasteIdObject is not string pasteIdText)
             {
-                Console.Error.WriteLine("Refused edit: ID missing");
-                return Redirect("/");
+                return Refuse("Refused edit: ID missing", "/");
             }
             if (!long.TryParse(pasteIdText, out long pasteId))
             {
-                Console.Error.WriteLine("Refused edit: non-numeric ID");
-                return Redirect("/Error/Error404");
+                return Refuse($"Refused edit: non-numeric ID `{pasteIdText}`");
             }
             if (!PasteDatabase.TryGetPaste(pasteId, out Paste paste))
             {
-                Console.Error.WriteLine("Refused edit: unlisted ID");
-                return Redirect("/Error/Error404");
+                return Refuse($"Refused edit: unlisted ID `{pasteId}`");
             }
             if (Request.Method != "POST")
             {
@@ -465,7 +426,7 @@ namespace DenizenPastingWebsite.Controllers
                         }
                         break;
                     case "statuschange":
-                        if ((bool)ViewData["auth_isloggedin"] && Request.Form.TryGetValue("status", out StringValues statusVal) && statusVal.Count == 1 && Enum.TryParse<PasteUser.Status>(statusVal[0], true, out PasteUser.Status statusEnum))
+                        if ((bool)ViewData["auth_isloggedin"] && Request.Form.TryGetValue("status", out StringValues statusVal) && statusVal.Count == 1 && Enum.TryParse(statusVal[0], true, out PasteUser.Status statusEnum))
                         {
                             Console.WriteLine($"User {paste.PostSourceData} status changed to {statusEnum} by logged in staff - {(ulong)ViewData["auth_userid"]}");
                             PasteUser user = PasteDatabase.GetUser(paste.PostSourceData);
@@ -501,7 +462,7 @@ namespace DenizenPastingWebsite.Controllers
                         break;
                 }
             }
-            return HandlePost(this, paste.Type, paste);
+            return HandlePost(paste.Type, paste);
         }
     }
 }

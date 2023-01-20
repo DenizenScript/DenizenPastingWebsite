@@ -26,8 +26,7 @@ namespace DenizenPastingWebsite.Controllers
             Setup();
             if (!(bool)ViewData["auth_isloggedin"])
             {
-                Console.Error.WriteLine("Refused Search: non-admin access");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Search: non-admin access");
             }
             return View(new InfoModel());
         }
@@ -37,23 +36,19 @@ namespace DenizenPastingWebsite.Controllers
             Setup();
             if (!(bool)ViewData["auth_isloggedin"])
             {
-                Console.Error.WriteLine("Refused Search JSON: non-admin access");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Search JSON: non-admin access");
             }
             if (Request.Method != "POST" || Request.Query.IsEmpty())
             {
-                Console.Error.WriteLine("Refused Search JSON: non-post access");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Search JSON: non-post access");
             }
             if (!Request.Query.TryGetValue("search-term", out StringValues searchTerm) || searchTerm.Count != 1)
             {
-                Console.Error.WriteLine("Refused Search JSON: missing 'search-term' query");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Search JSON: missing 'search-term' query");
             }
             if (!Request.Query.TryGetValue("search-start-ind", out StringValues startIndString) || startIndString.Count != 1)
             {
-                Console.Error.WriteLine("Refused Search JSON: missing 'search-start-ind' query");
-                return Redirect("/Error/Error404");
+                return Refuse("Refused Search JSON: missing 'search-start-ind' query");
             }
             if (!long.TryParse(startIndString[0], out long startInd))
             {
