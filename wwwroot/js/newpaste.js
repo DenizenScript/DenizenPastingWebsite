@@ -159,6 +159,11 @@ document.getElementById('newpaste_submit_button').addEventListener('click', func
             return;
         }
     }
+    else {
+        if (!giveErrorReason(lastSelection, lastSelection, pasteArea.value, false)) {
+            return;
+        }
+    }
     e.preventDefault();
     e.stopPropagation();
     return false;
