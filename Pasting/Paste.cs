@@ -73,6 +73,10 @@ namespace DenizenPastingWebsite.Pasting
             {
                 return true;
             }
+            if (StaffInfo is not null && StaffInfo.Contains(term, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
             return false;
         }
     }
