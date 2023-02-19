@@ -46,6 +46,10 @@ namespace DenizenPastingWebsite
                     return;
                 }
                 string[] split = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (split.Length == 0)
+                {
+                    continue;
+                }
                 switch (split[0])
                 {
                     case "remove_bot_post":
