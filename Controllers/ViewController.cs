@@ -45,6 +45,10 @@ namespace DenizenPastingWebsite.Controllers
             {
                 return Refuse($"non-numeric unlisted ID `{pasteId}`");
             }
+            if (paste.TakedownFrom is not null)
+            {
+                return View("Error451", new View451Model() { IssuingParty = paste.TakedownFrom });
+            }
             if (raw)
             {
                 Response.ContentType = "text/plain";

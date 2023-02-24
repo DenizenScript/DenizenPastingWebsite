@@ -54,6 +54,9 @@ namespace DenizenPastingWebsite.Pasting
         /// <summary>Formatted text, stored with GZip compression.</summary>
         public byte[] StoredFormatted { get; set; }
 
+        /// <summary>If non-null, the paste was taken down via copyright or other legal notice, and must display a 451 page.</summary>
+        public string TakedownFrom { get; set; }
+
         /// <summary>Searches the various text fields of the paste, returns true if the term is contained (case-insensitive), or false if not.</summary>
         public bool ContainsSearchText(string term)
         {

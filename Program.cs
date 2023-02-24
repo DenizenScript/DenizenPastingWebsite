@@ -73,6 +73,20 @@ namespace DenizenPastingWebsite
                             }
                         }
                         break;
+                    case "issue_451_takedown":
+                        {
+                            if (split.Length > 2 && long.TryParse(split[1], out long pasteId) && PasteDatabase.TryGetPaste(pasteId, out Paste paste))
+                            {
+                                paste.TakedownFrom = string.Join(' ', split[2..]);
+                                PasteDatabase.SubmitPaste(paste);
+                                Console.WriteLine($"paste {pasteId} removed");
+                            }
+                            else
+                            {
+                                Console.WriteLine("issue_451_takedown (ID HERE) (ISSUING PARTY HERE)");
+                            }
+                        }
+                        break;
                     case "rerender_type":
                         {
                             if (split.Length == 2 && PasteType.ValidPasteTypes.TryGetValue(split[1], out PasteType type))
