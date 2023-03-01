@@ -43,6 +43,10 @@ function postJSON(url, callback) {
     xhr.send();
 };
 
+function escapeHtml(raw) {
+    return raw.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+}
+
 function doSearch(searchTerm, searchMax, index) {
     setSearchProgress(`Searching... ${index} / ${(searchMax)}... please wait...`);
     console.log(`Step ${index} on search for ${searchTerm} until ${searchMax} pages...`);
@@ -55,13 +59,19 @@ function doSearch(searchTerm, searchMax, index) {
             searchEnded(`Search ended early with message: ${data['error']}`);
             return;
         }
-        for (var pasteId of data['result']) {
+        for (var pair of data['result']) {
+            var separator = pair.indexOf('=');
+            var pasteId = parseInt(pair.substring(0, separator));
+            var matchId = parseInt(pair.substring(separator + 1));
+            console.log(`${pasteId} and ${matchId} from ${separator}  on ${pair}`);
             if (pasteId == -1) {
                 searchEnded(`Searched every paste in database and got ${currentResults.length} result(s)`);
                 return;
             }
             currentResults.push(pasteId);
-            document.getElementById('search_results_box').innerHTML += `<br>Match #${currentResults.length} in <a href="/View/${pasteId}">Paste #${pasteId}</a>`;
+            var termSet = searchTerm.split("|||");
+            matchedFor = escapeHtml(termSet[matchId]);
+            document.getElementById('search_results_box').innerHTML += `<br>Match #${currentResults.length} in <a href="/View/${pasteId}">Paste #${pasteId}</a>for '<code>${matchedFor}</code>'`;
         }
         if (currentResults.length > 500) {
             searchEnded(`Search stopped early due to finding 500+ results.`);

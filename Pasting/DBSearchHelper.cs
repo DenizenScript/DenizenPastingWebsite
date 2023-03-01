@@ -14,24 +14,24 @@ namespace DenizenPastingWebsite.Pasting
 {
     public static class DBSearchHelper
     {
-        public static long[] GetSearchResults(string[] terms, long start, long max)
+        public static (long, int)[] GetSearchResults(string[] terms, long start, long max)
         {
             long firstInd = PasteDatabase.GetTotalPasteCount() - start;
             long lastInd = Math.Max(0, firstInd - max);
             if (firstInd < 0)
             {
-                return new[] { -1L };
+                return new[] { (-1L, -1) };
             }
-            List<long> results = new();
+            List<(long, int)> results = new();
             for (long index = firstInd; index >= lastInd; index--)
             {
                 if (PasteDatabase.TryGetPaste(index, out Paste paste))
                 {
-                    foreach (string term in terms)
+                    for (int i = 0; i < terms.Length; i++)
                     {
-                        if (paste.ContainsSearchText(term))
+                        if (paste.ContainsSearchText(terms[i]))
                         {
-                            results.Add(index);
+                            results.Add((index, i));
                             if (results.Count > 500)
                             {
                                 return results.ToArray();
