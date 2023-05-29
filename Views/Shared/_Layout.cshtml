@@ -37,6 +37,15 @@
                         <a class="dropdown-item" title="created by Alex 'mcmonkey' Goodwin" onclick="changetheme('light')">Quite Light</a>
                     </div>
                 </li>
+                @if ((bool)ViewData["auth_canlogin"] && (bool)ViewData["auth_isloggedin"])
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Staff Tools</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/Info/Search">Search</a>
+                        </div>
+                    </li>
+                }
                 @if ((bool)ViewData["auth_canlogin"])
                 {
                     <span class="top_login_button">
