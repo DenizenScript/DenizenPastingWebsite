@@ -32,7 +32,7 @@ namespace DenizenPastingWebsite.Highlighters
                 {
                     lastKey = trimmed[0..^1].ToLowerFast();
                 }
-                if (trimmed.StartsWithFast('-'))
+                if (trimmed.StartsWithFast('-') && !trimmed.EndsWithFast(':'))
                 {
                     int spaces = line.Length - trimmedStart.Length;
                     while (i + 1 < lines.Length)
