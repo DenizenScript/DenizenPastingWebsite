@@ -68,7 +68,7 @@ function doSearch(searchTerm, searchMax, index) {
             currentResults.push(paste.id);
             var termSet = searchTerm.split("|||");
             matchedFor = escapeHtml(termSet[paste.match_id]);
-            let text = `<tr><br><td>#${currentResults.length}</td><td>in <a href="/View/${paste.id}">Paste #${paste.id}</a></td><td>'<code>${matchedFor}</code>'</td>`;
+            let text = `<tr><td>#${currentResults.length}</td><td>in <a href="/View/${paste.id}">Paste #${paste.id}</a></td><td>'<code>${matchedFor}</code>'</td>`;
             text += `<td><code>${paste.type}</code></td><td><code>${escapeHtml(paste.source)}</code></td><td><code>${escapeHtml(paste.date)}</code></td><td>'<code>${escapeHtml(paste.title)}</code>'</td>`;
             if (paste.edited > 0) {
                 text += `<td><a href="/View/${paste.id}">Paste #${paste.edited}</a></td>`;
