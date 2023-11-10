@@ -10,6 +10,7 @@ using DenizenPastingWebsite.Utilities;
 using DenizenPastingWebsite.Pasting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json.Linq;
 
 namespace DenizenPastingWebsite.Controllers
 {
@@ -82,14 +83,39 @@ namespace DenizenPastingWebsite.Controllers
                 return Ok("{\"error\": \"too many search terms\"}");
             }
             Console.WriteLine($"User ID {ViewData["auth_userid"]} is searching term `{string.Join("`, `", searches)}` at ind {startInd}...");
-            (long, int)[] res = DBSearchHelper.GetSearchResults(searches, startInd, 1000);
-            if (res == null)
+            (Paste, int)[] res = DBSearchHelper.GetSearchResults(searches, startInd, 1000);
+            if (res is null)
             {
                 Console.Error.WriteLine("Refused Search JSON: Search rejected by helper, invalid input");
                 return Ok("{\"error\": \"invalid input\"}");
             }
             Console.WriteLine($"User ID {ViewData["auth_userid"]} searched term {searchTerm[0]} at ind {startInd} and got {res.Length} results.");
-            return Ok("{\"result\": [" + string.Join(',', res.Select(pair => $"\"{pair.Item1}={pair.Item2}\"")) + "]}");
+            JArray output = new();
+            foreach ((Paste paste, int matchId) in res)
+            {
+                if (paste is null)
+                {
+                    output.Add(new JObject()
+                    {
+                        ["match_id"] = matchId,
+                        ["id"] = -1
+                    });
+                }
+                else
+                {
+                    output.Add(new JObject()
+                    {
+                        ["match_id"] = matchId,
+                        ["id"] = paste.ID,
+                        ["title"] = paste.Title,
+                        ["type"] = paste.Type,
+                        ["date"] = paste.Date,
+                        ["source"] = paste.PostSourceData,
+                        ["edited"] = paste.Edited
+                    });
+                }
+            }
+            return Ok(new JObject() { ["result"] = output }.ToString());
         }
     }
 }

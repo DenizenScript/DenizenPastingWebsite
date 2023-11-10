@@ -12,7 +12,7 @@ function begin_search() {
         elem.readOnly = true;
         elem.classList.add('disabled');
     }
-    resultsElem.innerHTML = "";
+    resultsElem.innerHTML = "<tr><th>Match #</th><th>Link</th><th>Matched</th><th>Type</th><th>Source</th><th>Date</th><th>Title</th><th>Edited</th></tr>";
     currentResults = [];
     console.log(`Begin search for ${searchTerm} until ${searchMax} pages...`);
     doSearch(searchTerm, searchMax, 0);
@@ -59,19 +59,25 @@ function doSearch(searchTerm, searchMax, index) {
             searchEnded(`Search ended early with message: ${data['error']}`);
             return;
         }
-        for (var pair of data['result']) {
-            var separator = pair.indexOf('=');
-            var pasteId = parseInt(pair.substring(0, separator));
-            var matchId = parseInt(pair.substring(separator + 1));
-            console.log(`${pasteId} and ${matchId} from ${separator}  on ${pair}`);
-            if (pasteId == -1) {
+        console.log(data)
+        for (var paste of data['result']) {
+            if (paste.id == -1) {
                 searchEnded(`Searched every paste in database and got ${currentResults.length} result(s)`);
                 return;
             }
-            currentResults.push(pasteId);
+            currentResults.push(paste.id);
             var termSet = searchTerm.split("|||");
-            matchedFor = escapeHtml(termSet[matchId]);
-            document.getElementById('search_results_box').innerHTML += `<br>Match #${currentResults.length} in <a href="/View/${pasteId}">Paste #${pasteId}</a>for '<code>${matchedFor}</code>'`;
+            matchedFor = escapeHtml(termSet[paste.match_id]);
+            let text = `<tr><br><td>#${currentResults.length}</td><td>in <a href="/View/${paste.id}">Paste #${paste.id}</a></td><td>'<code>${matchedFor}</code>'</td>`;
+            text += `<td><code>${paste.type}</code></td><td><code>${escapeHtml(paste.source)}</code></td><td><code>${escapeHtml(paste.date)}</code></td><td>'<code>${escapeHtml(paste.title)}</code>'</td>`;
+            if (paste.edited > 0) {
+                text += `<td><a href="/View/${paste.id}">Paste #${paste.edited}</a></td>`;
+            }
+            else {
+                text += '<td></td>';
+            }
+            text += '</tr>';
+            document.getElementById('search_results_box').innerHTML += text;
         }
         if (currentResults.length > 500) {
             searchEnded(`Search stopped early due to finding 500+ results.`);
