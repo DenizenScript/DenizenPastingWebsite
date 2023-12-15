@@ -66,7 +66,7 @@ namespace DenizenPastingWebsite.Utilities
                         user.DiscordToken = token.AccessTok;
                         user.RefreshToken = token.RefreshTok;
                         TimeSpan maxAge = TimeSpan.FromSeconds(token.ExpiresSeconds + InvalidateDelay);
-                        response.Cookies.Append("paste_session_token", sessTok, new() { MaxAge = maxAge, IsEssential = true, SameSite = SameSiteMode.Strict, HttpOnly = true });
+                        response.Cookies.Append("paste_session_token", sessTok, new() { MaxAge = maxAge, IsEssential = true, SameSite = SameSiteMode.Lax, HttpOnly = true });
                         PasteDatabase.Internal.UserCollection.Upsert(user);
                     }
                 }

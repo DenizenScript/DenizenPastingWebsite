@@ -70,7 +70,7 @@ namespace DenizenPastingWebsite.Controllers
             }
             string session = AuthHelper.GenerateAuthenticationSession(user.ID, token.ExpiresSeconds, token.AccessTok, token.RefreshTok);
             TimeSpan maxAge = TimeSpan.FromSeconds(token.ExpiresSeconds + AuthHelper.InvalidateDelay);
-            Response.Cookies.Append("paste_session_token", session, new() { MaxAge = maxAge, IsEssential = true, SameSite = SameSiteMode.Strict, Secure = true, HttpOnly = true });
+            Response.Cookies.Append("paste_session_token", session, new() { MaxAge = maxAge, IsEssential = true, SameSite = SameSiteMode.Lax, Secure = true, HttpOnly = true });
             Setup();
             ViewData["auth_isloggedin"] = true;
             return View("LoginSuccess");
