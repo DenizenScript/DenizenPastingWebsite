@@ -6,6 +6,7 @@ using FreneticUtilities.FreneticToolkit;
 using FreneticUtilities.FreneticExtensions;
 using LiteDB;
 using System.Collections.Concurrent;
+using System.Threading;
 
 namespace DenizenPastingWebsite.Pasting
 {
@@ -23,23 +24,34 @@ namespace DenizenPastingWebsite.Pasting
             const int jump = 500;
             Task task = null;
             LockObject locker = new();
+            long msFind = 0, msFill = 0, msFillString = 0, msContains = 0;
             for (long index = firstInd; index >= lastInd; index -= jump)
             {
                 Paste[] pastes;
                 lock (locker)
                 {
+                    long tickFindStart = Environment.TickCount64;
                     pastes = PasteDatabase.Internal.PasteCollection.Find(Query.And(Query.GT("_id", index - jump), Query.LTE("_id", index))).ToArray();
+                    long tickFindEnd = Environment.TickCount64;
                     foreach (Paste paste in pastes)
                     {
                         PasteDatabase.FillPasteFromStorage(paste, false);
                     }
+                    long tickFillEnd = Environment.TickCount64;
+                    msFind += tickFindEnd - tickFindStart;
+                    msFill += tickFillEnd - tickFindEnd;
                 }
                 task?.Wait();
                 task = Task.Run(() =>
                 {
+                    long tickFillStart = Environment.TickCount64;
                     Parallel.ForEach(pastes, paste =>
                     {
                         PasteDatabase.FillPasteStrings(paste, false);
+                    });
+                    long tickFillEnd = Environment.TickCount64;
+                    Parallel.ForEach(pastes, paste =>
+                    {
                         for (int i = 0; i < terms.Length; i++)
                         {
                             if (paste.ContainsSearchText(terms[i]))
@@ -49,10 +61,15 @@ namespace DenizenPastingWebsite.Pasting
                             }
                         }
                     });
+                    long tickContainsEnd = Environment.TickCount64;
+                    Interlocked.Add(ref msFillString, tickFillEnd - tickFillStart);
+                    Interlocked.Add(ref msContains, tickContainsEnd - tickFillEnd);
                 });
             }
             task?.Wait();
-            return [.. results.OrderByDescending(p => p.Item1.ID)];
+            (Paste, int)[] final = [.. results.OrderByDescending(p => p.Item1.ID)];
+            Console.WriteLine($"Search found {final.Length} results, using {msFind}ms to find pastes, {msFill}ms to fill from dbstore, {msFillString}ms to fill strings, {msContains}ms to check containment.");
+            return final;
         }
     }
 }
