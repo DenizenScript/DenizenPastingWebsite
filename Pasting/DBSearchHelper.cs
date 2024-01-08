@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FreneticUtilities.FreneticToolkit;
 using FreneticUtilities.FreneticExtensions;
 using LiteDB;
+using System.Collections.Concurrent;
 
 namespace DenizenPastingWebsite.Pasting
 {
@@ -18,8 +19,8 @@ namespace DenizenPastingWebsite.Pasting
             {
                 return [(null, -1)];
             }
-            List<(Paste, int)> results = [];
-            const int jump = 250;
+            ConcurrentQueue<(Paste, int)> results = [];
+            const int jump = 500;
             Task task = null;
             LockObject locker = new();
             for (long index = firstInd; index >= lastInd; index -= jump)
@@ -39,25 +40,19 @@ namespace DenizenPastingWebsite.Pasting
                     Parallel.ForEach(pastes, paste =>
                     {
                         PasteDatabase.FillPasteStrings(paste, false);
-                    });
-                    foreach (Paste paste in pastes.OrderByDescending(p => p.ID))
-                    {
                         for (int i = 0; i < terms.Length; i++)
                         {
                             if (paste.ContainsSearchText(terms[i]))
                             {
-                                results.Add((paste, i));
-                                if (results.Count > 500)
-                                {
-                                    return;
-                                }
+                                results.Enqueue((paste, i));
                                 break;
                             }
                         }
-                    }
+                    });
                 });
             }
-            return [.. results];
+            task?.Wait();
+            return [.. results.OrderByDescending(p => p.Item1.ID)];
         }
     }
 }
