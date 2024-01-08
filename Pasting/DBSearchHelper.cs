@@ -7,8 +7,6 @@ using FreneticUtilities.FreneticExtensions;
 using DenizenPastingWebsite.Models;
 using DenizenPastingWebsite.Utilities;
 using DenizenPastingWebsite.Pasting;
-using System.Drawing;
-using Microsoft.AspNetCore.Http.Connections;
 
 namespace DenizenPastingWebsite.Pasting
 {
@@ -20,7 +18,7 @@ namespace DenizenPastingWebsite.Pasting
             long lastInd = Math.Max(0, firstInd - max);
             if (firstInd < 0)
             {
-                return [((Paste)null, -1)];
+                return [(null, -1)];
             }
             List<(Paste, int)> results = [];
             for (long index = firstInd; index >= lastInd; index--)

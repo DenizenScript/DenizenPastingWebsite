@@ -31,6 +31,12 @@ namespace DenizenPastingWebsite.Utilities
                 return;
             }
             viewData["auth_canlogin"] = true;
+            if (DebugAlwaysOn)
+            {
+                viewData["auth_isloggedin"] = true;
+                viewData["auth_userid"] = 0;
+                return;
+            }
             string sessTok = request.Cookies["paste_session_token"];
             if (sessTok is null)
             {
@@ -160,7 +166,7 @@ namespace DenizenPastingWebsite.Utilities
             {
                 return;
             }
-            Enabled = true;
+            DebugAlwaysOn = section.GetBool("debug_always_on", false).Value;
             ClientID = section.GetString("client-id");
             ClientSecret = section.GetString("client-secret");
             RedirectURL = HttpUtility.UrlEncode(section.GetString("redirect-url"));
@@ -169,6 +175,8 @@ namespace DenizenPastingWebsite.Utilities
         }
 
         public static bool Enabled = false;
+
+        public static bool DebugAlwaysOn = false;
 
         public const string DISCORD_OAUTH_BASE = "https://discord.com/api/oauth2",
             DISCORD_API_BASE = "https://discord.com/api/v8";

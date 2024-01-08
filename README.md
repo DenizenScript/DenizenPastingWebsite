@@ -94,6 +94,8 @@ discord_oauth:
     # To use Discord OAuth2, you must register an application at https://discord.com/developers/applications
     # Change to 'true' if in use.
     enabled: false
+    # Can consider all users always logged in for debugging.
+    debug_always_on: false
     # Discord client ID. Generated on Discord's OAuth2 page.
     client-id: 123
     # Discord client secret Generated on Discord's OAuth2 page.
