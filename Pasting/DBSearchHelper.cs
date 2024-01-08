@@ -19,7 +19,7 @@ namespace DenizenPastingWebsite.Pasting
                 return [(null, -1)];
             }
             List<(Paste, int)> results = [];
-            const int jump = 100;
+            const int jump = 250;
             Task task = null;
             LockObject locker = new();
             for (long index = firstInd; index >= lastInd; index -= jump)
