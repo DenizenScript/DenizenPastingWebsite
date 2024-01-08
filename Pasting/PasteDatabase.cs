@@ -149,7 +149,7 @@ namespace DenizenPastingWebsite.Pasting
                 {
                     paste.Raw = Encoding.UTF8.GetString(UnGZip(paste.StoredRaw));
                 }
-                if (paste.Formatted is null && paste.StoredFormatted is not null)
+                if (paste.Formatted is null && paste.StoredFormatted is not null && includeFormatted)
                 {
                     paste.Formatted = Encoding.UTF8.GetString(UnGZip(paste.StoredFormatted));
                 }
@@ -160,7 +160,7 @@ namespace DenizenPastingWebsite.Pasting
                 {
                     paste.Raw = Encoding.UTF8.GetString(paste.StoredRaw);
                 }
-                if (paste.Formatted is null && paste.StoredFormatted is not null)
+                if (paste.Formatted is null && paste.StoredFormatted is not null && includeFormatted)
                 {
                     paste.Formatted = Encoding.UTF8.GetString(paste.StoredFormatted);
                 }
