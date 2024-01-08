@@ -47,7 +47,10 @@ function escapeHtml(raw) {
     return raw.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 }
 
-function doSearch(searchTerm, searchMax, index) {
+function doSearch(searchTerm, searchMax, index, timeStarted = 0) {
+    if (timeStarted == 0) {
+        timeStarted = Date.now();
+    }
     setSearchProgress(`Searching... ${index} / ${(searchMax)}... please wait...`);
     console.log(`Step ${index} on search for ${searchTerm} until ${searchMax} pages...`);
     postJSON(`/Info/PostSearchJson?search-term=${encodeURIComponent(searchTerm)}&search-start-ind=${index}`, function(status, data) {
@@ -85,9 +88,11 @@ function doSearch(searchTerm, searchMax, index) {
         }
         index += 1000;
         if (index >= searchMax) {
-            searchEnded(`Search hit maximum limit with ${currentResults.length} result(s)`);
+            let timeTaken = Date.now() - timeStarted;
+            let avgTime = timeTaken / (index / 1000);
+            searchEnded(`Search hit maximum limit with ${currentResults.length} result(s) (took ${Math.round(avgTime)}ms per thousand entries)`);
             return;
         }
-        doSearch(searchTerm, searchMax, index);
+        doSearch(searchTerm, searchMax, index, timeStarted);
     });
 }
