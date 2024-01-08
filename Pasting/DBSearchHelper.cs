@@ -20,9 +20,9 @@ namespace DenizenPastingWebsite.Pasting
             long lastInd = Math.Max(0, firstInd - max);
             if (firstInd < 0)
             {
-                return new[] { ((Paste)null, -1) };
+                return [((Paste)null, -1)];
             }
-            List<(Paste, int)> results = new();
+            List<(Paste, int)> results = [];
             for (long index = firstInd; index >= lastInd; index--)
             {
                 if (PasteDatabase.TryGetPaste(index, out Paste paste))
@@ -34,14 +34,14 @@ namespace DenizenPastingWebsite.Pasting
                             results.Add((paste, i));
                             if (results.Count > 500)
                             {
-                                return results.ToArray();
+                                return [.. results];
                             }
                             break;
                         }
                     }
                 }
             }
-            return results.ToArray();
+            return [.. results];
         }
     }
 }

@@ -61,11 +61,11 @@ namespace DenizenPastingWebsite.Pasting
             MaxPasteRawLength = Config.GetInt("max-paste-size").Value;
             TrustXForwardedFor = Config.GetBool("trust-x-forwarded-for").Value;
             MaxPastesPerMinute = Config.GetInt("max-pastes-per-minute").Value;
-            NewPasteWebhooks = (Config.GetStringList("webhooks.new-paste") ?? new List<string>()).ToArray();
-            SpamBlockKeywords = (Config.GetStringList("spam-block-keyphrases") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
-            SpamBlockShortKeywords = (Config.GetStringList("spam-block-short-keyphrases") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
-            SpamBlockTitles = (Config.GetStringList("spam-block-titles") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
-            SpamBlockPartialTitles = (Config.GetStringList("spam-block-partial-titles") ?? new List<string>()).Select(s => s.ToLowerFast()).ToArray();
+            NewPasteWebhooks = [.. (Config.GetStringList("webhooks.new-paste") ?? [])];
+            SpamBlockKeywords = (Config.GetStringList("spam-block-keyphrases") ?? []).Select(s => s.ToLowerFast()).ToArray();
+            SpamBlockShortKeywords = (Config.GetStringList("spam-block-short-keyphrases") ?? []).Select(s => s.ToLowerFast()).ToArray();
+            SpamBlockTitles = (Config.GetStringList("spam-block-titles") ?? []).Select(s => s.ToLowerFast()).ToArray();
+            SpamBlockPartialTitles = (Config.GetStringList("spam-block-partial-titles") ?? []).Select(s => s.ToLowerFast()).ToArray();
             ContactInfo = Config.GetString("tos_contact", ContactInfo);
             TermsOfService = Config.GetString("tos_text", TermsOfService);
             if (Config.HasKey("discord_oauth"))
@@ -90,7 +90,7 @@ namespace DenizenPastingWebsite.Pasting
         public static AsciiMatcher AllowedSenderText = new("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.:-[](),/= ");
 
         /// <summary>Helper to count number of submissions a specific sender has sent.</summary>
-        public static Dictionary<string, List<long>> SubmissionCounter = new();
+        public static Dictionary<string, List<long>> SubmissionCounter = [];
 
         /// <summary>Returns the count of how many pastes a specific sender has sent in the past 24 hours, adding 1 to the count for a new submission.</summary>
         public static int CountSubmitter(string submitter)

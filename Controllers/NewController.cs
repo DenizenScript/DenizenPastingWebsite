@@ -35,7 +35,7 @@ namespace DenizenPastingWebsite.Controllers
         /// <summary>Quickly cleans control codes from text and replaces them with spaces.</summary>
         public static string ForceCleanText(string text)
         {
-            char[] chars = text.ToArray();
+            char[] chars = [.. text];
             for (int i = 0; i < chars.Length; i++)
             {
                 // ASCII Control codes

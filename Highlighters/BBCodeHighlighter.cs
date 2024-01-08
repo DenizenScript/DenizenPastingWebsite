@@ -42,7 +42,7 @@ namespace DenizenPastingWebsite.Highlighters
                 }
                 else if (inBrackets && text[i] == ']')
                 {
-                    string[] datum = bracketContents.Split(new char[] { '=' }, 2);
+                    string[] datum = bracketContents.Split(['='], 2);
                     switch (datum[0])
                     {
                         case "b":
@@ -88,7 +88,7 @@ namespace DenizenPastingWebsite.Highlighters
                             url = !url;
                             if (datum.Length == 2)
                             {
-                                if (datum[1].StartsWith("http://") || datum[1].StartsWith("https://") || datum[1].StartsWith("ftp://") || datum[1].StartsWith("/"))
+                                if (datum[1].StartsWith("http://") || datum[1].StartsWith("https://") || datum[1].StartsWith("ftp://") || datum[1].StartsWith('/'))
                                 {
                                     built.Append("<a href=\"" + datum[1] + "\">");
                                 }

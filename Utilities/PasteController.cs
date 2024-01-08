@@ -9,10 +9,7 @@ namespace DenizenPastingWebsite.Utilities
 {
     public class PasteController : Controller
     {
-        public static HashSet<string> IgnoredOrigins = new()
-        {
-            "127.0.0.1", "::1", "[::1]"
-        };
+        public static HashSet<string> IgnoredOrigins = ["127.0.0.1", "::1", "[::1]"];
 
         [NonAction]
         public (string, string) GetSenderAndOrigin()

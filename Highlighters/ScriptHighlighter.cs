@@ -64,17 +64,16 @@ namespace DenizenPastingWebsite.Highlighters
 
         public static AsciiMatcher CommentHeaderMatcher = new("|+=#_@/");
 
-        public static HashSet<string> DefiniteNotScriptKeys = new()
-        { "interact scripts", "default constants", "data", "constants", "text", "lore", "aliases", "slots", "enchantments", "input" };
+        public static HashSet<string> DefiniteNotScriptKeys = ["interact scripts", "default constants", "data", "constants", "text", "lore", "aliases", "slots", "enchantments", "input"];
 
         /// <summary>Special helper characters to avoid HTML validity mixups.</summary>
         public const char CHAR_TAG_START = (char)0x01, CHAR_TAG_END = (char)0x02;
 
-        public static HashSet<string> IfOperators = new() { CHAR_TAG_START.ToString(), CHAR_TAG_END.ToString(), CHAR_TAG_START + "=", CHAR_TAG_END + "=", "==", "!=", "||", "&amp;&amp;", "(", ")", "or", "and", "not", "in", "contains", "!in", "!contains", "matches", "!matches" };
+        public static HashSet<string> IfOperators = [CHAR_TAG_START.ToString(), CHAR_TAG_END.ToString(), CHAR_TAG_START + "=", CHAR_TAG_END + "=", "==", "!=", "||", "&amp;&amp;", "(", ")", "or", "and", "not", "in", "contains", "!in", "!contains", "matches", "!matches"];
 
-        public static HashSet<string> IfCommandLabels = new() { "cmd:if", "cmd:else", "cmd:while", "cmd:waituntil" };
+        public static HashSet<string> IfCommandLabels = ["cmd:if", "cmd:else", "cmd:while", "cmd:waituntil"];
 
-        public static HashSet<string> DeffableCommandLabels = new() { "cmd:run", "cmd:runlater", "cmd:clickable", "cmd:bungeerun" };
+        public static HashSet<string> DeffableCommandLabels = ["cmd:run", "cmd:runlater", "cmd:clickable", "cmd:bungeerun"];
 
         public static string ColorLine(string line, string lastKey)
         {

@@ -12,7 +12,7 @@ namespace DenizenPastingWebsite.Pasting
     public class PasteType
     {
         /// <summary>A map of all valid paste types (lowercased) to their paste type object.</summary>
-        public static Dictionary<string, PasteType> ValidPasteTypes = new();
+        public static Dictionary<string, PasteType> ValidPasteTypes = [];
 
         /// <summary>HTMLString option list for other language selection.</summary>
         public static HtmlString OtherLangOptions;
@@ -51,8 +51,8 @@ namespace DenizenPastingWebsite.Pasting
 
         public string MetaColor;
 
-        public static List<(string, string, string)> AltLanguages = new()
-        {
+        public static List<(string, string, string)> AltLanguages =
+        [
             ("csharp", "cs", "C#"),
             ("java", "java", "Java"),
             ("properties", "properties", "Properties File"),
@@ -91,6 +91,6 @@ namespace DenizenPastingWebsite.Pasting
             ("r", "r", "R"),
             ("shell", "shell", "Shell Session"),
             ("objectivec", "objc", "Objective C")
-        };
+        ];
     }
 }

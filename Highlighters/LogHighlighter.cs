@@ -33,7 +33,7 @@ namespace DenizenPastingWebsite.Highlighters
                 return (text, null);
             }
             string[] lines = text.SplitFast('\n');
-            List<string> filtered = new();
+            List<string> filtered = [];
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];
@@ -122,7 +122,7 @@ namespace DenizenPastingWebsite.Highlighters
                 }
             }
             // in-console as of 1.18.x: [15:07:27 INFO]: <name> words
-            if (line.IndexOf(" INFO]: <") == 9 && line.StartsWith("[") && TimePrefixMatcher.IsOnlyMatches(line[1..9]))
+            if (line.IndexOf(" INFO]: <") == 9 && line.StartsWith('[') && TimePrefixMatcher.IsOnlyMatches(line[1..9]))
             {
                 return FilterizeText(line, 17, line.Length, "chat", output);
             }
@@ -454,7 +454,7 @@ namespace DenizenPastingWebsite.Highlighters
         }
 
         /// <summary>Special plugins for <see cref="ColorizePluginMessage(string)"/>.</summary>
-        public static HashSet<string> SpecialPlugins = new() { "Denizen", "Citizens", "Sentinel" };
+        public static HashSet<string> SpecialPlugins = ["Denizen", "Citizens", "Sentinel"];
 
         /// <summary>Formats and colorizes a message from a user.</summary>
         public static (string, string) ColorizeUserMessage(string text)
@@ -598,7 +598,7 @@ namespace DenizenPastingWebsite.Highlighters
             {
                 string afterOpen = text.After("&lt;");
                 int withStart = afterOpen.IndexOf("&gt; with '");
-                int endQuote = afterOpen.LastIndexOf("'");
+                int endQuote = afterOpen.LastIndexOf('\'');
                 if (withStart != -1 && endQuote > withStart + "&gt; with '".Length)
                 {
                     string tag = afterOpen[0..withStart];

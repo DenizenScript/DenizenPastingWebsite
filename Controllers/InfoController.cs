@@ -90,7 +90,7 @@ namespace DenizenPastingWebsite.Controllers
                 return Ok("{\"error\": \"invalid input\"}");
             }
             Console.WriteLine($"User ID {ViewData["auth_userid"]} searched term {searchTerm[0]} at ind {startInd} and got {res.Length} results.");
-            JArray output = new();
+            JArray output = [];
             foreach ((Paste paste, int matchId) in res)
             {
                 if (paste is null)

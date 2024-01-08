@@ -267,8 +267,10 @@ namespace DenizenPastingWebsite.Utilities
 
         public static TokenResults DoTokenPost(string content)
         {
-            HttpRequestMessage request = new(HttpMethod.Post, $"{DISCORD_OAUTH_BASE}/token");
-            request.Content = new ByteArrayContent(StringConversionHelper.UTF8Encoding.GetBytes(content));
+            HttpRequestMessage request = new(HttpMethod.Post, $"{DISCORD_OAUTH_BASE}/token")
+            {
+                Content = new ByteArrayContent(StringConversionHelper.UTF8Encoding.GetBytes(content))
+            };
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
             try
             {

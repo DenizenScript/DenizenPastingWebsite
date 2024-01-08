@@ -25,7 +25,7 @@ namespace DenizenPastingWebsite.Utilities
             viewData["Theme_Is_Dark"] = theme.IsDark;
         }
 
-        public static Dictionary<string, ThemeHelper> Themes = new();
+        public static Dictionary<string, ThemeHelper> Themes = [];
 
         public static ThemeHelper Dark;
 
