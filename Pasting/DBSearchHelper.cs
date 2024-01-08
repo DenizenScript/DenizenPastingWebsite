@@ -4,9 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FreneticUtilities.FreneticToolkit;
 using FreneticUtilities.FreneticExtensions;
-using DenizenPastingWebsite.Models;
-using DenizenPastingWebsite.Utilities;
-using DenizenPastingWebsite.Pasting;
+using LiteDB;
 
 namespace DenizenPastingWebsite.Pasting
 {
@@ -21,23 +19,43 @@ namespace DenizenPastingWebsite.Pasting
                 return [(null, -1)];
             }
             List<(Paste, int)> results = [];
-            for (long index = firstInd; index >= lastInd; index--)
+            const int jump = 100;
+            Task task = null;
+            LockObject locker = new();
+            for (long index = firstInd; index >= lastInd; index -= jump)
             {
-                if (PasteDatabase.TryGetPaste(index, out Paste paste))
+                Paste[] pastes;
+                lock (locker)
                 {
-                    for (int i = 0; i < terms.Length; i++)
+                    pastes = PasteDatabase.Internal.PasteCollection.Find(Query.And(Query.GT("_id", index - jump), Query.LTE("_id", index))).ToArray();
+                    foreach (Paste paste in pastes)
                     {
-                        if (paste.ContainsSearchText(terms[i]))
-                        {
-                            results.Add((paste, i));
-                            if (results.Count > 500)
-                            {
-                                return [.. results];
-                            }
-                            break;
-                        }
+                        PasteDatabase.FillPasteFromStorage(paste, false);
                     }
                 }
+                task?.Wait();
+                task = Task.Run(() =>
+                {
+                    Parallel.ForEach(pastes, paste =>
+                    {
+                        PasteDatabase.FillPasteStrings(paste, false);
+                    });
+                    foreach (Paste paste in pastes.OrderByDescending(p => p.ID))
+                    {
+                        for (int i = 0; i < terms.Length; i++)
+                        {
+                            if (paste.ContainsSearchText(terms[i]))
+                            {
+                                results.Add((paste, i));
+                                if (results.Count > 500)
+                                {
+                                    return;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                });
             }
             return [.. results];
         }

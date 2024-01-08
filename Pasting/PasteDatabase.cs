@@ -136,31 +136,12 @@ namespace DenizenPastingWebsite.Pasting
             }
         }
 
-        /// <summary>Fills text content of a paste object from file store or compressed data.</summary>
-        public static void FillPaste(Paste paste)
+        /// <summary>Fills text content of a paste object from compressed data.</summary>
+        public static void FillPasteStrings(Paste paste, bool includeFormatted = true)
         {
             if (paste is null)
             {
                 return;
-            }
-            lock (Internal.PasteLock)
-            {
-                if (paste.IsInFileStore)
-                {
-                    MemoryStream stream = new();
-                    Internal.FileStorage.Download($"/paste/raw/{paste.ID}.txt", stream);
-                    paste.StoredRaw = stream.ToArray();
-                    stream = new MemoryStream();
-                    Internal.FileStorage.Download($"/paste/formatted/{paste.ID}.txt", stream);
-                    paste.StoredFormatted = stream.ToArray();
-                }
-            }
-            if (paste.IsInFileStore && !paste.IsCompressed)
-            {
-                paste.Raw = Encoding.UTF8.GetString(paste.StoredRaw);
-                paste.Formatted = Encoding.UTF8.GetString(paste.StoredFormatted);
-                paste.StoredRaw = null;
-                paste.StoredFormatted = null;
             }
             if (paste.IsCompressed)
             {
@@ -173,6 +154,57 @@ namespace DenizenPastingWebsite.Pasting
                     paste.Formatted = Encoding.UTF8.GetString(UnGZip(paste.StoredFormatted));
                 }
             }
+            else
+            {
+                if (paste.Raw is null && paste.StoredRaw is not null)
+                {
+                    paste.Raw = Encoding.UTF8.GetString(paste.StoredRaw);
+                }
+                if (paste.Formatted is null && paste.StoredFormatted is not null)
+                {
+                    paste.Formatted = Encoding.UTF8.GetString(paste.StoredFormatted);
+                }
+            }
+            paste.StoredRaw = null;
+            paste.StoredFormatted = null;
+        }
+
+        /// <summary>Fills text content of a paste object from file store.</summary>
+        public static void FillPasteFromStorage(Paste paste, bool includeFormatted = true)
+        {
+            if (paste is null)
+            {
+                return;
+            }
+            if (paste.IsInFileStore)
+            {
+                lock (Internal.PasteLock)
+                {
+                    MemoryStream stream = new();
+                    Internal.FileStorage.Download($"/paste/raw/{paste.ID}.txt", stream);
+                    paste.StoredRaw = stream.ToArray();
+                    if (includeFormatted)
+                    {
+                        stream = new MemoryStream();
+                        Internal.FileStorage.Download($"/paste/formatted/{paste.ID}.txt", stream);
+                        paste.StoredFormatted = stream.ToArray();
+                    }
+                }
+            }
+        }
+
+        /// <summary>Fills text content of a paste object from file store or compressed data.</summary>
+        public static void FillPaste(Paste paste, bool includeFormatted = true)
+        {
+            if (paste is null)
+            {
+                return;
+            }
+            if (paste.IsInFileStore)
+            {
+                FillPasteFromStorage(paste, includeFormatted);
+            }
+            FillPasteStrings(paste, includeFormatted);
         }
 
         /// <summary>Tries to get a paste.</summary>
