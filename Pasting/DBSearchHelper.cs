@@ -21,17 +21,16 @@ namespace DenizenPastingWebsite.Pasting
                 return [(null, -1)];
             }
             ConcurrentQueue<(Paste, int)> results = [];
-            const int jump = 500;
+            const int jump = 501;
             Task task = null;
-            LockObject locker = new();
             long msFind = 0, msFill = 0, msFillString = 0, msContains = 0;
             for (long index = firstInd; index >= lastInd; index -= jump)
             {
                 Paste[] pastes;
-                lock (locker)
+                lock (PasteDatabase.Internal.PasteLock)
                 {
                     long tickFindStart = Environment.TickCount64;
-                    pastes = PasteDatabase.Internal.PasteCollection.Find(Query.And(Query.GT("_id", index - jump), Query.LTE("_id", index))).ToArray();
+                    pastes = PasteDatabase.Internal.PasteCollection.Find(Query.And(Query.GT("_id", Math.Max(lastInd, index - jump)), Query.LTE("_id", index))).ToArray();
                     long tickFindEnd = Environment.TickCount64;
                     foreach (Paste paste in pastes)
                     {

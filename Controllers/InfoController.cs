@@ -77,7 +77,7 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused Search JSON: empty search");
                 return Ok("{\"error\": \"no valid searches given\"}");
             }
-            if (searches.Length > 10)
+            if (searches.Length > 25)
             {
                 Console.Error.WriteLine("Refused Search JSON: too many searches");
                 return Ok("{\"error\": \"too many search terms\"}");

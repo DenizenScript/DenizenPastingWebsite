@@ -62,7 +62,6 @@ function doSearch(searchTerm, searchMax, index, timeStarted = 0) {
             searchEnded(`Search ended early with message: ${data['error']}`);
             return;
         }
-        console.log(data)
         for (var paste of data['result']) {
             if (paste.id == -1) {
                 searchEnded(`Searched every paste in database and got ${currentResults.length} result(s)`);
