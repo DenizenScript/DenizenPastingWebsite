@@ -169,7 +169,8 @@ namespace DenizenPastingWebsite.Controllers
                     Raw = diffText,
                     Formatted = DiffHighlighter.Highlight(diffText),
                     Edited = newPaste.ID,
-                    ID = PasteDatabase.GetNextPasteID()
+                    ID = PasteDatabase.GetNextPasteID(),
+                    StaffInfo = GenerateStaffInfo(sender, null)
                 };
                 newPaste.DiffReport = diffPaste.ID;
                 PasteDatabase.SubmitPaste(diffPaste);
