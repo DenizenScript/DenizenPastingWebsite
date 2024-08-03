@@ -129,7 +129,7 @@ namespace DenizenPastingWebsite.Pasting
                                 sender = sender[..512];
                             }
                             string content = $"New **{PasteType.ValidPasteTypes[paste.Type].Name}** paste: {URL_BASE}/View/{paste.ID} sent by `{sender}` (`{CountSubmitter(sender)}` today)";
-                            if (paste.Raw.Length < 1024 * 10 && paste.Raw.CountCharacter('\n') < 15 && (paste.Raw.Contains("http://") || paste.Raw.Contains("https://")))
+                            if (paste.Raw.Length < 1024 * 10 && paste.Raw.CountCharacter('\n') < 25 && (paste.Raw.Contains("http://") || paste.Raw.Contains("https://")))
                             {
                                 content += "... 🚩 potential spam - paste contains URLs.";
                             }

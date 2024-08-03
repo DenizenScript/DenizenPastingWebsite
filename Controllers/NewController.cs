@@ -290,7 +290,7 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine($"Refused paste: link spambot? {linkLines} linkLines and {normalLines} normal lines");
                 return false;
             }
-            if (normalLines < 20 && PasteServer.SpamBlockKeywords.Length > 0)
+            if (normalLines < 25 && PasteServer.SpamBlockShortKeywords.Length > 0)
             {
                 string contentLow = content.ToLowerFast();
                 foreach (string block in PasteServer.SpamBlockShortKeywords)
