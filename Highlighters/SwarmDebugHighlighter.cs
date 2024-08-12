@@ -25,7 +25,6 @@ namespace DenizenPastingWebsite.Highlighters
             {
                 string line = lines[i];
                 string[] parts = line.SplitFast(' ', 3);
-                Console.WriteLine($"Line {i}, parts: {parts.Length}, part 2 {(parts.Length > 2 ? parts[2] : "null")}");
                 if (parts.Length == 4 && parts[2].StartsWithFast('[') && parts[2].EndsWithFast(']'))
                 {
                     string color = "mc_7";
