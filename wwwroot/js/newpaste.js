@@ -3,8 +3,10 @@ function setAddr(addr) {
     window.history.pushState(addr, document.title, addr);
     document.getElementById('submitpost').action = addr;
 }
+
 var privacyFilterDiv = document.getElementById("log_privacy_filter_options");
 var lastSelection = "other-csharp";
+
 function setPasteType(name) {
     lastSelection = name;
     document.title = "New " + name + " Paste | Denizen Pastebin";
@@ -25,6 +27,7 @@ function setPasteType(name) {
     }
     resize();
 }
+
 function autoSetOtherType() {
     var selectedOption = document.getElementById('other_type_selection').selectedOptions[0];
     var selectedName = selectedOption.getAttribute("name");
@@ -35,6 +38,7 @@ function autoSetOtherType() {
         setAddr('/New/Other?selected=' + selectedName);
     }
 }
+
 function otherTypeEntryClick() {
     var selectedOption = document.getElementById('other_type_selection').selectedOptions[0];
     var selectedName = selectedOption.getAttribute("name");
@@ -42,33 +46,41 @@ function otherTypeEntryClick() {
         document.getElementById('pastetype_other').click();
     }
 }
+
 const urlParams = new URLSearchParams(window.location.search);
 var selectedOtherType = urlParams.get('selected');
+
 if (selectedOtherType === null) {
     var origType = document.getElementById('orig_type').value;
     if (origType.startsWith('other-')) {
         selectedOtherType = origType;
     }
 }
+
 if (selectedOtherType !== null) {
     console.log(selectedOtherType);
     document.getElementById('other_type_selection').children[selectedOtherType].selected = 'selected';
     autoSetOtherType();
 }
+
 for (var option of document.getElementById('other_type_selection').children) {
     option.addEventListener('click', otherTypeEntryClick);
 }
+
 // Paste area related stuff
 var pasteArea = document.getElementById('pastecontents');
 var spacer = document.getElementById('paste_spacer');
+
 function resize() {
     pasteArea.style.height = 'auto';
     pasteArea.style.height = (pasteArea.scrollHeight + 200) + 'px';
     spacer.style.height = pasteArea.style.height;
 }
+
 function delayedResize() {
     window.setTimeout(resize, 0);
 }
+
 pasteArea.addEventListener('change', resize);
 pasteArea.addEventListener('cut', delayedResize);
 pasteArea.addEventListener('paste', delayedResize);
@@ -83,18 +95,23 @@ pasteArea.addEventListener('keydown', function(e) {
         this.selectionEnd = this.selectionStart;
     }
 });
+
 resize();
+
 function tryConfirmSubmit(message) {
     document.getElementById('submit_modal_text').textContent = message;
     $('#submit_confirm_modal').modal('show');
 }
+
 var manualModalYes = false;
+
 document.getElementById('modal_no_button').addEventListener('click', function(e) {
     $('#submit_confirm_modal').modal('hide');
     e.preventDefault();
     e.stopPropagation();
     return false;
 }, true);
+
 document.getElementById('modal_yes_button').addEventListener('click', function(e) {
     manualModalYes = true;
     document.getElementById('newpaste_submit_button').click();
@@ -102,6 +119,7 @@ document.getElementById('modal_yes_button').addEventListener('click', function(e
     e.stopPropagation();
     return false;
 }, true);
+
 function giveErrorReason(type, cleanName, content, requiredToFail) {
     if (type != "Log" && (content.includes("[Server thread/INFO]: ") || content.includes("Starting minecraft server version "))) {
         tryConfirmSubmit(`Are you sure this is a ${cleanName} paste? It looks like a server log. You should probably click 'Cancel' and select 'Server log' and submit it properly as a log.`);
@@ -123,6 +141,7 @@ function giveErrorReason(type, cleanName, content, requiredToFail) {
     }
     return true;
 }
+
 document.getElementById('newpaste_submit_button').addEventListener('click', function(e) {
     console.log(`Trying to submit a ${lastSelection}`);
     if (manualModalYes) {

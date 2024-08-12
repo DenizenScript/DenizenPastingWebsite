@@ -95,7 +95,7 @@ namespace DenizenPastingWebsite.Pasting
         /// <summary>Returns the count of how many pastes a specific sender has sent in the past 24 hours, adding 1 to the count for a new submission.</summary>
         public static int CountSubmitter(string submitter)
         {
-            List<long> submissions = SubmissionCounter.GetOrCreate(submitter, () => new List<long>());
+            List<long> submissions = SubmissionCounter.GetOrCreate(submitter, () => []);
             long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             long yesterday = now - (60 * 60 * 24);
             if (submissions.Count > 0 && submissions[0] < yesterday)

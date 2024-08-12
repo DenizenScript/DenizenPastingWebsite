@@ -34,7 +34,7 @@ namespace DenizenPastingWebsite.Utilities
             if (DebugAlwaysOn)
             {
                 viewData["auth_isloggedin"] = true;
-                viewData["auth_userid"] = 0;
+                viewData["auth_userid"] = 0UL;
                 return;
             }
             string sessTok = request.Cookies["paste_session_token"];
