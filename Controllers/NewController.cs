@@ -340,6 +340,16 @@ namespace DenizenPastingWebsite.Controllers
             return View("Index", new NewPasteModel() { NewType = "log" });
         }
 
+        public IActionResult Swarm()
+        {
+            Setup();
+            if (Request.Method == "POST")
+            {
+                return HandlePost("swarm");
+            }
+            return View("Index", new NewPasteModel() { NewType = "swarm" });
+        }
+
         public IActionResult BBCode()
         {
             Setup();

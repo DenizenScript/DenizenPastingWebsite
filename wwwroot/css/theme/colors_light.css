@@ -6,6 +6,7 @@ hr {border-color:#333333;}
 .prefix_text {color:#666666;}
 .line_numbers {color:#666666;}
 .other_box {background-color:#eeeeee;border-color:#4582ec;color:#000000;}
+.lineback_alt {background-color:rgba(0, 0, 0, 0.2);display: inline-block; width: 100%;}
 /* Quite Light: created by Alex 'mcmonkey' Goodwin */
 /* Denizen Script Colors */
 .script_comment_header{color:#CC0000;}

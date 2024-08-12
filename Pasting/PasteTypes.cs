@@ -21,6 +21,7 @@ namespace DenizenPastingWebsite.Pasting
         {
             ValidPasteTypes["script"] = new PasteType() { Name = "Script", DisplayName = "Denizen Script", FileExtension = "dsc", Highlight = ScriptHighlighter.Highlight, MetaColor = "#00FFFF" };
             ValidPasteTypes["log"] = new PasteType() { Name = "Log", DisplayName = "Server Log", FileExtension = "log", Highlight = LogHighlighter.Highlight, Filter = LogHighlighter.DoFilterMethod, MetaColor = "#2050FF" };
+            ValidPasteTypes["swarm"] = new PasteType() { Name = "Swarm", DisplayName = "Swarm Debug Log", FileExtension = "log", Highlight = SwarmDebugHighlighter.Highlight, MetaColor = "#AA00DD" };
             ValidPasteTypes["diff"] = new PasteType() { Name = "Diff", DisplayName = "Diff Report", FileExtension = "diff", Highlight = DiffHighlighter.Highlight, MetaColor = "#00FF00" };
             ValidPasteTypes["bbcode"] = new PasteType() { Name = "BBCode", DisplayName = "BBCode", FileExtension = "txt", Highlight = BBCodeHighlighter.Highlight, MetaColor = "#FFFFFF" };
             ValidPasteTypes["text"] = new PasteType() { Name = "Text", DisplayName = "Plain Text", FileExtension = "txt", Highlight = HighlighterCore.HighlightPlainText, MetaColor = "#A0A0A0" };

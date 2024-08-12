@@ -4,6 +4,7 @@ textarea {color:#FFFFFF;}
 hr {border-color:#AAAAAA;}
 .prefix_text {color:#999999;}
 .line_numbers {color:#999999;}
+.lineback_alt {background-color:rgba(0, 0, 0, 0.2);display: inline-block; width: 100%;}
 /* Standard Dark: created by Alex 'mcmonkey' Goodwin */
 /* Denizen Script Colors */
 .script_comment_header{color:#FF0000;}

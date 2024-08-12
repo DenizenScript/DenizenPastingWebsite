@@ -133,6 +133,9 @@ function giveErrorReason(type, cleanName, content, requiredToFail) {
     else if (type != "other-properties" && (content.includes("max-players=") || content.includes("level-type=") || content.includes("allow-flight="))) {
         tryConfirmSubmit(`Are you sure this is a ${cleanName} paste? It looks like a Minecraft server.properties file. You should probably click 'Cancel' and select 'Other' then 'Properties file' and submit it properly as a properties file.`);
     }
+    else if (type != "Swarm" && (content.includes("[Init] === SwarmUI") || content.includes("[Debug] [ComfyUI-"))) {
+        tryConfirmSubmit(`Are you sure this is a ${cleanName} paste? It looks like a SwarmUI Debug Log file. You should probably click 'Cancel' and select 'Swarm Debug' and submit it properly as a Swarm debug log.`);
+    }
     else if (requiredToFail) {
         tryConfirmSubmit(`Are you sure this is a ${cleanName} paste? It doesn't look like one. Consider clicking 'Cancel' and selecting a more appropriate type.`);
     }
@@ -166,6 +169,12 @@ document.getElementById('newpaste_submit_button').addEventListener('click', func
         else if (!giveErrorReason(lastSelection, "Minecraft Server Log", pasteArea.value, false)) {
             tryConfirmSubmit(`Are you sure this is a server log? It doesn't look like one. Consider clicking 'Cancel' and selecting a more appropriate type. Or, you might not have included the full log content.`);
         }
+    }
+    else if (lastSelection == "Swarm") {
+        if (pasteArea.value.includes("[Init] === SwarmUI") || pasteArea.value.includes("[Info] Creating new") || pasteArea.value.includes("[Debug] [ComfyUI-")) {
+            return;
+        }
+        giveErrorReason(lastSelection, "SwarmUI Debug Log", pasteArea.value, true);
     }
     else if (lastSelection == "other-java") {
         if (pasteArea.value.includes("package ") || pasteArea.value.includes("class ") || pasteArea.value.includes(" void ")) {
