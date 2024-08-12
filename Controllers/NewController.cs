@@ -78,13 +78,22 @@ namespace DenizenPastingWebsite.Controllers
             }
             string[] filters = form.Keys.Where(s => s.StartsWith("privacy_filter_") && form.TryGetValue(s, out StringValues val) && val.Count == 1 && val[0].ToLowerFast() == "on").Select(s => s["privacy_filter_".Length..]).ToArray();
             bool micro = form.TryGetValue("response", out StringValues responseValue) && responseValue.Count == 1 && responseValue[0].ToLowerFast() == "micro";
-            bool microv2 = form.TryGetValue("v", out StringValues versionValue) && versionValue.Count == 1 && versionValue[0].ToLowerFast() == "200";
+            bool microv2 = false;
             if (micro)
             {
                 sender += ", response=micro";
-                if (microv2)
+                if (form.TryGetValue("v", out StringValues versionValue) && versionValue.Count == 1)
                 {
-                    sender += "v2";
+                    if (versionValue[0] == "200")
+                    {
+                        sender += "v2_Denizen";
+                        microv2 = true;
+                    }
+                    else if (versionValue[0] == "300")
+                    {
+                        sender += "v3_Swarm";
+                        microv2 = true;
+                    }
                 }
             }
             PasteUser user = PasteDatabase.GetUser(sender); // Note: intentionally use 'sender' not 'realOrigin'
