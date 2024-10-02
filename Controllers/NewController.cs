@@ -65,7 +65,7 @@ namespace DenizenPastingWebsite.Controllers
             {
                 return RejectPaste(type, "Refused paste: Improper form data");
             }
-            if (edits == null && form.TryGetValue("editing", out StringValues editValue) && editValue.Count == 1 && editValue[0] != "")
+            if (edits is null && form.TryGetValue("editing", out StringValues editValue) && editValue.Count == 1 && editValue[0] != "")
             {
                 if (!long.TryParse(editValue[0], out long editingID))
                 {
@@ -134,7 +134,7 @@ namespace DenizenPastingWebsite.Controllers
             }
             pasteContentText = pasteContentText.Replace("\r\n", "\n");
             string[] filterOutput = null;
-            if (filters != null && filters.Any() && actualType.Filter is not null)
+            if (filters is not null && filters.Any() && actualType.Filter is not null)
             {
                 (pasteContentText, filterOutput) = actualType.Filter(pasteContentText, filters);
             }
@@ -153,12 +153,12 @@ namespace DenizenPastingWebsite.Controllers
             {
                 return RejectPaste(type, "Refused paste: Massive formatted-content length");
             }
-            if (newPaste.Formatted == null)
+            if (newPaste.Formatted is null)
             {
                 return RejectPaste(type, "Refused paste: format failed");
             }
             string diffText = null;
-            if (edits != null)
+            if (edits is not null)
             {
                 diffText = DiffHighlighter.GenerateDiff(edits.Raw, newPaste.Raw, out bool hasDifferences);
                 if (!hasDifferences && edits.Type == newPaste.Type)
@@ -167,7 +167,7 @@ namespace DenizenPastingWebsite.Controllers
                 }
             }
             newPaste.ID = PasteDatabase.GetNextPasteID();
-            if (diffText != null)
+            if (diffText is not null)
             {
                 Paste diffPaste = new()
                 {
