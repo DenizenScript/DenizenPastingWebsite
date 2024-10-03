@@ -227,6 +227,11 @@ namespace DenizenPastingWebsite.Controllers
                     return false;
                 }
             }
+            if (content.Length < 2048 && content.Contains("[url="))
+            {
+                Console.Error.WriteLine($"Refused paste: very short paste with a BBCode URL, likely spammer");
+                return false;
+            }
             string titleLow = title.ToLowerFast();
             if (titleLow.Contains("<a href="))
             {
@@ -294,7 +299,7 @@ namespace DenizenPastingWebsite.Controllers
                     normalLines++;
                 }
             }
-            if (linkLines >= normalLines || (linkLines > 0 && normalLines < 4))
+            if (linkLines * 2 >= normalLines || (linkLines > 0 && normalLines < 4))
             {
                 Console.Error.WriteLine($"Refused paste: link spambot? {linkLines} linkLines and {normalLines} normal lines");
                 return false;
