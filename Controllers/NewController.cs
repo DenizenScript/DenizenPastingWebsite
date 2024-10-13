@@ -96,6 +96,17 @@ namespace DenizenPastingWebsite.Controllers
                     }
                 }
             }
+            else
+            {
+                if (!form.TryGetValue("vcode", out StringValues val) || val.Count != 1)
+                {
+                    return RejectPaste(type, "Refused paste: no validation code");
+                }
+                if (!NewPasteModel.IsValidValidationCode(val[0]))
+                {
+                    return RejectPaste(type, "Refused paste: wrong validation code");
+                }
+            }
             PasteUser user = PasteDatabase.GetUser(sender); // Note: intentionally use 'sender' not 'realOrigin'
             if (user.CurrentStatus == PasteUser.Status.BLOCKED)
             {

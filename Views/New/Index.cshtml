@@ -12,6 +12,7 @@
     <span class="center_helper">
         <input type="hidden" id="orig_type" name="orig_type" value="@Model.NewType">
         <input type="hidden" name="editing" value="@Model.EditID">
+        <input type="hidden" name="vcode" value="@NewPasteModel.GetValidationCode()">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <input type="radio" class="btn-check" name="pastetype" id="pastetype_script" value="script" autocomplete="off" onclick="setPasteType('Script')">
             <label class="btn btn-outline-primary" title="Paste a Denizen Script (.dsc)" for="pastetype_script"> Denizen Script</label>

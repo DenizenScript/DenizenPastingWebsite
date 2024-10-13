@@ -5,6 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using DenizenPastingWebsite.Utilities;
 using DenizenPastingWebsite.Pasting;
+using System.Security.Cryptography;
+using FreneticUtilities.FreneticExtensions;
+using FreneticUtilities.FreneticToolkit;
 
 namespace DenizenPastingWebsite.Models
 {
@@ -42,5 +45,25 @@ namespace DenizenPastingWebsite.Models
 
         /// <summary>HTMLString option list for other language selection.</summary>
         public HtmlString OtherLangOptions => PasteType.OtherLangOptions;
+
+        /// <summary>Gets a simple validation code (to help prevent automated spam).</summary>
+        public static string GetValidationCode()
+        {
+            return GetValidationCode(DateTimeOffset.UtcNow.ToString($"yyyy-MM-dd"));
+        }
+
+        /// <summary>Gets a simple validation code (to help prevent automated spam) for any given validation string.</summary>
+        public static string GetValidationCode(string text)
+        {
+            return Convert.ToHexString(SHA256.HashData($"dpaste:{text}".EncodeUTF8())[0..8]);
+        }
+
+        /// <summary>Checks if the given validation code looks correct.</summary>
+        public static bool IsValidValidationCode(string text)
+        {
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+            DateTimeOffset yesterday = now.AddDays(-1);
+            return text == GetValidationCode(now.ToString("yyyy-MM-dd")) || text == GetValidationCode(yesterday.ToString("yyyy-MM-dd"));
+        }
     }
 }
