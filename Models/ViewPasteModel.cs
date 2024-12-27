@@ -47,14 +47,16 @@ namespace DenizenPastingWebsite.Models
 
         public HtmlString RenderHistorical => new(HighlighterCore.HighlightPlainText(Paste.HistoricalContent));
 
+        public static AsciiMatcher PreviewExcludeText = new("\n\r\t'`*~");
+
         public string PreviewContent()
         {
             string[] split = Paste.Raw.SplitFast('\n', 2);
             string combined = split[0] + (split.Length > 1 ? split[1] : "");
-            string cleaned = HighlighterCore.EscapeForHTML(combined.Replace('\r', '\n').Replace("\n", "  ")).Replace("\"", "&quot;").Replace("'", "").Replace("`", "");
-            if (cleaned.Length > 100)
+            string cleaned = PreviewExcludeText.TrimToNonMatches(HighlighterCore.EscapeForHTML(combined.Replace('\r', '\n').Replace("\n", "  ")).Replace("\"", "&quot;"));
+            if (cleaned.Length > 200)
             {
-                cleaned = cleaned[0..100] + "...";
+                cleaned = cleaned[0..200] + "...";
             }
             return cleaned;
         }

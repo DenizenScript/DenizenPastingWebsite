@@ -52,7 +52,7 @@ namespace DenizenPastingWebsite.Highlighters
             {
                 return (text, null);
             }
-            return (string.Join('\n', lines), filtered.ToArray());
+            return (string.Join('\n', lines), [.. filtered]);
         }
 
         /// <summary>Text that can appear in an IP string.</summary>
