@@ -103,6 +103,15 @@ namespace DenizenPastingWebsite.Controllers
                 }
                 else
                 {
+                    string content = "";
+                    if (paste.Raw is not null)
+                    {
+                        content = paste.Raw.Replace('\r', '\n').Replace("\n", "  ");
+                        if (content.Length > 200)
+                        {
+                            content = content[..200] + " ...";
+                        }
+                    }
                     output.Add(new JObject()
                     {
                         ["match_id"] = matchId,
@@ -111,7 +120,8 @@ namespace DenizenPastingWebsite.Controllers
                         ["type"] = paste.Type,
                         ["date"] = paste.Date,
                         ["source"] = paste.PostSourceData,
-                        ["edited"] = paste.Edited
+                        ["edited"] = paste.Edited,
+                        ["content"] = content
                     });
                 }
             }

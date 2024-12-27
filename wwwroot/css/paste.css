@@ -144,3 +144,12 @@ h4 {
     border: 1px solid black;
     padding: 0.2rem;
 }
+.search_preview_box {
+    max-width: 300px;
+    max-height: 18px;
+    line-height: 9px;
+    overflow-y: auto;
+    font-size: 9px;
+    word-wrap: break-word;
+    text-align: left;
+}

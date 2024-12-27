@@ -12,7 +12,7 @@ function begin_search() {
         elem.readOnly = true;
         elem.classList.add('disabled');
     }
-    resultsElem.innerHTML = "<tr><th>Match #</th><th>Link</th><th>Matched</th><th>Type</th><th>Source</th><th>Date</th><th>Title</th><th>Edited</th></tr>";
+    resultsElem.innerHTML = "<tr><th>Match #</th><th>Link</th><th>Matched</th><th>Type</th><th>Source</th><th>Date</th><th>Title</th><th>Edited</th><th>Content Preview</th></tr>";
     currentResults = [];
     console.log(`Begin search for ${searchTerm} until ${searchMax} pages...`);
     doSearch(searchTerm, searchMax, 0);
@@ -62,16 +62,18 @@ function doSearch(searchTerm, searchMax, index, timeStarted = 0) {
             searchEnded(`Search ended early with message: ${data['error']}`);
             return;
         }
-        for (var paste of data['result']) {
+        for (let paste of data['result']) {
             if (paste.id == -1) {
                 searchEnded(`Searched every paste in database and got ${currentResults.length} result(s)`);
                 return;
             }
             currentResults.push(paste.id);
-            var termSet = searchTerm.split("|||");
+            let termSet = searchTerm.split("|||");
             matchedFor = escapeHtml(termSet[paste.match_id]);
+            let contentPreview = escapeHtml(paste.content);
             let text = `<tr><td>#${currentResults.length}</td><td>in <a href="/View/${paste.id}">Paste #${paste.id}</a></td><td>'<code>${matchedFor}</code>'</td>`;
             text += `<td><code>${paste.type}</code></td><td><code>${escapeHtml(paste.source)}</code></td><td><code>${escapeHtml(paste.date)}</code></td><td>'<code>${escapeHtml(paste.title)}</code>'</td>`;
+            text += `<td><div class="search_preview_box">${contentPreview}</div></td>`;
             if (paste.edited > 0) {
                 text += `<td><a href="/View/${paste.id}">Paste #${paste.edited}</a></td>`;
             }
