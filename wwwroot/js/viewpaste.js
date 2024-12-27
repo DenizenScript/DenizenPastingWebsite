@@ -11,6 +11,13 @@ function loadprivateinfo(url) {
             }
         }
         document.getElementById('staff_private_info').style.display = "block";
+        let spamFlagBlock = document.getElementById('staff_private_spamflag');
+        if (parsed.spamFlag) {
+            spamFlagBlock.innerText = parsed.spamFlag;
+        }
+        else {
+            spamFlagBlock.style.display = 'none';
+        }
         var parts = parsed.paste.filtered;
         if (parts) {
             for (var i = 0; i < parts.length; i++) {

@@ -110,6 +110,27 @@ namespace DenizenPastingWebsite.Pasting
         /// <summary>Helper to match 'true ascii' range characters.</summary>
         public static readonly AsciiMatcher MatchTrueAscii = new(c => c >= 32 && c <= 126);
 
+        public static string GetSpamFlag(Paste paste, PasteUser user)
+        {
+            if (user.CurrentStatus == PasteUser.Status.POTENTIAL_SPAMMER || user.CurrentStatus == PasteUser.Status.BLOCKED)
+            {
+                return "... 🚩 potential spam - user has previously had spam blocked.";
+            }
+            else if (paste.Raw.Length < 1024 * 10 && paste.Raw.CountCharacter('\n') < 25 && (paste.Raw.Contains("http://") || paste.Raw.Contains("https://")))
+            {
+                return "... 🚩 potential spam - paste contains URLs.";
+            }
+            else if (paste.Raw.Length < 1024 * 10 && MatchTrueAscii.TrimToNonMatches(paste.Raw).Length * 4 > paste.Raw.Length)
+            {
+                return "... :warning: possible spam - paste is heavily non-ASCII content.";
+            }
+            else if (MatchTrueAscii.TrimToNonMatches(paste.Title).Length * 2 > paste.Title.Length)
+            {
+                return "... :warning: possible spam - paste has a non-ASCII title.";
+            }
+            return null;
+        }
+
         /// <summary>Runs the new-paste webhooks, if needed.</summary>
         public static void RunNewPasteWebhook(Paste paste, PasteUser user)
         {
@@ -132,21 +153,10 @@ namespace DenizenPastingWebsite.Pasting
                                 sender = sender[..512];
                             }
                             string content = $"New **{PasteType.ValidPasteTypes[paste.Type].Name}** paste: {URL_BASE}/View/{paste.ID} sent by `{sender}` (`{CountSubmitter(sender)}` today)";
-                            if (user.CurrentStatus == PasteUser.Status.POTENTIAL_SPAMMER)
+                            string spamFlag = GetSpamFlag(paste, user);
+                            if (spamFlag is not null)
                             {
-                                content += "... 🚩 potential spam - user has previously had spam blocked.";
-                            }
-                            else if (paste.Raw.Length < 1024 * 10 && paste.Raw.CountCharacter('\n') < 25 && (paste.Raw.Contains("http://") || paste.Raw.Contains("https://")))
-                            {
-                                content += "... 🚩 potential spam - paste contains URLs.";
-                            }
-                            else if (paste.Raw.Length < 1024 * 10 && MatchTrueAscii.TrimToNonMatches(paste.Raw).Length * 4 > paste.Raw.Length)
-                            {
-                                content += "... 🚩 potential spam - paste is heavily non-ASCII content.";
-                            }
-                            else if (MatchTrueAscii.TrimToNonMatches(paste.Title).Length * 2 > paste.Title.Length)
-                            {
-                                content += "... 🚩 potential spam - paste has a non-ASCII title.";
+                                content += spamFlag;
                             }
                             request.Content = new ByteArrayContent(StringConversionHelper.UTF8Encoding.GetBytes("{\"content\":\"" + content.Replace('\\', '/').Replace('"', '\'') + "\"}"));
                             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");

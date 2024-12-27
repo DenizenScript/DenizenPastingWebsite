@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DenizenPastingWebsite.Models;
 using DenizenPastingWebsite.Utilities;
 using DenizenPastingWebsite.Pasting;
+using FreneticUtilities.FreneticExtensions;
 
 namespace DenizenPastingWebsite.Controllers
 {
@@ -57,9 +58,18 @@ namespace DenizenPastingWebsite.Controllers
             else if (priv)
             {
                 PasteUser user = PasteDatabase.GetUser(paste.PostSourceData);
+                string spamFlag = PasteServer.GetSpamFlag(paste, user);
+                if (spamFlag is not null)
+                {
+                    spamFlag = spamFlag.After(' ').After(' ');
+                }
+                else
+                {
+                    spamFlag = "";
+                }
                 Response.ContentType = "application/json";
                 string staffData = paste.StaffInfo ?? "{}";
-                return Ok("{" + $"\"paste\":{staffData},\"userStatus\":\"{user.CurrentStatus}\"" + "}");
+                return Ok("{" + $"\"paste\":{staffData},\"userStatus\":\"{user.CurrentStatus}\",\"spamFlag\":\"{spamFlag}\"" + "}");
             }
             return View(new ViewPasteModel() { Paste = paste });
         }

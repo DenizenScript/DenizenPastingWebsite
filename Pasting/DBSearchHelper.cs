@@ -53,7 +53,21 @@ namespace DenizenPastingWebsite.Pasting
                     {
                         for (int i = 0; i < terms.Length; i++)
                         {
-                            if (paste.ContainsSearchText(terms[i]))
+                            if (terms[i] == "$spam")
+                            {
+                                if (paste.HistoricalContent is not null)
+                                {
+                                    continue;
+                                }
+                                PasteUser user = PasteDatabase.GetUser(paste.PostSourceData);
+                                if (PasteServer.GetSpamFlag(paste, user) is not null)
+                                {
+                                    Console.WriteLine($"Marked {paste.ID} as spam because {PasteServer.GetSpamFlag(paste, user)}");
+                                    results.Enqueue((paste, i));
+                                    break;
+                                }
+                            }
+                            else if (paste.ContainsSearchText(terms[i]))
                             {
                                 results.Enqueue((paste, i));
                                 break;
