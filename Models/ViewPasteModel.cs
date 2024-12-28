@@ -51,9 +51,9 @@ namespace DenizenPastingWebsite.Models
 
         public string PreviewContent()
         {
-            string[] split = Paste.Raw.SplitFast('\n', 2);
-            string combined = split[0] + (split.Length > 1 ? split[1] : "");
-            string cleaned = PreviewExcludeText.TrimToNonMatches(HighlighterCore.EscapeForHTML(combined.Replace('\r', '\n').Replace("\n", "  ")).Replace("\"", "&quot;"));
+            string[] split = Paste.Raw.SplitFast('\n', 5);
+            string combined = split[0].Take(4).JoinString("  ");
+            string cleaned = PreviewExcludeText.TrimToNonMatches(HighlighterCore.EscapeForHTML(combined.Replace('\r', '\n').Replace("\n", "  ")).Replace("\"", "&quot;").Replace("  ", "&nbsp;&nbsp;"));
             if (cleaned.Length > 200)
             {
                 cleaned = cleaned[0..200] + "...";
