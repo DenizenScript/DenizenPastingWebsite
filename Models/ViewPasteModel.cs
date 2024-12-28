@@ -49,6 +49,8 @@ namespace DenizenPastingWebsite.Models
 
         public static AsciiMatcher PreviewExcludeText = new("\n\r\t'`*~");
 
+        public string Title => HighlighterCore.EscapeForHTML(Paste.Title);
+
         public string PreviewContent()
         {
             string[] split = Paste.Raw.SplitFast('\n', 5);
