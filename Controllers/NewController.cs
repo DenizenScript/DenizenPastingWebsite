@@ -55,6 +55,11 @@ namespace DenizenPastingWebsite.Controllers
                 return RejectPaste(type, "Refused paste: Non-Post");
             }
             (string sender, string realOrigin) = GetSenderAndOrigin();
+            string userAgent = Request.Headers.UserAgent.FirstOrDefault("");
+            if (string.IsNullOrWhiteSpace(userAgent))
+            {
+                userAgent = "(None)";
+            }
             Console.WriteLine($"Attempted paste from {realOrigin} as {sender}");
             IFormCollection form = Request.Form;
             if (!form.TryGetValue("pastetitle", out StringValues pasteTitle) || !form.TryGetValue("pastecontents", out StringValues pasteContents))
@@ -175,7 +180,7 @@ namespace DenizenPastingWebsite.Controllers
                 Raw = pasteContentText,
                 Formatted = actualType.Highlight(pasteContentText),
                 Edited = (edits == null ? 0 : edits.ID),
-                StaffInfo = GenerateStaffInfo(sender, filterOutput)
+                StaffInfo = GenerateStaffInfo(sender, userAgent, filterOutput)
             };
             if (newPaste.Formatted.Length > PasteServer.MaxPasteRawLength * 5)
             {
@@ -207,7 +212,7 @@ namespace DenizenPastingWebsite.Controllers
                     Formatted = DiffHighlighter.Highlight(diffText),
                     Edited = newPaste.ID,
                     ID = PasteDatabase.GetNextPasteID(),
-                    StaffInfo = GenerateStaffInfo(sender, null)
+                    StaffInfo = GenerateStaffInfo(sender, userAgent, null)
                 };
                 newPaste.DiffReport = diffPaste.ID;
                 PasteDatabase.SubmitPaste(diffPaste);
@@ -226,11 +231,12 @@ namespace DenizenPastingWebsite.Controllers
             return Redirect($"/View/{newPaste.ID}");
         }
 
-        public static string GenerateStaffInfo(string submitter, string[] filteredOutput)
+        public static string GenerateStaffInfo(string submitter, string userAgent, string[] filteredOutput)
         {
             Dictionary<string, object> jsonObj = new()
             {
-                ["submitter"] = submitter
+                ["submitter"] = submitter,
+                ["user_agent"] = userAgent
             };
             if (filteredOutput is not null && filteredOutput.Any())
             {

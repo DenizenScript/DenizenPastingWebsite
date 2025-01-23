@@ -3,6 +3,7 @@ function loadprivateinfo(url) {
         console.log(obj);
         var parsed = JSON.parse(obj); // This should already be a JSON parsed object (because res.json()) but something borks and it's a string until parsed
         document.getElementById('staff_private_submitter').textContent = (parsed.paste.submitter ?? "Unknown");
+        document.getElementById('staff_private_useragent').textContent = (parsed.paste.user_agent ?? "Unknown");
         var selector = document.getElementById('staff_submitter_status_selector');
         for (var i = 0; i < selector.options.length; i++) {
             if (selector.options[i].value.toLowerCase() == parsed.userStatus.toLowerCase()) {
