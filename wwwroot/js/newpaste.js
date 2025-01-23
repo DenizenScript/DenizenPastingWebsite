@@ -146,7 +146,16 @@ function giveErrorReason(type, cleanName, content, requiredToFail) {
 }
 
 document.getElementById('newpaste_submit_button').addEventListener('click', function(e) {
-    console.log(`Trying to submit a ${lastSelection}`);
+    let vcode = document.getElementById('inp_vcode').value;
+    let checkCode = 0;
+    let testStr = `${vcode}${pasteArea.value}`;
+    for (let i = 0; i < testStr.length; i++) {
+        let code = testStr.charCodeAt(i);
+        if (code >= 32 && code <= 126) {
+            checkCode = ((checkCode * 31) + code) % 69420;
+        }
+    }
+    document.getElementById('inp_checkcode').value = checkCode;
     if (manualModalYes) {
         return;
     }

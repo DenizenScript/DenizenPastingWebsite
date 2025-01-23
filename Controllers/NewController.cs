@@ -106,6 +106,23 @@ namespace DenizenPastingWebsite.Controllers
                 {
                     return RejectPaste(type, "Refused paste: wrong validation code");
                 }
+                if (!form.TryGetValue("checkcode", out StringValues checkCode) || checkCode.Count != 1)
+                {
+                    return RejectPaste(type, "Refused paste: no validation code");
+                }
+                string testStr = $"{val[0]}{pasteContents[0]}";
+                int actualCode = 0;
+                foreach (char c in testStr)
+                {
+                    if (c >= 32 && c <= 126)
+                    {
+                        actualCode = ((actualCode * 31) + c) % 69420;
+                    }
+                }
+                if (checkCode[0] != $"{actualCode}")
+                {
+                    return RejectPaste(type, "Refused paste: bad check code");
+                }
             }
             PasteUser user = PasteDatabase.GetUser(sender); // Note: intentionally use 'sender' not 'realOrigin'
             if (user.CurrentStatus == PasteUser.Status.BLOCKED)
