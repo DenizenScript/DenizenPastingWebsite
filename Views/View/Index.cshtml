@@ -1,7 +1,7 @@
 @model ViewPasteModel
 @{
     ViewData["Title"] = $"{Model.Paste.Title} | Paste #{Model.Paste.ID}";
-    ViewData["Description"] = new HtmlString($"Content of {Model.Type.DisplayName} Paste #{Model.Paste.ID}: <code>`{Model.Title}`</code>... pasted <code>`{Model.Paste.Date}`</code>, Paste length: <code>`{Model.LengthText}`</code>, Content: <code>`{Model.PreviewContent()}`</code>");
+    ViewData["Description"] = new HtmlString($"Content of {Model.Type.DisplayName} Paste #{Model.Paste.ID}: `{Model.Title}`... pasted `{Model.Paste.Date}`, Paste length: `{Model.LengthText}`, Content: `{Model.PreviewContent()}`");
     ViewData["MetaColor"] = Model.Type.MetaColor;
     ViewData["OtherHeaderLines"] = "";
 }
