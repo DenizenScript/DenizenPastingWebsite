@@ -324,7 +324,9 @@ namespace DenizenPastingWebsite.Controllers
                 {
                     continue;
                 }
-                if (line.Contains("http"))
+                // Strip some common expected URLs to avoid link spam blocking legitimate server log pastes
+                string whitelisted = line.Replace(" https://repo.maven.apache.org/", "").Replace("https://papermc.io/", "").Replace("https://docs.papermc.io/", "");
+                if (whitelisted.Contains("http"))
                 {
                     linkLines++;
                 }
