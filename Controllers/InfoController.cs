@@ -71,7 +71,7 @@ namespace DenizenPastingWebsite.Controllers
                 Console.Error.WriteLine("Refused Search JSON: too-long search");
                 return Ok("{'error': \"search term too long\"}");
             }
-            string[] searches = searchTerm[0].Split("|||", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Where(s => s.Length >= 3).ToArray();
+            string[] searches = [.. searchTerm[0].Split("|||", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Where(s => s.Length >= 3)];
             if (searches.Length == 0)
             {
                 Console.Error.WriteLine("Refused Search JSON: empty search");

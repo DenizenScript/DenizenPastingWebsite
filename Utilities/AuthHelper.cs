@@ -171,7 +171,7 @@ namespace DenizenPastingWebsite.Utilities
             ClientSecret = section.GetString("client-secret");
             RedirectURL = HttpUtility.UrlEncode(section.GetString("redirect-url"));
             GuildID = section.GetUlong("guild-id").Value;
-            AdminRoleIDs = section.GetDataList("guild-roles-admin").Select(d => d.AsULong.Value).ToHashSet();
+            AdminRoleIDs = [.. section.GetDataList("guild-roles-admin").Select(d => d.AsULong.Value)];
         }
 
         public static bool Enabled = false;
@@ -254,7 +254,7 @@ namespace DenizenPastingWebsite.Utilities
                 return new UserGuildData()
                 {
                     ID = ulong.Parse(result.GetProperty("user").GetProperty("id").GetString()),
-                    Roles = result.GetProperty("roles").EnumerateArray().Select(e => ulong.Parse(e.GetString())).ToArray()
+                    Roles = [.. result.GetProperty("roles").EnumerateArray().Select(e => ulong.Parse(e.GetString()))]
                 };
             }
             catch (Exception ex)

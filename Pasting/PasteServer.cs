@@ -62,10 +62,10 @@ namespace DenizenPastingWebsite.Pasting
             TrustXForwardedFor = Config.GetBool("trust-x-forwarded-for").Value;
             MaxPastesPerMinute = Config.GetInt("max-pastes-per-minute").Value;
             NewPasteWebhooks = [.. (Config.GetStringList("webhooks.new-paste") ?? [])];
-            SpamBlockKeywords = (Config.GetStringList("spam-block-keyphrases") ?? []).Select(s => s.ToLowerFast()).ToArray();
-            SpamBlockShortKeywords = (Config.GetStringList("spam-block-short-keyphrases") ?? []).Select(s => s.ToLowerFast()).ToArray();
-            SpamBlockTitles = (Config.GetStringList("spam-block-titles") ?? []).Select(s => s.ToLowerFast()).ToArray();
-            SpamBlockPartialTitles = (Config.GetStringList("spam-block-partial-titles") ?? []).Select(s => s.ToLowerFast()).ToArray();
+            SpamBlockKeywords = [.. (Config.GetStringList("spam-block-keyphrases") ?? []).Select(s => s.ToLowerFast())];
+            SpamBlockShortKeywords = [.. (Config.GetStringList("spam-block-short-keyphrases") ?? []).Select(s => s.ToLowerFast())];
+            SpamBlockTitles = [.. (Config.GetStringList("spam-block-titles") ?? []).Select(s => s.ToLowerFast())];
+            SpamBlockPartialTitles = [.. (Config.GetStringList("spam-block-partial-titles") ?? []).Select(s => s.ToLowerFast())];
             ContactInfo = Config.GetString("tos_contact", ContactInfo);
             TermsOfService = Config.GetString("tos_text", TermsOfService);
             if (Config.HasKey("discord_oauth"))

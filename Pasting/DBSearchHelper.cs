@@ -30,7 +30,7 @@ namespace DenizenPastingWebsite.Pasting
                 lock (PasteDatabase.Internal.PasteLock)
                 {
                     long tickFindStart = Environment.TickCount64;
-                    pastes = PasteDatabase.Internal.PasteCollection.Find(Query.And(Query.GT("_id", Math.Max(lastInd, index - jump)), Query.LTE("_id", index))).ToArray();
+                    pastes = [.. PasteDatabase.Internal.PasteCollection.Find(Query.And(Query.GT("_id", Math.Max(lastInd, index - jump)), Query.LTE("_id", index)))];
                     long tickFindEnd = Environment.TickCount64;
                     foreach (Paste paste in pastes)
                     {

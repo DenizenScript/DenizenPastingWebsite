@@ -81,7 +81,7 @@ namespace DenizenPastingWebsite.Controllers
                     return RejectPaste(type, "Refused edit paste: unlisted ID");
                 }
             }
-            string[] filters = form.Keys.Where(s => s.StartsWith("privacy_filter_") && form.TryGetValue(s, out StringValues val) && val.Count == 1 && val[0].ToLowerFast() == "on").Select(s => s["privacy_filter_".Length..]).ToArray();
+            string[] filters = [.. form.Keys.Where(s => s.StartsWith("privacy_filter_") && form.TryGetValue(s, out StringValues val) && val.Count == 1 && val[0].ToLowerFast() == "on").Select(s => s["privacy_filter_".Length..])];
             bool micro = form.TryGetValue("response", out StringValues responseValue) && responseValue.Count == 1 && responseValue[0].ToLowerFast() == "micro";
             bool microv2 = false;
             if (micro)
