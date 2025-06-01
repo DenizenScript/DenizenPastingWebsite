@@ -325,7 +325,10 @@ namespace DenizenPastingWebsite.Controllers
                     continue;
                 }
                 // Strip some common expected URLs to avoid link spam blocking legitimate server log pastes
-                string whitelisted = line.Replace(" https://repo.maven.apache.org/", "").Replace("https://papermc.io/", "").Replace("https://docs.papermc.io/", "");
+                string whitelisted = line.Replace("https://papermc.io/", "").Replace("https://docs.papermc.io/", "") // Minecraft
+                    .Replace(" https://repo.maven.apache.org/", "").Replace("http://www.slf4j.org/", "") // Java
+                    .Replace("http://localhost:", "") // etc
+                    ;
                 if (whitelisted.Contains("http"))
                 {
                     linkLines++;
