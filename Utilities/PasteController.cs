@@ -64,12 +64,19 @@ namespace DenizenPastingWebsite.Utilities
         [NonAction]
         public static bool CheckExclusion(string[] set, string realIp)
         {
-            foreach (string compare in set)
+            try
             {
-                if (CheckContains(realIp, compare))
+                foreach (string compare in set)
                 {
-                    return true;
+                    if (CheckContains(realIp, compare))
+                    {
+                        return true;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error checking IP exclusion for `{realIp}`: {ex}");
             }
             return false;
         }
