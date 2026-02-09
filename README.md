@@ -62,7 +62,7 @@ max-paste-size: 5000000
 # Whether to test the "X-Forwarded-For" web header.
 # Set to 'true' if running behind a reverse-proxy (like Apache2 or Nginx), 'false' if directly exposed.
 trust-x-forwarded-for: true
-# X-Forwarded-For addresses to ignore when above trust is true.
+# X-Forwarded-For addresses to ignore when above trust is true. You can do CIDR ranges.
 exclude-forward-addresses:
 - 127.0.0.1
 # Set to the base URL for the paste service.

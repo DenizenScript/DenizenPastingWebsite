@@ -21,10 +21,10 @@ namespace DenizenPastingWebsite.Utilities
             {
                 realOrigin = realOrigin["::ffff:".Length..];
             }
-            string sender = IgnoredOrigins.Contains(realOrigin) || PasteServer.ExcludeForwardAddresses.Contains(realOrigin) ? "" : $"Remote IP: {realOrigin}";
+            string sender = IgnoredOrigins.Contains(realOrigin) || CheckExclusion(PasteServer.ExcludeForwardAddresses, realOrigin) ? "" : $"Remote IP: {realOrigin}";
             if (Request.Headers.TryGetValue("X-Forwarded-For", out StringValues forwardHeader))
             {
-                string[] forwards = [.. forwardHeader.Where(f => !PasteServer.ExcludeForwardAddresses.Contains(f))];
+                string[] forwards = [.. forwardHeader.Where(f => !CheckExclusion(PasteServer.ExcludeForwardAddresses, f))];
                 if (PasteServer.TrustXForwardedFor && forwards.Length > 0)
                 {
                     sender += ", X-Forwarded-For: " + string.Join(" / ", forwards);
@@ -44,6 +44,53 @@ namespace DenizenPastingWebsite.Utilities
                 sender = "Unknown";
             }
             return (sender, realOrigin);
+        }
+
+        [NonAction]
+        public static bool CheckExclusion(string[] set, string realIp)
+        {
+            foreach (string compare in set)
+            {
+                if (CheckContains(realIp, compare))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        [NonAction]
+        public static bool CheckContains(string realIp, string compare)
+        {
+            if (compare.Contains('/'))
+            {
+                return IsIpInRange(realIp, compare);
+            }
+            return realIp == compare;
+        }
+
+        [NonAction]
+        public static bool IsIpInRange(string ipAddress, string cidrRange)
+        {
+            string[] parts = cidrRange.Split('/');
+            string rangeIp = parts[0];
+            int prefixLength = int.Parse(parts[1]);
+            uint ipInt = IpToUInt(ipAddress);
+            uint rangeIpInt = IpToUInt(rangeIp);
+            uint mask = 0xFFFFFFFF << (32 - prefixLength);
+            return (ipInt & mask) == (rangeIpInt & mask);
+        }
+
+        [NonAction]
+        public static uint IpToUInt(string ipAddress)
+        {
+            IPAddress ip = IPAddress.Parse(ipAddress);
+            byte[] bytes = ip.GetAddressBytes();
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(bytes);
+            }
+            return BitConverter.ToUInt32(bytes, 0);
         }
 
         [NonAction]
