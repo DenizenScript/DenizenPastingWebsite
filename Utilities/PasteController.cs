@@ -39,7 +39,7 @@ namespace DenizenPastingWebsite.Utilities
             string sender = IgnoredOrigins.Contains(realOrigin) || CheckExclusion(PasteServer.ExcludeForwardAddresses, realOrigin) ? "" : $"Remote IP: {realOrigin}";
             if (Request.Headers.TryGetValue("X-Forwarded-For", out StringValues forwardHeader))
             {
-                string[] forwards = [.. forwardHeader.Select(FixIP).Where(f => !CheckExclusion(PasteServer.ExcludeForwardAddresses, f))];
+                string[] forwards = [.. forwardHeader.Select(FixIP).SelectMany(f => f.Split(',')).Select(f => f.Trim()).Where(f => !CheckExclusion(PasteServer.ExcludeForwardAddresses, f))];
                 if (PasteServer.TrustXForwardedFor && forwards.Length > 0)
                 {
                     sender += ", X-Forwarded-For: " + string.Join(" / ", forwards);
