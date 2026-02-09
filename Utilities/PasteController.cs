@@ -62,7 +62,7 @@ namespace DenizenPastingWebsite.Utilities
         [NonAction]
         public static bool CheckContains(string realIp, string compare)
         {
-            if (compare.Contains('/'))
+            if (compare.Contains('/') && !realIp.Contains(':'))
             {
                 return IsIpInRange(realIp, compare);
             }
