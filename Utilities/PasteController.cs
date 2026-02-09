@@ -13,18 +13,33 @@ namespace DenizenPastingWebsite.Utilities
         public static HashSet<string> IgnoredOrigins = ["127.0.0.1", "::1", "[::1]"];
 
         [NonAction]
+        public string FixIP(string ip)
+        {
+            if (ip.StartsWith("::ffff:"))
+            {
+                return ip["::ffff:".Length..];
+            }
+            // Trim v6 to the first half block
+            if (ip.Contains(':'))
+            {
+                string[] bits = ip.Split(':');
+                if (bits.Length == 8)
+                {
+                    return $"{bits[0]}:{bits[1]}:{bits[2]}:{bits[3]}::0";
+                }
+            }
+            return ip;
+        }
+
+        [NonAction]
         public (string, string) GetSenderAndOrigin()
         {
             IPAddress remoteAddress = Request.HttpContext.Connection.RemoteIpAddress;
-            string realOrigin = remoteAddress.ToString();
-            if (realOrigin.StartsWith("::ffff:"))
-            {
-                realOrigin = realOrigin["::ffff:".Length..];
-            }
+            string realOrigin = FixIP(remoteAddress.ToString());
             string sender = IgnoredOrigins.Contains(realOrigin) || CheckExclusion(PasteServer.ExcludeForwardAddresses, realOrigin) ? "" : $"Remote IP: {realOrigin}";
             if (Request.Headers.TryGetValue("X-Forwarded-For", out StringValues forwardHeader))
             {
-                string[] forwards = [.. forwardHeader.Where(f => !CheckExclusion(PasteServer.ExcludeForwardAddresses, f))];
+                string[] forwards = [.. forwardHeader.Select(FixIP).Where(f => !CheckExclusion(PasteServer.ExcludeForwardAddresses, f))];
                 if (PasteServer.TrustXForwardedFor && forwards.Length > 0)
                 {
                     sender += ", X-Forwarded-For: " + string.Join(" / ", forwards);
