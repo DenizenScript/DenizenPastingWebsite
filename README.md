@@ -62,6 +62,9 @@ max-paste-size: 5000000
 # Whether to test the "X-Forwarded-For" web header.
 # Set to 'true' if running behind a reverse-proxy (like Apache2 or Nginx), 'false' if directly exposed.
 trust-x-forwarded-for: true
+# X-Forwarded-For addresses to ignore when above trust is true.
+exclude-forward-addresses:
+- 127.0.0.1
 # Set to the base URL for the paste service.
 url-base: https://example.com
 # How many pastes from a single origin can come through per minute (a simple flood protection tool). If set to 0, the paste website is effectively read-only. Set to '99999' if you want effectively unlimited pastes.

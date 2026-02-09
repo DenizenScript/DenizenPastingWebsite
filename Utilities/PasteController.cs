@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace DenizenPastingWebsite.Utilities
@@ -16,13 +17,18 @@ namespace DenizenPastingWebsite.Utilities
         {
             IPAddress remoteAddress = Request.HttpContext.Connection.RemoteIpAddress;
             string realOrigin = remoteAddress.ToString();
-            string sender = IgnoredOrigins.Contains(realOrigin) ? "" : $"Remote IP: {realOrigin}";
+            if (realOrigin.StartsWith("::ffff:"))
+            {
+                realOrigin = realOrigin["::ffff:".Length..];
+            }
+            string sender = IgnoredOrigins.Contains(realOrigin) || PasteServer.ExcludeForwardAddresses.Contains(realOrigin) ? "" : $"Remote IP: {realOrigin}";
             if (Request.Headers.TryGetValue("X-Forwarded-For", out StringValues forwardHeader))
             {
-                sender += ", X-Forwarded-For: " + string.Join(" / ", forwardHeader);
-                if (PasteServer.TrustXForwardedFor && forwardHeader.Count > 0)
+                string[] forwards = [.. forwardHeader.Where(f => !PasteServer.ExcludeForwardAddresses.Contains(f))];
+                if (PasteServer.TrustXForwardedFor && forwards.Length > 0)
                 {
-                    realOrigin = string.Join(" / ", forwardHeader);
+                    sender += ", X-Forwarded-For: " + string.Join(" / ", forwards);
+                    realOrigin = string.Join(" / ", forwards);
                 }
             }
             if (Request.Headers.TryGetValue("REMOTE_ADDR", out StringValues remoteAddr))

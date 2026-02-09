@@ -29,6 +29,9 @@ namespace DenizenPastingWebsite.Pasting
         /// <summary>Whether X-Forwarded-For headers are trustworthy.</summary>
         public static bool TrustXForwardedFor;
 
+        /// <summary>Forward addresses to exclude when trusting X-Forwarded-For headers.</summary>
+        public static string[] ExcludeForwardAddresses;
+
         /// <summary>The maximum number of pastes per user per minute.</summary>
         public static int MaxPastesPerMinute;
 
@@ -60,6 +63,7 @@ namespace DenizenPastingWebsite.Pasting
             URL_BASE = Config.GetString("url-base");
             MaxPasteRawLength = Config.GetInt("max-paste-size").Value;
             TrustXForwardedFor = Config.GetBool("trust-x-forwarded-for").Value;
+            ExcludeForwardAddresses = [.. (Config.GetStringList("exclude-forward-addresses") ?? [])];
             MaxPastesPerMinute = Config.GetInt("max-pastes-per-minute").Value;
             NewPasteWebhooks = [.. (Config.GetStringList("webhooks.new-paste") ?? [])];
             SpamBlockKeywords = [.. (Config.GetStringList("spam-block-keyphrases") ?? []).Select(s => s.ToLowerFast())];
